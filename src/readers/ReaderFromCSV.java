@@ -8,6 +8,8 @@ import exceptions.FileTroubleException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderFromCSV implements DataReader {
@@ -15,7 +17,7 @@ public class ReaderFromCSV implements DataReader {
         Reader in = new FileReader(path, StandardCharsets.UTF_8);
         CSVParser parser = CSVParser.parse(in, CSVFormat.RFC4180);
         List<CSVRecord> records = parser.getRecords();
-        List<String []> parsed = new java.util.ArrayList<>();
+        List<String []> parsed = new ArrayList<>();
         int massiveLength = records.get(0).values().length;
         for (CSVRecord elem : records) {
             if (!(elem.values().length == massiveLength)){

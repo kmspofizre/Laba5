@@ -1,6 +1,9 @@
 package components;
 
 public class Coordinates {
-    private long x;
-    private double y;
+    private float x;
+    private Integer y;
+    public Coordinates(float x, Integer y){
+
+    }
 }
