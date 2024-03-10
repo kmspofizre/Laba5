@@ -52,7 +52,7 @@ public class CSVDataBase extends DataBase{
             System.out.println();
             System.out.println("Строка " + stringCounter + ":");
             if (cityValidator.validateData(item)){
-                String [] merged = collectionMaker(id, item);
+                String [] merged = dataPreparer(id, item);
                 validatedData.add(merged);
                 System.out.println("Успешно");
                 id++;
@@ -61,7 +61,7 @@ public class CSVDataBase extends DataBase{
         }
         return validatedData;
     }
-    public String [] collectionMaker(long id, String[] item){
+    public String [] dataPreparer(long id, String[] item){
         String [] merged = new String[12];
         merged[0] = String.valueOf(id);
         merged[1] = item[0];
