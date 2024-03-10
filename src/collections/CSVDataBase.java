@@ -6,17 +6,14 @@ import readers.ReaderFromCSV;
 import validators.CityCollectionValidator;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
-import java.util.TreeMap;
+import java.util.*;
 
 public class CSVDataBase extends DataBase{
     public CSVDataBase(String file_name){
         List<String []> validatedData = getValidatedData(getData(file_name));
+
         // создать новый метод, который из validatedData будет делать коллекцию, где ключи - id, а
         // значения - объекты класса City
-        // Сделать срез полученного списка, где последний элемент - ключ
     }
     // разбор параметров из csv
     @Override
@@ -48,18 +45,36 @@ public class CSVDataBase extends DataBase{
     public List<String []>getValidatedData(List<String []> dataToValidate){
         List<Long> ids = getIds(dataToValidate);
         CityCollectionValidator cityValidator = new CityCollectionValidator();
+        List<String []> validatedData = new ArrayList<>();
         long id = 1;
-
+        long stringCounter = 1;
         for (String [] item : dataToValidate){
-            System.out.println("Строка " + id + ":");
+            System.out.println();
+            System.out.println("Строка " + stringCounter + ":");
             if (cityValidator.validateData(item)){
-
-                // написать, в какой строке файла ошибочные данные
-                // создание айдишников при валидном item
-                // генерировать дату
+                String [] merged = collectionMaker(id, item);
+                validatedData.add(merged);
                 System.out.println("Успешно");
                 id++;
             }
+            stringCounter++;
         }
+        return validatedData;
+    }
+    public String [] collectionMaker(long id, String[] item){
+        String [] merged = new String[12];
+        merged[0] = String.valueOf(id);
+        merged[1] = item[0];
+        merged[2] = item[1];
+        merged[3] = item[2];
+        merged[4] = new Date().toString();
+        merged[5] = item[3];
+        merged[6] = item[4];
+        merged[7] = item[5];
+        merged[8] = item[6];
+        merged[9] = item[7];
+        merged[10] = item[8];
+        merged[11] = item[9];
+        return merged;
     }
 }
