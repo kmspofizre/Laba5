@@ -3,6 +3,7 @@ package collections;
 import components.City;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
+import utils.CityCollectionMaker;
 import validators.CityCollectionValidator;
 
 import java.io.IOException;
@@ -11,11 +12,14 @@ import java.util.*;
 public class CSVDataBase extends DataBase{
     public CSVDataBase(String file_name){
         List<String []> validatedData = getValidatedData(getData(file_name));
+        TreeMap<Long, City> cityCollection = CityCollectionMaker.makeCityCollection(validatedData);
+        for (Map.Entry<Long, City> item : cityCollection.entrySet()){
+            System.out.println(item.getKey());
+        }
 
         // создать новый метод, который из validatedData будет делать коллекцию, где ключи - id, а
         // значения - объекты класса City
     }
-    // разбор параметров из csv
     @Override
     public List<String []> getData(String file_name){
         try {
@@ -38,12 +42,11 @@ public class CSVDataBase extends DataBase{
         System.out.println(idsList.toString());
         return idsList;
     }
-
-    // validateData boolean
-    // циклом перебирается parsed и на каждом шаге добавляется/не добавляется новый элемент в коллекцию
     // значения не прошли валидацию (вывести значения + вывести, какие конкретно данные не прошли валидацию)
     public List<String []>getValidatedData(List<String []> dataToValidate){
-        List<Long> ids = getIds(dataToValidate);
+        if (dataToValidate == null){
+            return new ArrayList<>();
+        }
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String []> validatedData = new ArrayList<>();
         long id = 1;

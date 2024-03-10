@@ -2,14 +2,16 @@ package validators;
 
 import components.*;
 import exceptions.WrongDataException;
+import utils.CityCollectionMaker;
 
-import java.util.List;
 
 public class CityCollectionValidator extends CollectionValidator {
     @Override
     public boolean validateData(String[] dataToValidate) {
         Human governor = null;
         Coordinates coords = null;
+        int area = 0;
+        int population = 0;
         try {
             governor = new Human(Integer.parseInt(dataToValidate[9]));
         } catch (NumberFormatException e) {
@@ -20,34 +22,32 @@ public class CityCollectionValidator extends CollectionValidator {
             coords = new Coordinates(Float.parseFloat(dataToValidate[1]),
                     Integer.parseInt(dataToValidate[2]));
         } catch (NumberFormatException e) {
-            System.out.println("Неверные данные: координаты вводятся через пробел," +
+            System.out.println("Неверные данные: координатами являются два числа," +
                     " где первое число вещественное, а второе - целое");
             return false;
         }
         String governmentString = dataToValidate[7];
-         Government government = switch (governmentString) {
-            case ("DESPOTISM") -> Government.DESPOTISM;
-            case ("DICTATORSHIP") -> Government.DICTATORSHIP;
-            case ("STRATOCRACY") -> Government.STRATOCRACY;
-            default -> null;
-        };
+        Government government = CityCollectionMaker.getGovernment(governmentString);
         String climateString = dataToValidate[6];
-        Climate climate = switch (climateString) {
-            case ("MONSOON") -> Climate.MONSOON;
-            case ("MEDITERRANIAN") -> Climate.MEDITERRANIAN;
-            case ("SUBARCTIC") -> Climate.SUBARCTIC;
-            case ("DESERT") -> Climate.DESERT;
-            default -> null;
-        };
+
+        Climate climate = CityCollectionMaker.getClimate(climateString);
         String standardOfLivingString = dataToValidate[8];
-        StandardOfLiving standardOfLiving = switch (standardOfLivingString) {
-            case ("VERY_HIGH") -> StandardOfLiving.VERY_HIGH;
-            case ("LOW") -> StandardOfLiving.LOW;
-            case ("NIGHTMARE") -> StandardOfLiving.NIGHTMARE;
-            default -> null;
-        };
-        int area = Integer.parseInt(dataToValidate[3]);
-        int population = Integer.parseInt(dataToValidate[4]);
+        StandardOfLiving standardOfLiving = CityCollectionMaker.getStandardOfLiving(standardOfLivingString);
+        try {
+            area = Integer.parseInt(dataToValidate[3]);
+        }
+        catch (NumberFormatException e){
+            System.out.println("Неверные данные: значение площади должно быть числом большим нуля");
+            return false;
+        }
+        try {
+            population = Integer.parseInt(dataToValidate[4]);
+        }
+        catch (NumberFormatException e){
+            System.out.println("Неверные данные: Население должно быть числом большим нуля");
+            return false;
+        }
+
         try {
             Double metersAboveSeaLevel = Double.parseDouble(dataToValidate[5]);
         }
@@ -70,6 +70,9 @@ public class CityCollectionValidator extends CollectionValidator {
             System.out.println(e.getMessage());
             return false;
         }
+    }
+    public static boolean numberOfParamsValidator(String [] items){
+        return (items.length == 10);
     }
 }
 
