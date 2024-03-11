@@ -30,4 +30,46 @@ public class City {
         this.standardOfLiving = standardOfLiving;
         this.governor = governor;
     }
+
+
+    @Override
+    public String toString(){
+        return "Название: " + this.name + "\n" + "Координаты: " + this.coordinates + "\n" + "Площадь: " +
+                this.area + "\n" + "Население: " + this.population ;
+    }
+
+    public Double getMetersAboveSeaLevel() {
+        return this.metersAboveSeaLevel;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+    public Coordinates getCoordinates(){
+        return this.coordinates;
+    }
+
+    public Integer getArea(){
+        return this.area;
+    }
+
+    public Integer getPopulation(){
+        return this.population;
+    }
+
+    public Climate getClimate(){
+        return this.climate;
+    }
+
+    public Government getGovernment(){
+        return this.government;
+    }
+
+    public StandardOfLiving getStandardOfLiving(){
+        return this.standardOfLiving;
+    }
+
+    public Human getGovernor(){
+        return governor;
+    }
 }

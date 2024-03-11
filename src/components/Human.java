@@ -5,4 +5,7 @@ public class Human {
     public Human(int age){
         this.age = age;
     }
+    public Integer getAge(){
+        return age;
+    }
 }

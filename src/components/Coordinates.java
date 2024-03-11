@@ -7,4 +7,16 @@ public class Coordinates {
         this.x = x;
         this.y = y;
     }
+    @Override
+    public String toString(){
+        return this.x + " " + this.y;
+    }
+
+    public Float getX(){
+        return x;
+    }
+
+    public Integer getY(){
+        return y;
+    }
 }
