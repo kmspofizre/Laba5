@@ -13,35 +13,35 @@ public class CityCollectionValidator extends CollectionValidator {
         int area = 0;
         int population = 0;
         try {
-            governor = new Human(Integer.parseInt(dataToValidate[9]));
+            governor = new Human(Integer.parseInt(dataToValidate[10]));
         } catch (NumberFormatException e) {
             System.out.println("Неверные данные: возраст человека должен быть целым положительным числом");
             return false;
         }
         try {
-            coords = new Coordinates(Float.parseFloat(dataToValidate[1]),
-                    Integer.parseInt(dataToValidate[2]));
+            coords = new Coordinates(Float.parseFloat(dataToValidate[2]),
+                    Integer.parseInt(dataToValidate[3]));
         } catch (NumberFormatException e) {
             System.out.println("Неверные данные: координатами являются два числа," +
                     " где первое число вещественное, а второе - целое");
             return false;
         }
-        String governmentString = dataToValidate[7];
+        String governmentString = dataToValidate[8];
         Government government = CityCollectionMaker.getGovernment(governmentString);
-        String climateString = dataToValidate[6];
+        String climateString = dataToValidate[7];
 
         Climate climate = CityCollectionMaker.getClimate(climateString);
-        String standardOfLivingString = dataToValidate[8];
+        String standardOfLivingString = dataToValidate[9];
         StandardOfLiving standardOfLiving = CityCollectionMaker.getStandardOfLiving(standardOfLivingString);
         try {
-            area = Integer.parseInt(dataToValidate[3]);
+            area = Integer.parseInt(dataToValidate[4]);
         }
         catch (NumberFormatException e){
             System.out.println("Неверные данные: значение площади должно быть числом большим нуля");
             return false;
         }
         try {
-            population = Integer.parseInt(dataToValidate[4]);
+            population = Integer.parseInt(dataToValidate[5]);
         }
         catch (NumberFormatException e){
             System.out.println("Неверные данные: Население должно быть числом большим нуля");
@@ -49,7 +49,7 @@ public class CityCollectionValidator extends CollectionValidator {
         }
 
         try {
-            Double metersAboveSeaLevel = Double.parseDouble(dataToValidate[5]);
+            Double metersAboveSeaLevel = Double.parseDouble(dataToValidate[6]);
         }
         catch (NumberFormatException e){
             System.out.println("Неверные данные: Высота над уровнем моря должна быть вещественным числом.");
@@ -58,7 +58,7 @@ public class CityCollectionValidator extends CollectionValidator {
         CoordinatesValidator.validateData(coords);
         try {
             if (AreaValidator.validateData(area) &&
-                    CityNameValidator.validateData(dataToValidate[0]) &&
+                    CityNameValidator.validateData(dataToValidate[1]) &&
                     GovernmentValidator.validateData(government) && GovernorValidator.validateData(governor)
                     && ClimateValidator.validateData(climate) && PopulationValidator.validateData(population) &&
                     StandardOfLivingValidator.validateData(standardOfLiving)){

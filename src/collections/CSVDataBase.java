@@ -58,36 +58,34 @@ public class CSVDataBase extends DataBase{
         }
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String []> validatedData = new ArrayList<>();
-        long id = 1;
         long stringCounter = 1;
         for (String [] item : dataToValidate){
             System.out.println();
             System.out.println("Строка " + stringCounter + ":");
             if (cityValidator.validateData(item)){
+                Long id = Long.parseLong(item[0]);
                 String [] merged = dataPreparer(id, item);
                 validatedData.add(merged);
                 System.out.println("Успешно");
-                id++;
             }
             stringCounter++;
         }
-        this.lastCityId = id;
         return validatedData;
     }
     public String [] dataPreparer(long id, String[] item){
         String [] merged = new String[12];
         merged[0] = String.valueOf(id);
-        merged[1] = item[0];
-        merged[2] = item[1];
-        merged[3] = item[2];
+        merged[1] = item[1];
+        merged[2] = item[2];
+        merged[3] = item[3];
         merged[4] = new Date().toString();
-        merged[5] = item[3];
-        merged[6] = item[4];
-        merged[7] = item[5];
-        merged[8] = item[6];
-        merged[9] = item[7];
-        merged[10] = item[8];
-        merged[11] = item[9];
+        merged[5] = item[4];
+        merged[6] = item[5];
+        merged[7] = item[6];
+        merged[8] = item[7];
+        merged[9] = item[8];
+        merged[10] = item[9];
+        merged[11] = item[10];
         return merged;
     }
     public void info(){
