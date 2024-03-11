@@ -2,7 +2,7 @@ package components;
 
 import java.util.Date;
 
-public class City {
+public class City implements Comparable<City>{
     private long id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; // Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; // Поле не может быть null
@@ -34,7 +34,7 @@ public class City {
 
     @Override
     public String toString(){
-        return "Название: " + this.name + "\n" + "Координаты: " + this.coordinates + "\n" + "Площадь: " +
+        return this.id + ". Название: " + this.name + "\n" + "Координаты: " + this.coordinates + "\n" + "Площадь: " +
                 this.area + "\n" + "Население: " + this.population ;
     }
 
@@ -71,5 +71,10 @@ public class City {
 
     public Human getGovernor(){
         return governor;
+    }
+
+    @Override
+    public int compareTo(City city) {
+        return Integer.compare(this.area, city.area);
     }
 }

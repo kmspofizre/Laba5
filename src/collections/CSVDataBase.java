@@ -145,7 +145,6 @@ public class CSVDataBase extends DataBase{
         this.dataBase.clear();
     }
 
-    // save
 
     public void removeGreaterKey(long id){
         if (this.dataBase.containsKey(id)){
@@ -191,6 +190,16 @@ public class CSVDataBase extends DataBase{
         }
         catch (IOException e){
             System.out.println("Не удалось найти файл");
+        }
+    }
+
+    public void removeLower(Long id){
+        TreeMap<Long, City> newCityCollection = new TreeMap<>();
+        City city = this.dataBase.get(id);
+        for (Map.Entry<Long, City> item : this.dataBase.entrySet()){
+            if (item.getValue().compareTo(city) >= 0){
+                newCityCollection.put(item.getKey(), item.getValue());
+            }
         }
     }
 }
