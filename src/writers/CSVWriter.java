@@ -14,7 +14,7 @@ public class CSVWriter implements DataWriter{
         BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, false));
         CSVPrinter printer = new CSVPrinter(bw, CSVFormat.RFC4180);
         for (City city : dataToWrite.values()){
-            printer.printRecord(city.getName(), city.getCoordinates().getX().toString(),
+            printer.printRecord(city.getId(), city.getName(), city.getCoordinates().getX().toString(),
                     city.getCoordinates().getY().toString(), city.getArea().toString(), city.getPopulation().toString(),
                     city.getMetersAboveSeaLevel().toString(), city.getClimate().toString(),
                     city.getGovernment().toString(), city.getStandardOfLiving().toString(),

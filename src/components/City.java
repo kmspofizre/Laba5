@@ -73,6 +73,10 @@ public class City implements Comparable<City>{
         return governor;
     }
 
+    public long getId(){
+        return this.id;
+    }
+
     @Override
     public int compareTo(City city) {
         return Integer.compare(this.area, city.area);

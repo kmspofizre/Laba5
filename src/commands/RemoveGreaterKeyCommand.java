@@ -8,13 +8,13 @@ import java.util.List;
 
 public class RemoveGreaterKeyCommand extends Command{
 
-    public RemoveGreaterKeyCommand(String commandName, String description, boolean hasArguments) {
-        super(commandName, description, hasArguments);
+    public RemoveGreaterKeyCommand(String commandName, String description,
+                                   boolean hasArguments, boolean isMultiLines) {
+        super(commandName, description, hasArguments, isMultiLines);
     }
     @Override
     public void execute(String [] args, CSVDataBase dataBase) throws NumberFormatException{
         Long id = Long.parseLong(args[0]);
-        // валидация
         dataBase.removeGreaterKey(id);
     }
 }

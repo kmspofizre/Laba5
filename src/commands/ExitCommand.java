@@ -3,8 +3,8 @@ package commands;
 import collections.CSVDataBase;
 
 public class ExitCommand extends Command{
-    public ExitCommand(String commandName, String description, boolean hasArguments) {
-        super(commandName, description, hasArguments);
+    public ExitCommand(String commandName, String description, boolean hasArguments, boolean isMultiLines) {
+        super(commandName, description, hasArguments, isMultiLines);
     }
     @Override
     public void execute(String [] args, CSVDataBase dataBase){

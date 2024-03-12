@@ -48,4 +48,8 @@ public class CommandHandler {
             System.out.println(command);
         }
     }
+
+    public Command[] getCommands() {
+        return commands;
+    }
 }
