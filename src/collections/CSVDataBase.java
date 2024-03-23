@@ -100,20 +100,35 @@ public class CSVDataBase extends DataBase{
         }
     }
 
-    public void insert(List<String []> data){
+    public void insert(long id, List<String []> data, boolean fromScript){
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String []> validatedData = new ArrayList<>();
-        if (cityValidator.validateData(data.get(0))){
-            this.lastCityId = this.lastCityId + 1;
-            String [] merged = dataPreparer(this.lastCityId, data.get(0));
-            validatedData.add(merged);
-            TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
-            this.dataBase.putAll(cityInstance);
-            System.out.println("Элемент добавлен успешно");
+        if (!this.dataBase.containsKey(id)){
+            if (fromScript){
+                if (cityValidator.validateData(data.get(0))){
+                    this.lastCityId = this.lastCityId + 1;
+                    String [] merged = dataPreparer(id, data.get(0));
+                    validatedData.add(merged);
+                    TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
+                    this.dataBase.putAll(cityInstance);
+                    System.out.println("Элемент добавлен успешно");
+                }
+            }
+            else {
+                String [] merged = dataPreparer(id, data.get(0));
+                validatedData.add(merged);
+                TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
+                this.dataBase.putAll(cityInstance);
+                System.out.println("Элемент добавлен успешно");
+            }
+
+        }
+        else{
+            System.out.println("Элемент с таким id уже существует");
         }
     }
 
-    public void update(long id, List<String []> data){
+    public void update(long id, List<String []> data, boolean fromScript){
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String []> validatedData = new ArrayList<>();
         if (this.dataBase.containsKey(id)){

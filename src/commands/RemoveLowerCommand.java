@@ -5,11 +5,11 @@ import collections.CSVDataBase;
 public class RemoveLowerCommand extends Command{
 
     public RemoveLowerCommand(String commandName, String description,
-                              boolean hasArguments, boolean isMultiLines) {
-        super(commandName, description, hasArguments, isMultiLines);
+                              boolean hasInlineArguments, boolean isMultiLines) {
+        super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase) throws NumberFormatException{
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException{
         Long id = Long.parseLong(args[0]);
         dataBase.removeLower(id);
     }

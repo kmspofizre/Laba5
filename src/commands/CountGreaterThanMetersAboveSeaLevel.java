@@ -8,11 +8,11 @@ import java.util.List;
 
 public class CountGreaterThanMetersAboveSeaLevel extends Command{
     public CountGreaterThanMetersAboveSeaLevel(String commandName, String description,
-                                               boolean hasArguments, boolean isMultiLines) {
-        super(commandName, description, hasArguments, isMultiLines);
+                                               boolean hasInlineArguments, boolean isMultiLines) {
+        super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase) throws NumberFormatException{
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException{
         Double metersAboveSeaLevel = Double.parseDouble(args[0]);
         dataBase.countGreaterThanMetersAboveSeaLevel(metersAboveSeaLevel);
     }

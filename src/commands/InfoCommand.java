@@ -8,11 +8,11 @@ import java.util.List;
 
 public class InfoCommand extends Command{
     public InfoCommand(String commandName, String description,
-                       boolean hasArguments, boolean isMultiLines) {
-        super(commandName, description, hasArguments, isMultiLines);
+                       boolean hasInlineArguments, boolean isMultiLines) {
+        super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase){
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         dataBase.info();
     }
 }

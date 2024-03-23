@@ -7,13 +7,13 @@ public class Command {
     private String description;
     private boolean hasInlineArguments;
     private boolean isMultiLines;
-    public Command(String commandName, String description, boolean hasArguments, boolean isMultiLines){
+    public Command(String commandName, String description, boolean hasInlineArguments, boolean isMultiLines){
         this.commandName = commandName;
         this.description = description;
-        this.hasInlineArguments = hasArguments;
+        this.hasInlineArguments = hasInlineArguments;
         this.isMultiLines = isMultiLines;
     }
-    public void execute(String [] args, CSVDataBase dataBase){}
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){}
     @Override
     public String toString(){
         return this.commandName + " - " + this.description;
@@ -27,4 +27,5 @@ public class Command {
     public boolean isMultiLines(){
         return this.isMultiLines;
     }
+
 }

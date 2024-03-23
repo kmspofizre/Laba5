@@ -7,7 +7,7 @@ public class CommandsInitiator {
         Command [] commands = new Command[12];
         commands[0] = new InfoCommand("info", "des", false, false);
         commands[1] = new ShowCommand("show", "des", false, false);
-        commands[2] = new InsertCommand("insert", "des", false, true);
+        commands[2] = new InsertCommand("insert", "des", true, true);
         commands[3] = new UpdateCommand("update", "des", true, true);
         commands[4] = new RemoveCommand("remove", "des", true, false);
         commands[5] = new ClearCommand("clear", "des", false, false);

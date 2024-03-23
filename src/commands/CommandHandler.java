@@ -16,9 +16,9 @@ public class CommandHandler {
         this.history = new String [14];
         this.historyIndex = 0;
     }
-    public boolean executeCommand(Command command, String [] args){
+    public boolean executeCommand(Command command, String [] args, boolean fromScript){
         try{
-            command.execute(args, this.dataBase);
+            command.execute(args, this.dataBase, fromScript);
             this.history[this.historyIndex] = command.getCommandName();
             if (this.historyIndex == 14){
                 this.historyIndex = 0;

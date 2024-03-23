@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ShowCommand extends Command{
-    public ShowCommand(String commandName, String description, boolean hasArguments, boolean isMultiLines) {
-        super(commandName, description, hasArguments, isMultiLines);
+    public ShowCommand(String commandName, String description, boolean hasInlineArguments, boolean isMultiLines) {
+        super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase){
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         dataBase.show();
     }
 }

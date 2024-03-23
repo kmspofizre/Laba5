@@ -1,5 +1,6 @@
 package utils;
 
+import commands.CHCommand;
 import commands.Command;
 import exceptions.CommandExecutingException;
 
@@ -8,7 +9,8 @@ public class InstructionFetcher {
     public InstructionFetcher(Command [] commands){
         this.commandsAvalible = commands;
     }
-    public Command instructionFetch(String command, String[] firstLineArgs) throws CommandExecutingException{
+    public Command instructionFetch(String command) throws CommandExecutingException{
+        // проверить на history и help и executeScript и передать chCommand
         for (Command item : this.commandsAvalible){
             if (item.getCommandName().equals(command)){
                 return item;

@@ -9,11 +9,11 @@ import java.util.List;
 
 public class UpdateCommand extends Command{
 
-    public UpdateCommand(String name, String description, boolean hasArguments, boolean isMultiLines) {
-        super(name, description, hasArguments, isMultiLines);
+    public UpdateCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
+        super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase) throws NumberFormatException, CommandExecutingException{
+    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException{
         Long id = Long.parseLong(args[0]);
         // валидация
         // построчный ввод
@@ -22,8 +22,8 @@ public class UpdateCommand extends Command{
             throw new CommandExecutingException("Недостаточно данных");
         }
         List<String []> commandArgs = new ArrayList<>();
-        commandArgs.add(args);
+        commandArgs.add(argsToGive);
 
-        dataBase.update(id, commandArgs);
+        dataBase.update(id, commandArgs, fromScript);
     }
 }
