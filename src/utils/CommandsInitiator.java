@@ -4,7 +4,7 @@ import commands.*;
 
 public class CommandsInitiator {
     public static Command[] initCommands(){
-        Command [] commands = new Command[12];
+        Command [] commands = new Command[15];
         commands[0] = new InfoCommand("info", "des", false, false);
         commands[1] = new ShowCommand("show", "des", false, false);
         commands[2] = new InsertCommand("insert", "des", true, true);
@@ -20,6 +20,9 @@ public class CommandsInitiator {
                 "des", true, false);
         commands[11] = new FilterContainsNameCommand("filter_contains_name",
                 "des", true, false);
+        commands[12] = new ExecuteScriptCommand("execute_script", "des", true, false);
+        commands[13] = new HelpCommand("help", "des", false, false);
+        commands[14] = new HistoryCommand("history", "des", false, false);
         return commands;
     }
 }
