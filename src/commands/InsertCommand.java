@@ -4,10 +4,7 @@ import collections.CSVDataBase;
 import exceptions.CommandExecutingException;
 import validators.InputDataValidator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class InsertCommand extends Command{
     public InsertCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
@@ -40,6 +37,17 @@ public class InsertCommand extends Command{
         data[8] = InputDataValidator.governmentValidator(scanner);
         data[9] = InputDataValidator.standardOfLivingValidator(scanner);
         data[10] = InputDataValidator.governorValidator(scanner);
+        return data;
+    }
+    @Override
+    public String[] prepareScriptData(String [] args,
+                                      Scanner scanner) throws NumberFormatException, NoSuchElementException {
+        Long id = Long.parseLong(args[0]);
+        String[] data = new String[11];
+        data[0] = id.toString();
+        for (int i = 1; i < 11; i++){
+            data[i] = scanner.nextLine();
+        }
         return data;
     }
 }

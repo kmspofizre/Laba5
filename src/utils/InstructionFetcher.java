@@ -5,6 +5,7 @@ import commands.Command;
 import commands.CommandHandler;
 import exceptions.CommandExecutingException;
 
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
 public class InstructionFetcher {
@@ -19,14 +20,17 @@ public class InstructionFetcher {
             }
         }
         throw new CommandExecutingException("Неверная команда. Используйте help, чтобы узнать список доступных команд");
-        // если длинная, то передать true и вызвать методы из InputDataValidator
-
-        // если короткая, то передать false и обработать inline значение
-        // выкинуть исключение, если нет команжы
     }
-    public void fetchAndExecuteCHC(Command command, CommandHandler commandHandler){
+    public void fetchAndExecuteCHC(Command command,
+                                   CommandHandler commandHandler,
+                                   String[] args) throws CommandExecutingException,
+            FileNotFoundException, StackOverflowError {
         if ((Objects.equals(command.getCommandName(), "execute_command"))) {
             // исполнить скрипт
+            if (args.length == 0){
+                throw new CommandExecutingException("Не передано имя файла");
+            }
+
         } else if ((Objects.equals(command.getCommandName(), "help"))) {
             commandHandler.help();
         } else if ((Objects.equals(command.getCommandName(), "history"))) {

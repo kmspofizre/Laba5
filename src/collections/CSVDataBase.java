@@ -138,12 +138,21 @@ public class CSVDataBase extends DataBase{
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String []> validatedData = new ArrayList<>();
         if (this.dataBase.containsKey(id)){
-            if (cityValidator.validateData(data.get(0))){
+            if (!fromScript){
                 String [] merged = dataPreparer(id, data.get(0));
                 validatedData.add(merged);
                 TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                 this.dataBase.putAll(cityInstance);
                 System.out.println("Элемент обновлен успешно");
+            }
+            else{
+                if (cityValidator.validateData(data.get(0))){
+                    String [] merged = dataPreparer(id, data.get(0));
+                    validatedData.add(merged);
+                    TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
+                    this.dataBase.putAll(cityInstance);
+                    System.out.println("Элемент обновлен успешно");
+                }
             }
         }
         else {

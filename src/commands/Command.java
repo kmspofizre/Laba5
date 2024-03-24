@@ -34,5 +34,8 @@ public class Command {
         String [] data = new String[0];
         return data;
     }
-
+    public String [] prepareScriptData(String[] args, Scanner scanner){
+        String [] data = new String[0];
+        return data;
+    }
 }

@@ -2,19 +2,26 @@ package commands;
 
 import collections.CSVDataBase;
 import exceptions.CommandExecutingException;
+import exceptions.WrongDataException;
+import utils.DataPreparer;
+import utils.InstructionFetcher;
 
-import java.util.TreeMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class CommandHandler {
     private CSVDataBase dataBase;
     private Command [] commands;
     private String [] history;
     private int historyIndex;
+    private InstructionFetcher instructionFetcher;
     public CommandHandler(CSVDataBase dataBase, Command [] commands){
         this.dataBase = dataBase;
         this.commands = commands;
         this.history = new String [14];
         this.historyIndex = 0;
+        this.instructionFetcher = new InstructionFetcher(commands);
     }
     public boolean executeCommand(Command command, String [] args, boolean fromScript){
         try{
@@ -59,5 +66,51 @@ public class CommandHandler {
     }
     public Command[] getCommands() {
         return commands;
+    }
+    public void executeScript(String fileName) throws FileNotFoundException, StackOverflowError {
+        Scanner scanner = new Scanner(new File(fileName));
+        String line;
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            String[] command = line.split(" ");
+            String [] argsToGive = Arrays.copyOfRange(command, 1, command.length);
+            try {
+                Command currentCommand = this.instructionFetcher.instructionFetch(command[0]);
+                if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
+                    if (Objects.equals(currentCommand.getCommandName(), "execute_script")){
+                        if (argsToGive.length == 0){
+                            throw new CommandExecutingException("Не передано имя файла");
+                        }
+                        executeScript(argsToGive[0]);
+                    }
+                    else if (Objects.equals(currentCommand.getCommandName(), "history")){
+                        getHistory();
+                    }
+                    else if (Objects.equals(currentCommand.getCommandName(), "help")){
+                        help();
+                    }
+                }
+                else {
+                    String [] argsForCommand = DataPreparer.prepareScriptData(currentCommand, argsToGive, scanner);
+                    executeCommand(currentCommand, argsForCommand, true);
+                }
+            }
+            catch (CommandExecutingException | WrongDataException e){
+                System.out.println(e.getMessage());
+            }
+            catch (NumberFormatException exc){
+                System.out.println("Неверный формат ввода числового значения");
+            }
+            catch (FileNotFoundException fnfe){
+                System.out.println("Передано неверное имя файла");
+            }
+            catch (StackOverflowError sofe){
+                System.out.println("Вызов скрипта повлек рекурсию");
+            }
+            catch (NoSuchElementException e){
+                System.out.println("Недостаточно данных");
+            }
+        }
+        scanner.close();
     }
 }

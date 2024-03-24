@@ -17,4 +17,15 @@ public class DataPreparer {
         String [] data = command.prepareData(inlineArgs, scanner);
         return data;
     }
+    public static String[] prepareScriptData(Command command, String[] inlineArgs,
+                                             Scanner scanner) throws CommandExecutingException, WrongThreadException,
+            NumberFormatException{
+        if (command.isHasInlineArguments()){
+            if (inlineArgs.length == 0){
+                throw new CommandExecutingException("Inline аргументы не были доставлены");
+            }
+        }
+        String [] data = command.prepareScriptData(inlineArgs, scanner);
+        return data;
+    }
 }

@@ -7,6 +7,7 @@ import commands.CommandHandler;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -17,6 +18,7 @@ public class ProgramRunner {
     public ProgramRunner(CSVDataBase csvDataBase, CommandHandler commandHandler){
         this.csvDataBase = csvDataBase;
         this.commandHandler = commandHandler;
+        this.fromScript = false;
     }
     // fromScript
     public void runProgram(){
@@ -29,7 +31,7 @@ public class ProgramRunner {
             try {
                 Command currentCommand = infetch.instructionFetch(command[0]);
                 if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
-                    infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler);
+                    infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler, argsToGive);
                 }
                 else {
                     String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner);
@@ -41,6 +43,12 @@ public class ProgramRunner {
             }
             catch (NumberFormatException exc){
                 System.out.println("Неверный формат ввода числового значения");
+            }
+            catch (FileNotFoundException fnfe){
+                System.out.println("Передано неверное имя файла");
+            }
+            catch (StackOverflowError sofe){
+
             }
         }
     }

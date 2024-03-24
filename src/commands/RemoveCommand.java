@@ -23,4 +23,12 @@ public class RemoveCommand extends Command{
         data[0] = args[0];
         return data;
     }
+
+    @Override
+    public String[] prepareScriptData(String [] args, Scanner scanner) throws NumberFormatException{
+        String [] data = new String [1];
+        Long id = Long.parseLong(args[0]);
+        data[0] = args[0];
+        return data;
+    }
 }

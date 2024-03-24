@@ -28,4 +28,12 @@ public class FilterContainsNameCommand extends Command{
         }
         return data;
     }
+    @Override
+    public String [] prepareScriptData(String [] args, Scanner scanner) throws WrongDataException {
+        String [] data = new String[1];
+        if (CityNameValidator.validateData(args[0])){
+            data[0] = args[0];
+        }
+        return data;
+    }
 }
