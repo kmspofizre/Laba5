@@ -14,8 +14,8 @@ public class UpdateCommand extends Command{
     @Override
     public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException{
         Long id = Long.parseLong(args[0]);
-        String [] argsToGive = Arrays.copyOfRange(args, 1, args.length);
-        if (argsToGive.length != 10){
+        String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
+        if (argsToGive.length <= 10){
             throw new CommandExecutingException("Недостаточно данных");
         }
         List<String []> commandArgs = new ArrayList<>();

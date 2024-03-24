@@ -57,7 +57,7 @@ public class CommandHandler {
         incrementHistoryIndex();
     }
     private void incrementHistoryIndex(){
-        if (this.historyIndex == 14){
+        if (this.historyIndex == 13){
             this.historyIndex = 0;
         }
         else {

@@ -25,11 +25,11 @@ public class InstructionFetcher {
                                    CommandHandler commandHandler,
                                    String[] args) throws CommandExecutingException,
             FileNotFoundException, StackOverflowError {
-        if ((Objects.equals(command.getCommandName(), "execute_command"))) {
-            // исполнить скрипт
+        if ((Objects.equals(command.getCommandName(), "execute_script"))) {
             if (args.length == 0){
                 throw new CommandExecutingException("Не передано имя файла");
             }
+            commandHandler.executeScript(args[0]);
 
         } else if ((Objects.equals(command.getCommandName(), "help"))) {
             commandHandler.help();
