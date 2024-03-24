@@ -20,6 +20,7 @@ public class CSVWriter implements DataWriter{
                     city.getGovernment().toString(), city.getStandardOfLiving().toString(),
                     city.getGovernor().toString());
         }
+        printer.close();
         return true;
     }
 }

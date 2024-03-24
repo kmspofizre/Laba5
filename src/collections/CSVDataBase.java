@@ -41,6 +41,9 @@ public class CSVDataBase extends DataBase{
         catch (FileTroubleException exc){
             System.out.println(exc.getMessage());
         }
+        catch (IndexOutOfBoundsException excc){
+            System.out.println("Файл с БД пуст");
+        }
         return null;
     }
     public List<Long> getIds(List<String []> data){
@@ -73,6 +76,9 @@ public class CSVDataBase extends DataBase{
         return validatedData;
     }
     public String [] dataPreparer(long id, String[] item){
+        for (String elem : item){
+            System.out.println(elem);
+        }
         String [] merged = new String[12];
         merged[0] = String.valueOf(id);
         merged[1] = item[1];
@@ -159,14 +165,13 @@ public class CSVDataBase extends DataBase{
     }
 
 
-    public void removeGreaterKey(long id){
-        if (this.dataBase.containsKey(id)){
-            this.dataBase = (TreeMap<Long, City>) this.dataBase.headMap(id);
-            System.out.println("Элементы, большие, чем заданный удалены успешно");
+    public void removeGreaterKey(long id) {
+        for (Long currentId : this.dataBase.keySet()) {
+            if (currentId > id) {
+                this.dataBase.remove(currentId);
+            }
         }
-        else {
-            System.out.println("Элемента с таким ключом не существует");
-        }
+        System.out.println("Элементы, большие, чем заданный удалены успешно");
     }
 
     public void sumOfMetersAboveSeaLevel(){
@@ -207,12 +212,19 @@ public class CSVDataBase extends DataBase{
     }
 
     public void removeLower(Long id){
-        TreeMap<Long, City> newCityCollection = new TreeMap<>();
-        City city = this.dataBase.get(id);
-        for (Map.Entry<Long, City> item : this.dataBase.entrySet()){
-            if (item.getValue().compareTo(city) >= 0){
-                newCityCollection.put(item.getKey(), item.getValue());
+        if (this.dataBase.containsKey(id)){
+            TreeMap<Long, City> newCityCollection = new TreeMap<>();
+            City city = this.dataBase.get(id);
+            for (Map.Entry<Long, City> item : this.dataBase.entrySet()){
+                if (item.getValue().compareTo(city) >= 0){
+                    newCityCollection.put(item.getKey(), item.getValue());
+                }
             }
+            this.dataBase = newCityCollection;
         }
+        else{
+            System.out.println("Элемента с заданным ключом не существует");
+        }
+
     }
 }

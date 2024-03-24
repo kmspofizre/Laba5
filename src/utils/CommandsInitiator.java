@@ -4,7 +4,7 @@ import commands.*;
 
 public class CommandsInitiator {
     public static Command[] initCommands() {
-        Command[] commands = new Command[15];
+        Command[] commands = new Command[16];
         commands[0] = new InfoCommand("info", "Вывести информацию о коллекции", false, false);
         commands[1] = new ShowCommand("show", "Вывести элементы коллекции", false, false);
         commands[2] = new InsertCommand("insert", "Добавить элемент с заданным ключом в коллекцию", true, true);
@@ -15,7 +15,7 @@ public class CommandsInitiator {
         commands[7] = new ExitCommand("exit", "Выйти из программы", false, false);
         commands[8] = new RemoveLowerCommand("remove_lower", "Удалить элементы коллекции, меньшие заданного", true, false);
         commands[9] = new RemoveGreaterKeyCommand("remove_greater_key",
-                "Удалить все элементы коллекции, ключ которых превышает заданный", false, false);
+                "Удалить все элементы коллекции, ключ которых превышает заданный", true, false);
         commands[10] = new CountGreaterThanMetersAboveSeaLevel("count_greater_than_meters_above_sea_level",
                 "Вывести количество элементов, значение поля metersAboveSeaLevel которых больше заданного", true, false);
         commands[11] = new FilterContainsNameCommand("filter_contains_name",
@@ -23,6 +23,9 @@ public class CommandsInitiator {
         commands[12] = new ExecuteScriptCommand("execute_script", "des", true, false);
         commands[13] = new HelpCommand("help", "Вывести справку по доступным командам", false, false);
         commands[14] = new HistoryCommand("history", "Вывести последние использованные команды", false, false);
+        commands[15] = new SumOfMetersAboveSeaLevelCommand("sum_of_meters_above_sea_level",
+                "Вывести сумму значений поля metersAboveSeaLevel для всех элементов коллекции",
+                false, false);
         return commands;
     }
 }

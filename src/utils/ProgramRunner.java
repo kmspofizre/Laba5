@@ -36,8 +36,11 @@ public class ProgramRunner {
                     this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }
             }
-            catch (CommandExecutingException | WrongDataException | NumberFormatException e){
+            catch (CommandExecutingException | WrongDataException e){
                 System.out.println(e.getMessage());
+            }
+            catch (NumberFormatException exc){
+                System.out.println("Неверный формат ввода числового значения");
             }
         }
     }

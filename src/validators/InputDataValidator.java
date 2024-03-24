@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class InputDataValidator {
     public static String stringDataValidator(Scanner scanner) {
+        System.out.println("Введите название города");
         String string = scanner.nextLine();
         while (string.equals("")) {
             System.out.println("Имя не может быть пустым");
@@ -100,6 +101,7 @@ public class InputDataValidator {
         return metersAboveSeaLevel.toString();
     }
     public static String climateValidator(Scanner scanner) {
+        System.out.println("Выберите климат: MONSOON, MEDITERRANIAN, SUBARCTIC, DESERT");
         List<String> climateTypes = new ArrayList<>();
         String climate = scanner.nextLine();
         climateTypes.add("MONSOON");
@@ -114,6 +116,7 @@ public class InputDataValidator {
         return climate;
     }
     public static String governmentValidator(Scanner scanner) {
+        System.out.println("Выберите тип правительства: DESPOTISM, DICTATORSHIP, STRATOCRACY");
         List<String> governmentTypes = new ArrayList<>();
         String government = scanner.nextLine();
         governmentTypes.add("DESPOTISM");
@@ -128,6 +131,7 @@ public class InputDataValidator {
     }
 
     public static String standardOfLivingValidator(Scanner scanner) {
+        System.out.println("Выберите уровень жизни в городе: NIGHTMARE, LOW, VERY_HIGH");
         List<String> standardOfLivingTypes = new ArrayList<>();
         String standardOfLiving = scanner.nextLine();
         standardOfLivingTypes.add("VERY_HIGH");

@@ -8,4 +8,8 @@ public class Human {
     public Integer getAge(){
         return age;
     }
+    @Override
+    public String toString(){
+        return String.valueOf(this.age);
+    }
 }
