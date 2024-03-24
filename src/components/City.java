@@ -35,7 +35,8 @@ public class City implements Comparable<City>{
     @Override
     public String toString(){
         return this.id + ". Название: " + this.name + "\n" + "Координаты: " + this.coordinates + "\n" + "Площадь: " +
-                this.area + "\n" + "Население: " + this.population ;
+                this.area + "\n" + "Население: " + this.population  + "\n"
+                + "Высота над уровнем моря: " + this.metersAboveSeaLevel;
     }
 
     public Double getMetersAboveSeaLevel() {

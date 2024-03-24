@@ -1,45 +1,43 @@
 package utils;
 
 import collections.CSVDataBase;
+import commands.CHCommand;
 import commands.Command;
 import commands.CommandHandler;
 import exceptions.CommandExecutingException;
+import exceptions.WrongDataException;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ProgramRunner {
+    private boolean fromScript;
+    private CommandHandler commandHandler;
+    private CSVDataBase csvDataBase;
+    public ProgramRunner(CSVDataBase csvDataBase, CommandHandler commandHandler){
+        this.csvDataBase = csvDataBase;
+        this.commandHandler = commandHandler;
+    }
     // fromScript
-    public void runProgram(CSVDataBase csvDataBase, CommandHandler commandHandler){
+    public void runProgram(){
         Scanner scanner = new Scanner(System.in);
-        InstructionFetcher infetch = new InstructionFetcher(commandHandler.getCommands());
+        InstructionFetcher infetch = new InstructionFetcher(this.commandHandler.getCommands());
         while (true){
             String line = scanner.nextLine();
             String[] command = line.split(" ");
-            // если команда короткая, то провалидировать одно значение
-            // если длинная - построчный ввод
-            // проверить наличие inline аргументов
+            String [] argsToGive = Arrays.copyOfRange(command, 1, command.length);
             try {
                 Command currentCommand = infetch.instructionFetch(command[0]);
-                // добавить проверку на наследника CHC (команды для CommandHandler) через isAssignableFrom
-                if (currentCommand.isMultiLines()){
-                    // собрать данные и передать в CH
-                    // данные собирать с помощью DataPreparer
-                    if (currentCommand.isHasInlineArguments()){
-                       // передаем в DataPreparer inline значение, его валидируем на стадии execute
-                        // остальные значения вводятся через построчный ввод при помощи специального метода у каждой команды
-                    }
-                    else {
-                        // если нет inline аргументов, то построчный ввод при помощи специального метода у команды
-                    }
+                if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
+                    infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler);
                 }
-                else{
-                    // проверить inline значения в DataPreparer с помощью валидатора
-                    // отправить в CH Inline значение
-                    // данные собирать с помощью DataPreparer
+                else {
+                    String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner);
+                    this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }
             }
-            catch (CommandExecutingException e){
+            catch (CommandExecutingException | WrongDataException | NumberFormatException e){
                 System.out.println(e.getMessage());
             }
         }

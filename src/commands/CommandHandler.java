@@ -41,14 +41,29 @@ public class CommandHandler {
         for (Command command : this.commands){
             System.out.println(command.toString());
         }
-        System.out.println("history - Выводит последние 14 команд");
-    }
-    public void getHistory(){
-        for (String command : this.history){
-            System.out.println(command);
+        this.history[this.historyIndex] = "help";
+        if (this.historyIndex == 14){
+            this.historyIndex = 0;
+        }
+        else {
+            this.historyIndex += 1;
         }
     }
-
+    public void getHistory(){
+        System.out.println("Последние вызванные команды:");
+        for (String command : this.history){
+            if (command != null){
+                System.out.println(command);
+            }
+        }
+        this.history[this.historyIndex] = "history";
+        if (this.historyIndex == 14){
+            this.historyIndex = 0;
+        }
+        else {
+            this.historyIndex += 1;
+        }
+    }
     public Command[] getCommands() {
         return commands;
     }

@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InputDataValidator {
-    public String stringDataValidator(String string, Scanner scanner) {
+    public static String stringDataValidator(Scanner scanner) {
+        String string = scanner.nextLine();
         while (string.equals("")) {
             System.out.println("Имя не может быть пустым");
             System.out.println("Введите название города");
@@ -15,7 +16,8 @@ public class InputDataValidator {
         return string;
     }
 
-    public String xCoordinateValidator(Float x, Scanner scanner) {
+    public static String xCoordinateValidator(Scanner scanner) {
+        Float x = Float.parseFloat("0");
         boolean f = false;
         while (!f) {
             System.out.println("Введите координату x");
@@ -29,7 +31,8 @@ public class InputDataValidator {
         return x.toString();
     }
 
-    public String yCoordinateValidator(Integer y, Scanner scanner) {
+    public static String yCoordinateValidator(Scanner scanner) {
+        Integer y = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
             System.out.println("Введите координату y");
@@ -43,7 +46,8 @@ public class InputDataValidator {
         return y.toString();
     }
 
-    public String areaValidator(Integer area, Scanner scanner) {
+    public static String areaValidator(Scanner scanner) {
+        Integer area = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
             System.out.println("Введите площадь города");
@@ -62,7 +66,8 @@ public class InputDataValidator {
         return area.toString();
     }
 
-    public String populationValidator(Integer population, Scanner scanner) {
+    public static String populationValidator(Scanner scanner) {
+        Integer population = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
             System.out.println("Введите население города");
@@ -80,7 +85,8 @@ public class InputDataValidator {
         }
         return population.toString();
     }
-    public String metersAboveSeaLevelValidator(Double metersAboveSeaLevel, Scanner scanner) {
+    public static String metersAboveSeaLevelValidator(Scanner scanner) {
+        Double metersAboveSeaLevel = Double.parseDouble("0");
         boolean f = false;
         while (!f) {
             System.out.println("Введите высоту над уровнем моря");
@@ -93,7 +99,7 @@ public class InputDataValidator {
         }
         return metersAboveSeaLevel.toString();
     }
-    public String climateValidator(Scanner scanner) {
+    public static String climateValidator(Scanner scanner) {
         List<String> climateTypes = new ArrayList<>();
         String climate = scanner.nextLine();
         climateTypes.add("MONSOON");
@@ -107,7 +113,7 @@ public class InputDataValidator {
         }
         return climate;
     }
-    public String governmentValidator(Scanner scanner) {
+    public static String governmentValidator(Scanner scanner) {
         List<String> governmentTypes = new ArrayList<>();
         String government = scanner.nextLine();
         governmentTypes.add("DESPOTISM");
@@ -121,7 +127,7 @@ public class InputDataValidator {
         return government;
     }
 
-    public String standardOfLivingValidator(Scanner scanner) {
+    public static String standardOfLivingValidator(Scanner scanner) {
         List<String> standardOfLivingTypes = new ArrayList<>();
         String standardOfLiving = scanner.nextLine();
         standardOfLivingTypes.add("VERY_HIGH");
@@ -134,20 +140,21 @@ public class InputDataValidator {
         }
         return standardOfLiving;
     }
-    public String governorValidator(Integer age, Scanner scanner){
+    public static String governorValidator(Scanner scanner){
+        Integer age = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
-            System.out.println("Введите население города");
+            System.out.println("Введите возраст губернатора");
             try {
                 age = Integer.parseInt(scanner.nextLine());
                 if (age <= 0){
-                    System.out.println("Население должно быть целым положительным числом");
+                    System.out.println("Возраст должен быть целым положительным числом");
                 }
                 else {
                     f = true;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Население должно быть целым положительным числом");
+                System.out.println("Возраст должен быть целым положительным числом");
             }
         }
         return age.toString();

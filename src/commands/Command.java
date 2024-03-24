@@ -2,6 +2,9 @@ package commands;
 
 import collections.CSVDataBase;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Command {
     private String commandName;
     private String description;
@@ -26,6 +29,10 @@ public class Command {
     }
     public boolean isMultiLines(){
         return this.isMultiLines;
+    }
+    public String [] prepareData(String [] args, Scanner scanner){
+        String [] data = new String[0];
+        return data;
     }
 
 }

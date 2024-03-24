@@ -3,26 +3,26 @@ package utils;
 import commands.*;
 
 public class CommandsInitiator {
-    public static Command[] initCommands(){
-        Command [] commands = new Command[15];
-        commands[0] = new InfoCommand("info", "des", false, false);
-        commands[1] = new ShowCommand("show", "des", false, false);
-        commands[2] = new InsertCommand("insert", "des", true, true);
-        commands[3] = new UpdateCommand("update", "des", true, true);
-        commands[4] = new RemoveCommand("remove", "des", true, false);
-        commands[5] = new ClearCommand("clear", "des", false, false);
-        commands[6] = new SaveCommand("save", "des", false, false);
-        commands[7] = new ExitCommand("exit", "des", false, false);
-        commands[8] = new RemoveLowerCommand("remove_lower", "des", true, false);
+    public static Command[] initCommands() {
+        Command[] commands = new Command[15];
+        commands[0] = new InfoCommand("info", "Вывести информацию о коллекции", false, false);
+        commands[1] = new ShowCommand("show", "Вывести элементы коллекции", false, false);
+        commands[2] = new InsertCommand("insert", "Добавить элемент с заданным ключом в коллекцию", true, true);
+        commands[3] = new UpdateCommand("update", "Изменить элемент по заданному id", true, true);
+        commands[4] = new RemoveCommand("remove", "Удалить элемент по заданному id", true, false);
+        commands[5] = new ClearCommand("clear", "Очистить коллекцию", false, false);
+        commands[6] = new SaveCommand("save", "Сохранить коллекцию в файл", false, false);
+        commands[7] = new ExitCommand("exit", "Выйти из программы", false, false);
+        commands[8] = new RemoveLowerCommand("remove_lower", "Удалить элементы коллекции, меньшие заданного", true, false);
         commands[9] = new RemoveGreaterKeyCommand("remove_greater_key",
-                "des", false, false);
+                "Удалить все элементы коллекции, ключ которых превышает заданный", false, false);
         commands[10] = new CountGreaterThanMetersAboveSeaLevel("count_greater_than_meters_above_sea_level",
-                "des", true, false);
+                "Вывести количество элементов, значение поля metersAboveSeaLevel которых больше заданного", true, false);
         commands[11] = new FilterContainsNameCommand("filter_contains_name",
-                "des", true, false);
+                "Вывести элементы, значение поля name которых содержит заданную подстроку", true, false);
         commands[12] = new ExecuteScriptCommand("execute_script", "des", true, false);
-        commands[13] = new HelpCommand("help", "des", false, false);
-        commands[14] = new HistoryCommand("history", "des", false, false);
+        commands[13] = new HelpCommand("help", "Вывести справку по доступным командам", false, false);
+        commands[14] = new HistoryCommand("history", "Вывести последние использованные команды", false, false);
         return commands;
     }
 }
