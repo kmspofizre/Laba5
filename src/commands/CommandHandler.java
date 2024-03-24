@@ -20,12 +20,7 @@ public class CommandHandler {
         try{
             command.execute(args, this.dataBase, fromScript);
             this.history[this.historyIndex] = command.getCommandName();
-            if (this.historyIndex == 14){
-                this.historyIndex = 0;
-            }
-            else {
-                this.historyIndex += 1;
-            }
+            incrementHistoryIndex();
             return true;
         }
         catch (CommandExecutingException e){
@@ -42,12 +37,7 @@ public class CommandHandler {
             System.out.println(command.toString());
         }
         this.history[this.historyIndex] = "help";
-        if (this.historyIndex == 14){
-            this.historyIndex = 0;
-        }
-        else {
-            this.historyIndex += 1;
-        }
+        incrementHistoryIndex();
     }
     public void getHistory(){
         System.out.println("Последние вызванные команды:");
@@ -57,6 +47,9 @@ public class CommandHandler {
             }
         }
         this.history[this.historyIndex] = "history";
+        incrementHistoryIndex();
+    }
+    private void incrementHistoryIndex(){
         if (this.historyIndex == 14){
             this.historyIndex = 0;
         }
