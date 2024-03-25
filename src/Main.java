@@ -14,7 +14,6 @@ public class Main {
 
         CommandHandler handler = new CommandHandler(dataBase, commands);
         ProgramRunner programRunner = new ProgramRunner(dataBase, handler);
-        // вызвать проверку
         if (SaveChecker.checkForSaves(dataBase)){
             dataBase.getDataFromTMP();
             System.out.println("Загружены данные с последнего сохранения");
@@ -23,10 +22,5 @@ public class Main {
             dataBase.writeCollectionToTMP();
         }
         programRunner.runProgram();
-
-
-        // добавить уточнение при удалении коллекции
-        // класс для чтения из файлов/бд
-        // класс для получения инфы из командной строки
     }
 }

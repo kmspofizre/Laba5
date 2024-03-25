@@ -84,6 +84,7 @@ public class CommandHandler {
                         if (argsToGive.length == 0){
                             throw new CommandExecutingException("Не передано имя файла");
                         }
+                        this.dataBase.save();
                         executeScript(argsToGive[0]);
                     }
                     else if (Objects.equals(currentCommand.getCommandName(), "history")){
@@ -120,6 +121,7 @@ public class CommandHandler {
             }
         }
         this.dataBase.writeCollectionToTMP();
+        this.dataBase.save();
         scanner.close();
     }
 }

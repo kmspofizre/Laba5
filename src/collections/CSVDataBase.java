@@ -194,7 +194,6 @@ public class CSVDataBase extends DataBase {
 
 
         public void removeGreaterKey (long id, boolean fromScript){
-
             for (Long currentId : this.dataBase.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
