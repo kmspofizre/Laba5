@@ -16,7 +16,7 @@ public class RemoveGreaterKeyCommand extends Command{
     @Override
     public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         Long id = Long.parseLong(args[0]);
-        dataBase.removeGreaterKey(id);
+        dataBase.removeGreaterKey(id, fromScript);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{

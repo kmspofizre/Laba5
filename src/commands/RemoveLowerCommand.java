@@ -13,7 +13,7 @@ public class RemoveLowerCommand extends Command{
     @Override
     public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException{
         Long id = Long.parseLong(args[0]);
-        dataBase.removeLower(id);
+        dataBase.removeLower(id, fromScript);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{

@@ -14,7 +14,7 @@ public class RemoveCommand extends Command{
     @Override
     public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         Long id = Long.parseLong(args[0]);
-        dataBase.remove(id);
+        dataBase.remove(id, fromScript);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{

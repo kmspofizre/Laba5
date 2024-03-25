@@ -96,21 +96,27 @@ public class CommandHandler {
                 }
             }
             catch (CommandExecutingException | WrongDataException e){
+                this.dataBase.getDataFromTMP();
                 System.out.println(e.getMessage());
             }
             catch (NumberFormatException exc){
+                this.dataBase.getDataFromTMP();
                 System.out.println("Неверный формат ввода числового значения");
             }
             catch (FileNotFoundException fnfe){
+                this.dataBase.getDataFromTMP();
                 System.out.println("Передано неверное имя файла");
             }
             catch (StackOverflowError sofe){
+                this.dataBase.getDataFromTMP();
                 System.out.println("Вызов скрипта повлек рекурсию");
             }
             catch (NoSuchElementException e){
+                this.dataBase.getDataFromTMP();
                 System.out.println("Недостаточно данных");
             }
         }
+        this.dataBase.writeCollectionToTMP();
         scanner.close();
     }
 }

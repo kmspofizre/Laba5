@@ -5,6 +5,7 @@ import components.Climate;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
 import utils.CityCollectionMaker;
+import utils.TMPManager;
 import validators.CityCollectionValidator;
 import writers.CSVWriter;
 
@@ -17,6 +18,7 @@ public class CSVDataBase extends DataBase {
     private Date initDate;
     private long lastCityId;
     private String fileName;
+    private TMPManager tmpManager;
 
     public CSVDataBase(String file_name) {
         List<String[]> validatedData = getValidatedData(getData(file_name));
@@ -24,6 +26,19 @@ public class CSVDataBase extends DataBase {
         this.initDate = new Date();
         this.dataBase = cityCollection;
         this.fileName = file_name;
+        this.tmpManager = new TMPManager();
+    }
+    public boolean compareWithTMP(){
+        TreeMap<Long, City> tmpCollection = this.tmpManager.getCollectionFromCSV();
+        return (this.dataBase.equals(tmpCollection));
+    }
+
+    public void getDataFromTMP(){
+        this.dataBase = this.tmpManager.getCollectionFromCSV();
+    }
+
+    public void writeCollectionToTMP(){
+        this.tmpManager.writeToTMP(this.dataBase);
     }
 
     @Override
@@ -119,6 +134,7 @@ public class CSVDataBase extends DataBase {
                 TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                 this.dataBase.putAll(cityInstance);
                 System.out.println("Элемент добавлен успешно");
+                writeCollectionToTMP();
             }
 
         } else {
@@ -144,6 +160,7 @@ public class CSVDataBase extends DataBase {
                 TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                 this.dataBase.putAll(cityInstance);
                 System.out.println("Элемент обновлен успешно");
+                writeCollectionToTMP();
             }
         }
         else {
@@ -151,10 +168,13 @@ public class CSVDataBase extends DataBase {
         }
     }
 
-        public void remove ( long id){
+        public void remove (long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
                 this.dataBase.remove(id);
                 System.out.println("Элемент удален успешно");
+                if (!fromScript){
+                    writeCollectionToTMP();
+                }
             } else {
                 System.out.println("Элемента с таким ключом не существует");
             }
@@ -164,10 +184,13 @@ public class CSVDataBase extends DataBase {
         }
 
 
-        public void removeGreaterKey ( long id){
+        public void removeGreaterKey (long id, boolean fromScript){
             for (Long currentId : this.dataBase.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
+                    if (!fromScript){
+                        writeCollectionToTMP();
+                    }
                 }
             }
             System.out.println("Элементы с ключами, большими, чем заданный удалены успешно");
@@ -209,7 +232,7 @@ public class CSVDataBase extends DataBase {
             }
         }
 
-        public void removeLower (Long id){
+        public void removeLower (Long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
                 TreeMap<Long, City> newCityCollection = new TreeMap<>();
                 City city = this.dataBase.get(id);
@@ -219,6 +242,9 @@ public class CSVDataBase extends DataBase {
                     }
                 }
                 this.dataBase = newCityCollection;
+                if (!fromScript){
+                    writeCollectionToTMP();
+                }
             } else {
                 System.out.println("Элемента с заданным ключом не существует");
             }
