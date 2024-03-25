@@ -2,11 +2,13 @@ package collections;
 
 import components.City;
 import components.Climate;
+import exceptions.CommandExecutingException;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
 import utils.CityCollectionMaker;
 import utils.TMPManager;
 import validators.CityCollectionValidator;
+import validators.InputDataValidator;
 import writers.CSVWriter;
 
 import java.io.IOException;
@@ -30,11 +32,15 @@ public class CSVDataBase extends DataBase {
     }
     public boolean compareWithTMP(){
         TreeMap<Long, City> tmpCollection = this.tmpManager.getCollectionFromCSV();
+        if (this.tmpManager.getCollectionFromCSV().isEmpty()){
+            return true;
+        }
         return (this.dataBase.equals(tmpCollection));
     }
 
     public void getDataFromTMP(){
         this.dataBase = this.tmpManager.getCollectionFromCSV();
+        save();
     }
 
     public void writeCollectionToTMP(){
@@ -115,7 +121,7 @@ public class CSVDataBase extends DataBase {
         }
     }
 
-    public void insert(long id, List<String[]> data, boolean fromScript) {
+    public void insert(long id, List<String[]> data, boolean fromScript) throws CommandExecutingException {
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String[]> validatedData = new ArrayList<>();
         if (!this.dataBase.containsKey(id)) {
@@ -138,11 +144,11 @@ public class CSVDataBase extends DataBase {
             }
 
         } else {
-            System.out.println("Элемент с таким id уже существует");
+            throw new CommandExecutingException("Элемент с таким id уже существует");
         }
     }
 
-    public void update(long id, List<String[]> data, boolean fromScript) {
+    public void update(long id, List<String[]> data, boolean fromScript) throws CommandExecutingException {
         CityCollectionValidator cityValidator = new CityCollectionValidator();
         List<String[]> validatedData = new ArrayList<>();
         if (this.dataBase.containsKey(id)) {
@@ -164,7 +170,7 @@ public class CSVDataBase extends DataBase {
             }
         }
         else {
-            System.out.println("Элемент с заданным ключом не найден");
+            throw new CommandExecutingException("Элемент с заданным ключом не найден");
         }
     }
 
@@ -180,11 +186,15 @@ public class CSVDataBase extends DataBase {
             }
         }
         public void clear () {
+        if (InputDataValidator.yesOrNo("Вы уверены, что хотите очистить коллекцию? (YES/NO)")){
             this.dataBase.clear();
+            System.out.println("Коллекция очищена");
+        }
         }
 
 
         public void removeGreaterKey (long id, boolean fromScript){
+
             for (Long currentId : this.dataBase.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
@@ -218,6 +228,7 @@ public class CSVDataBase extends DataBase {
 
         public void filterContainsName (String name){
             Collection<City> values = this.dataBase.values();
+            System.out.println("Элементы, содержащие " + name);
             for (City item : values) {
                 if (item.getName().contains(name)) {
                     System.out.println(item);
@@ -227,6 +238,7 @@ public class CSVDataBase extends DataBase {
         public void save () {
             try {
                 CSVWriter.writeCityCollectionToCSV(this.fileName, this.dataBase);
+                System.out.println("Данные сохранены");
             } catch (IOException e) {
                 System.out.println("Не удалось найти файл");
             }
@@ -244,10 +256,15 @@ public class CSVDataBase extends DataBase {
                 this.dataBase = newCityCollection;
                 if (!fromScript){
                     writeCollectionToTMP();
+                    System.out.println("Элементы удалены");
                 }
             } else {
                 System.out.println("Элемента с заданным ключом не существует");
             }
 
         }
+
+    public TMPManager getTmpManager() {
+        return tmpManager;
     }
+}

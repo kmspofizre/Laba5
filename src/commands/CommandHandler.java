@@ -72,6 +72,9 @@ public class CommandHandler {
         String line;
         while (scanner.hasNextLine()) {
             line = scanner.nextLine();
+            if (Objects.equals(line, "")){
+                continue;
+            }
             String[] command = line.split(" ");
             String [] argsToGive = Arrays.copyOfRange(command, 1, command.length);
             try {

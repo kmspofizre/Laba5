@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class City implements Comparable<City>{
     private long id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
@@ -81,5 +82,18 @@ public class City implements Comparable<City>{
     @Override
     public int compareTo(City city) {
         return Integer.compare(this.area, city.area);
+    }
+    @Override
+    public boolean equals(Object o){
+        City comp = (City) o;
+        if ((Objects.equals(this.metersAboveSeaLevel, comp.metersAboveSeaLevel)) &
+                (this.area == comp.area) & (Objects.equals(this.coordinates.toString(), comp.coordinates.toString()))
+                & (this.population == comp.population) &
+                (Objects.equals(this.governor.toString(), comp.governor.toString())) &
+                (Objects.equals(this.standardOfLiving.toString(), comp.standardOfLiving.toString()))
+                & (Objects.equals(this.climate.toString(), comp.climate.toString()))){
+            return true;
+        }
+        return false;
     }
 }

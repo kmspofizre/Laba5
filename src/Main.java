@@ -17,6 +17,7 @@ public class Main {
         // вызвать проверку
         if (SaveChecker.checkForSaves(dataBase)){
             dataBase.getDataFromTMP();
+            System.out.println("Загружены данные с последнего сохранения");
         }
         else {
             dataBase.writeCollectionToTMP();

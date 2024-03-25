@@ -38,7 +38,7 @@ public class TMPManager {
         } catch (FileTroubleException exc) {
             System.out.println(exc.getMessage());
         } catch (IndexOutOfBoundsException excc) {
-            System.out.println("tmp файл пуст");
+            System.out.print("");
         }
         return null;
     }

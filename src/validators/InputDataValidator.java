@@ -3,6 +3,7 @@ package validators;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class InputDataValidator {
@@ -162,6 +163,22 @@ public class InputDataValidator {
             }
         }
         return age.toString();
+    }
+    public static boolean yesOrNo(String question){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(question);
+        String line = scanner.nextLine();
+        while (!Objects.equals(line, "YES") & !Objects.equals(line, "NO")){
+            System.out.println(question);
+            line = scanner.nextLine();
+        }
+        if (line.equals("YES")){
+            return true;
+        }
+        else if (line.equals("NO")){
+            return false;
+        }
+        return false;
     }
 }
 

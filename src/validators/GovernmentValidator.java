@@ -7,7 +7,7 @@ public class GovernmentValidator extends Validator{
     public static boolean validateData(Government forValidation) throws WrongDataException{
 
         if (forValidation == null){
-            throw new WrongDataException("Неверные данные: Поле 'Правительство' пусто или заполнено неверно.\nНужно выбрать из списка");
+            throw new WrongDataException("Неверные данные: Поле 'Правительство' пусто или заполнено неверно.\nНужно выбрать из списка: DESPOTISM, DICTATORSHIP, STRATOCRACY");
         }
         return true;
     }
