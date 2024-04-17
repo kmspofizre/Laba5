@@ -41,21 +41,26 @@ public class InstructionFetcher {
     }
 
 
-    public void fetchAndCheckCHC(Command command, String[] args, Command [] commands, User user) throws CommandExecutingException,
+    public String fetchAndCheckCHC(Command command, String[] args, Command [] commands, User user) throws CommandExecutingException,
             FileNotFoundException, StackOverflowError, WrongDataException {
         if ((Objects.equals(command.getCommandName(), "execute_script"))) {
             if (args.length == 0){
                 throw new CommandExecutingException("Не передано имя файла");
             }
+            // здесь нужно получить лист стрингов из скрипта и соединить их по \n
             // валидация скрипта с помощью prepareData в execute_script формирование большого запроса
+            return null;
 
         } else if ((Objects.equals(command.getCommandName(), "help"))) {
             for (Command currentCommand : commands){
                 ResponseMachine.makeStringResponse(currentCommand.toString());
             }
             user.addCommandToHistory("help");
+            return null;
         } else if ((Objects.equals(command.getCommandName(), "history"))) {
             user.getHistory();
+            return null;
         }
+        return null;
     }
 }

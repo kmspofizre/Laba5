@@ -31,11 +31,14 @@ public class Client {
             try {
                 Command currentCommand = infetch.instructionFetch(command[0]);
                 if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
-                    infetch.fetchAndCheckCHC(currentCommand, argsToGive, commands, user);
+                    String commandData = infetch.fetchAndCheckCHC(currentCommand, argsToGive, commands, user);
+                    if (currentCommand.getCommandName().equals("execute_script")){
+                        // отправить полученную большую строку на серв
+                    }
                 }
                 else {
                     String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner);
-                    // отправка собранных значений на сервер
+                    // отправка собранных значений на сервер (здесь это для одной команды)
                     // this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }
             }
