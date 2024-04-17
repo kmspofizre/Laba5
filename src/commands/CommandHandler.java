@@ -5,6 +5,7 @@ import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.DataPreparer;
 import utils.InstructionFetcher;
+import utils.ResponseMachine;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,26 +32,26 @@ public class CommandHandler {
             return true;
         }
         catch (CommandExecutingException e){
-            System.out.println(e.getMessage());
+            ResponseMachine.makeStringResponse(e.getMessage());
             return false;
         }
         catch (NumberFormatException e){
-            System.out.println("Неверный формат ввода числового значения");
+            ResponseMachine.makeStringResponse("Неверный формат ввода числового значения");
             return false;
         }
     }
     public void help(){
         for (Command command : this.commands){
-            System.out.println(command.toString());
+            ResponseMachine.makeStringResponse(command.toString());
         }
         this.history[this.historyIndex] = "help";
         incrementHistoryIndex();
     }
     public void getHistory(){
-        System.out.println("Последние вызванные команды:");
+        ResponseMachine.makeStringResponse("Последние вызванные команды:");
         for (String command : this.history){
             if (command != null){
-                System.out.println(command);
+                ResponseMachine.makeStringResponse(command);
             }
         }
         this.history[this.historyIndex] = "history";
@@ -101,23 +102,23 @@ public class CommandHandler {
             }
             catch (CommandExecutingException | WrongDataException e){
                 this.dataBase.getDataFromTMP();
-                System.out.println(e.getMessage());
+                ResponseMachine.makeStringResponse(e.getMessage());
             }
             catch (NumberFormatException exc){
                 this.dataBase.getDataFromTMP();
-                System.out.println("Неверный формат ввода числового значения");
+                ResponseMachine.makeStringResponse("Неверный формат ввода числового значения");
             }
             catch (FileNotFoundException fnfe){
                 this.dataBase.getDataFromTMP();
-                System.out.println("Передано неверное имя файла");
+                ResponseMachine.makeStringResponse("Передано неверное имя файла");
             }
             catch (StackOverflowError sofe){
                 this.dataBase.getDataFromTMP();
-                System.out.println("Вызов скрипта повлек рекурсию");
+                ResponseMachine.makeStringResponse("Вызов скрипта повлек рекурсию");
             }
             catch (NoSuchElementException e){
                 this.dataBase.getDataFromTMP();
-                System.out.println("Недостаточно данных");
+                ResponseMachine.makeStringResponse("Недостаточно данных");
             }
         }
         this.dataBase.writeCollectionToTMP();

@@ -11,11 +11,11 @@ import java.util.TreeMap;
 public class SaveChecker {
     public static boolean checkForSaves(CSVDataBase dataBase){
         if (!(dataBase.compareWithTMP())){
-            System.out.println("У вас есть несохраненные изменения с прошлой сессии");
+            ResponseMachine.makeStringResponse("У вас есть несохраненные изменения с прошлой сессии");
             TMPManager tmpManager = dataBase.getTmpManager();
             TreeMap<Long, City> tmpCollection = tmpManager.getCollectionFromCSV();
             for (City item : tmpCollection.values()){
-                System.out.println(item);
+                ResponseMachine.makeStringResponse(item);
             }
             return agreeWithChanges();
         }

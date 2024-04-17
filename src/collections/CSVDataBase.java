@@ -6,6 +6,7 @@ import exceptions.CommandExecutingException;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
 import utils.CityCollectionMaker;
+import utils.ResponseMachine;
 import utils.TMPManager;
 import validators.CityCollectionValidator;
 import validators.InputDataValidator;
@@ -53,11 +54,11 @@ public class CSVDataBase extends DataBase {
             List<String[]> parsed = ReaderFromCSV.readFromCSV(file_name);
             return parsed;
         } catch (IOException e) {
-            System.out.println("Не удалось найти файл");
+            ResponseMachine.makeStringResponse("Не удалось найти файл");
         } catch (FileTroubleException exc) {
-            System.out.println(exc.getMessage());
+            ResponseMachine.makeStringResponse(exc.getMessage());
         } catch (IndexOutOfBoundsException excc) {
-            System.out.println("Файл с БД пуст");
+            ResponseMachine.makeStringResponse("Файл с БД пуст");
         }
         return null;
     }
@@ -67,7 +68,7 @@ public class CSVDataBase extends DataBase {
         for (String[] item : data) {
             idsList.add(Long.parseLong(item[0]));
         }
-        System.out.println(idsList.toString());
+        ResponseMachine.makeStringResponse(idsList.toString());
         return idsList;
     }
 
@@ -79,13 +80,13 @@ public class CSVDataBase extends DataBase {
         List<String[]> validatedData = new ArrayList<>();
         long stringCounter = 1;
         for (String[] item : dataToValidate) {
-            System.out.println();
-            System.out.println("Строка " + stringCounter + ":");
+            ResponseMachine.makeStringResponse("");
+            ResponseMachine.makeStringResponse("Строка " + stringCounter + ":");
             if (cityValidator.validateData(item)) {
                 Long id = Long.parseLong(item[0]);
                 String[] merged = dataPreparer(id, item);
                 validatedData.add(merged);
-                System.out.println("Успешно");
+                ResponseMachine.makeStringResponse("Успешно");
             }
             stringCounter++;
         }
@@ -110,14 +111,14 @@ public class CSVDataBase extends DataBase {
     }
 
     public void info() {
-        System.out.println("Тип коллекции: TreeMap");
-        System.out.println("Количество элементов: " + this.dataBase.size());
-        System.out.println("Дата инициализации: " + this.initDate);
+        ResponseMachine.makeStringResponse("Тип коллекции: TreeMap");
+        ResponseMachine.makeStringResponse("Количество элементов: " + this.dataBase.size());
+        ResponseMachine.makeStringResponse("Дата инициализации: " + this.initDate);
     }
 
     public void show() {
         for (Map.Entry<Long, City> item : this.dataBase.entrySet()) {
-            System.out.println(item.getValue().toString());
+            ResponseMachine.makeStringResponse(item.getValue().toString());
         }
     }
 
@@ -132,14 +133,14 @@ public class CSVDataBase extends DataBase {
                     validatedData.add(merged);
                     TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                     this.dataBase.putAll(cityInstance);
-                    System.out.println("Элемент добавлен успешно");
+                    ResponseMachine.makeStringResponse("Элемент добавлен успешно");
                 }
             } else {
                 String[] merged = dataPreparer(id, data.get(0));
                 validatedData.add(merged);
                 TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                 this.dataBase.putAll(cityInstance);
-                System.out.println("Элемент добавлен успешно");
+                ResponseMachine.makeStringResponse("Элемент добавлен успешно");
                 writeCollectionToTMP();
             }
 
@@ -158,14 +159,14 @@ public class CSVDataBase extends DataBase {
                     validatedData.add(merged);
                     TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                     this.dataBase.putAll(cityInstance);
-                    System.out.println("Элемент обновлен успешно");
+                    ResponseMachine.makeStringResponse("Элемент обновлен успешно");
                 }
             } else {
                 String[] merged = dataPreparer(id, data.get(0));
                 validatedData.add(merged);
                 TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
                 this.dataBase.putAll(cityInstance);
-                System.out.println("Элемент обновлен успешно");
+                ResponseMachine.makeStringResponse("Элемент обновлен успешно");
                 writeCollectionToTMP();
             }
         }
@@ -177,18 +178,18 @@ public class CSVDataBase extends DataBase {
         public void remove (long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
                 this.dataBase.remove(id);
-                System.out.println("Элемент удален успешно");
+                ResponseMachine.makeStringResponse("Элемент удален успешно");
                 if (!fromScript){
                     writeCollectionToTMP();
                 }
             } else {
-                System.out.println("Элемента с таким ключом не существует");
+                ResponseMachine.makeStringResponse("Элемента с таким ключом не существует");
             }
         }
         public void clear () {
         if (InputDataValidator.yesOrNo("Вы уверены, что хотите очистить коллекцию? (YES/NO)")){
             this.dataBase.clear();
-            System.out.println("Коллекция очищена");
+            ResponseMachine.makeStringResponse("Коллекция очищена");
         }
         }
 
@@ -202,7 +203,7 @@ public class CSVDataBase extends DataBase {
                     }
                 }
             }
-            System.out.println("Элементы с ключами, большими, чем заданный удалены успешно");
+            ResponseMachine.makeStringResponse("Элементы с ключами, большими, чем заданный удалены успешно");
         }
 
         public void sumOfMetersAboveSeaLevel () {
@@ -211,7 +212,7 @@ public class CSVDataBase extends DataBase {
             for (City item : values) {
                 sum += item.getMetersAboveSeaLevel();
             }
-            System.out.println("Сумма значений 'Высота над уровнем моря': " + sum);
+            ResponseMachine.makeStringResponse("Сумма значений 'Высота над уровнем моря': " + sum);
         }
 
         public void countGreaterThanMetersAboveSeaLevel (Double metersAboveSeaLevel){
@@ -222,24 +223,24 @@ public class CSVDataBase extends DataBase {
                     count += 1;
                 }
             }
-            System.out.println("Количество городов, высота которых над уровнем море больше заданной: " + count);
+            ResponseMachine.makeStringResponse("Количество городов, высота которых над уровнем море больше заданной: " + count);
         }
 
         public void filterContainsName (String name){
             Collection<City> values = this.dataBase.values();
-            System.out.println("Элементы, содержащие " + name);
+            ResponseMachine.makeStringResponse("Элементы, содержащие " + name);
             for (City item : values) {
                 if (item.getName().contains(name)) {
-                    System.out.println(item);
+                    ResponseMachine.makeStringResponse(item);
                 }
             }
         }
         public void save () {
             try {
                 CSVWriter.writeCityCollectionToCSV(this.fileName, this.dataBase);
-                System.out.println("Данные сохранены");
+                ResponseMachine.makeStringResponse("Данные сохранены");
             } catch (IOException e) {
-                System.out.println("Не удалось найти файл");
+                ResponseMachine.makeStringResponse("Не удалось найти файл");
             }
         }
 
@@ -255,10 +256,10 @@ public class CSVDataBase extends DataBase {
                 this.dataBase = newCityCollection;
                 if (!fromScript){
                     writeCollectionToTMP();
-                    System.out.println("Элементы удалены");
+                    ResponseMachine.makeStringResponse("Элементы удалены");
                 }
             } else {
-                System.out.println("Элемента с заданным ключом не существует");
+                ResponseMachine.makeStringResponse("Элемента с заданным ключом не существует");
             }
 
         }

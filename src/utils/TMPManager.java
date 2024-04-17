@@ -19,7 +19,7 @@ public class TMPManager {
             CSVWriter.writeCityCollectionToCSV("tmp.csv", dataToWrite);
         }
         catch (IOException e){
-            System.out.println("Файл для записи в tmp не найден");
+            ResponseMachine.makeStringResponse("Файл для записи в tmp не найден");
         }
     }
 
@@ -34,11 +34,11 @@ public class TMPManager {
             List<String[]> parsed = ReaderFromCSV.readFromCSV(file_name);
             return parsed;
         } catch (IOException e) {
-            System.out.println("Не удалось найти файл");
+            ResponseMachine.makeStringResponse("Не удалось найти файл");
         } catch (FileTroubleException exc) {
-            System.out.println(exc.getMessage());
+            ResponseMachine.makeStringResponse(exc.getMessage());
         } catch (IndexOutOfBoundsException excc) {
-            System.out.print("");
+            ResponseMachine.makeStringResponse("");
         }
         return null;
     }

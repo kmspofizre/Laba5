@@ -28,6 +28,8 @@ public class ProgramRunner {
             String line = scanner.nextLine();
             String[] command = line.split(" ");
             String [] argsToGive = Arrays.copyOfRange(command, 1, command.length);
+            // здесь происходит передача на сервер и там происходит обработка команды
+            // все, что ниже - нужно перенести на сервер
             try {
                 Command currentCommand = infetch.instructionFetch(command[0]);
                 if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
@@ -39,13 +41,13 @@ public class ProgramRunner {
                 }
             }
             catch (CommandExecutingException | WrongDataException e){
-                System.out.println(e.getMessage());
+                ResponseMachine.makeStringResponse(e.getMessage());
             }
             catch (NumberFormatException exc){
-                System.out.println("Неверный формат ввода числового значения");
+                ResponseMachine.makeStringResponse("Неверный формат ввода числового значения");
             }
             catch (FileNotFoundException fnfe){
-                System.out.println("Передано неверное имя файла");
+                ResponseMachine.makeStringResponse("Передано неверное имя файла");
             }
             catch (StackOverflowError sofe){
 

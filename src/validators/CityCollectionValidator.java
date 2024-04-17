@@ -3,6 +3,7 @@ package validators;
 import components.*;
 import exceptions.WrongDataException;
 import utils.CityCollectionMaker;
+import utils.ResponseMachine;
 
 
 public class CityCollectionValidator extends CollectionValidator {
@@ -15,14 +16,14 @@ public class CityCollectionValidator extends CollectionValidator {
         try {
             governor = new Human(Integer.parseInt(dataToValidate[10]));
         } catch (NumberFormatException e) {
-            System.out.println("Неверные данные: возраст человека должен быть целым положительным числом");
+            ResponseMachine.makeStringResponse("Неверные данные: возраст человека должен быть целым положительным числом");
             return false;
         }
         try {
             coords = new Coordinates(Float.parseFloat(dataToValidate[2]),
                     Integer.parseInt(dataToValidate[3]));
         } catch (NumberFormatException e) {
-            System.out.println("Неверные данные: координатами являются два числа," +
+            ResponseMachine.makeStringResponse("Неверные данные: координатами являются два числа," +
                     " где первое число вещественное, а второе - целое");
             return false;
         }
@@ -37,14 +38,14 @@ public class CityCollectionValidator extends CollectionValidator {
             area = Integer.parseInt(dataToValidate[4]);
         }
         catch (NumberFormatException e){
-            System.out.println("Неверные данные: значение площади должно быть числом большим нуля");
+            ResponseMachine.makeStringResponse("Неверные данные: значение площади должно быть числом большим нуля");
             return false;
         }
         try {
             population = Integer.parseInt(dataToValidate[5]);
         }
         catch (NumberFormatException e){
-            System.out.println("Неверные данные: Население должно быть числом большим нуля");
+            ResponseMachine.makeStringResponse("Неверные данные: Население должно быть числом большим нуля");
             return false;
         }
 
@@ -52,7 +53,7 @@ public class CityCollectionValidator extends CollectionValidator {
             Double metersAboveSeaLevel = Double.parseDouble(dataToValidate[6]);
         }
         catch (NumberFormatException e){
-            System.out.println("Неверные данные: Высота над уровнем моря должна быть вещественным числом.");
+            ResponseMachine.makeStringResponse("Неверные данные: Высота над уровнем моря должна быть вещественным числом.");
             return false;
         }
         CoordinatesValidator.validateData(coords);
@@ -67,7 +68,7 @@ public class CityCollectionValidator extends CollectionValidator {
             return false;
         }
         catch (WrongDataException e){
-            System.out.println(e.getMessage());
+            ResponseMachine.makeStringResponse(e.getMessage());
             return false;
         }
     }
