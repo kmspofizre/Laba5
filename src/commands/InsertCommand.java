@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import exceptions.CommandExecutingException;
+import exceptions.WrongDataException;
 import validators.InputDataValidator;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class InsertCommand extends Command{
     }
 
     @Override
-    public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{
+    public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException, WrongDataException {
         Long id = Long.parseLong(args[0]);
         String [] data = new String[11];
         data[0] = id.toString();

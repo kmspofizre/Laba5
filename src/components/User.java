@@ -16,8 +16,7 @@ public class User {
                 ResponseMachine.makeStringResponse(command);
             }
         }
-        this.history[this.historyIndex] = "history";
-        incrementHistoryIndex();
+        this.addCommandToHistory("history");
     }
     private void incrementHistoryIndex(){
         if (this.historyIndex == 13){
@@ -26,5 +25,10 @@ public class User {
         else {
             this.historyIndex += 1;
         }
+    }
+
+    public void addCommandToHistory(String command){
+        this.history[this.historyIndex] = command;
+        incrementHistoryIndex();
     }
 }

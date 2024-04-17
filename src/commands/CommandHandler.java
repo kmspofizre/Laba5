@@ -121,7 +121,6 @@ public class CommandHandler {
                 ResponseMachine.makeStringResponse("Недостаточно данных");
             }
         }
-        this.dataBase.writeCollectionToTMP();
         this.dataBase.save();
         scanner.close();
     }
