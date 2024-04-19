@@ -33,11 +33,13 @@ public class Client {
                 if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
                     String commandData = infetch.fetchAndCheckCHC(currentCommand, argsToGive, commands, user);
                     if (currentCommand.getCommandName().equals("execute_script")){
-                        // отправить полученную большую строку на серв
+                        // отпавить полученную большую строку на серв
+                        // список request (add request и так далее)
                     }
                 }
                 else {
                     String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner);
+
                     // отправка собранных значений на сервер (здесь это для одной команды)
                     // this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }

@@ -1,6 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Request;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -37,5 +38,8 @@ public class Command {
     public String [] prepareScriptData(String[] args, Scanner scanner){
         String [] data = new String[0];
         return data;
+    }
+    public Request prepareRequest(String [] args, Scanner scanner){
+        return null;
     }
 }

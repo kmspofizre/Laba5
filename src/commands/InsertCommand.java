@@ -1,8 +1,12 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.City;
+import components.CityRequest;
+import components.Request;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
+import utils.CityCollectionMaker;
 import validators.InputDataValidator;
 
 import java.util.*;
@@ -50,5 +54,12 @@ public class InsertCommand extends Command{
             data[i] = scanner.nextLine();
         }
         return data;
+    }
+    @Override
+    public Request prepareRequest(String [] args, Scanner scanner){
+        String[] cityData = prepareData(args, scanner);
+        City city = CityCollectionMaker.makeCityInstance(cityData);
+        CityRequest cityRequest = new CityRequest(args[0], city);
+        return cityRequest;
     }
 }
