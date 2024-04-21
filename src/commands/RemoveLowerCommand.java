@@ -1,6 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Request;
 
 import java.util.Scanner;
 
@@ -29,5 +30,11 @@ public class RemoveLowerCommand extends Command{
         Long id = Long.parseLong(args[0]);
         data[0] = args[0];
         return data;
+    }
+
+    @Override
+    public Request prepareRequest(String [] args, Scanner scanner){
+        String [] data = prepareData(args, scanner);
+        return new Request(data[0]);
     }
 }

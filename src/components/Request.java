@@ -3,8 +3,8 @@ package components;
 import commands.Command;
 
 public class Request {
-    private String args;
-    private Command command;
+    protected String args;
+    protected Command command;
     public Request(String args){
         this.args = args;
     }
@@ -19,5 +19,9 @@ public class Request {
 
     public void setCommand(Command command) {
         this.command = command;
+    }
+    @Override
+    public String toString(){
+        return this.command.toString() + "\n" + this.args;
     }
 }

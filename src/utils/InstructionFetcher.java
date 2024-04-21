@@ -3,12 +3,14 @@ package utils;
 import commands.CHCommand;
 import commands.Command;
 import commands.CommandHandler;
+import commands.ExecuteScriptCommand;
+import components.Request;
 import components.User;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 
 import java.io.FileNotFoundException;
-import java.util.Objects;
+import java.util.*;
 
 public class InstructionFetcher {
     private Command[] commandsAvalible;
@@ -47,20 +49,37 @@ public class InstructionFetcher {
             if (args.length == 0){
                 throw new CommandExecutingException("Не передано имя файла");
             }
+            HashSet<String> hashSet = new HashSet<>();
+            List<String> stringList = ((ExecuteScriptCommand) command).prepareData(args, commands, hashSet);
+            return ((ExecuteScriptCommand) command).prepareStringForRequest(stringList);
             // здесь нужно получить лист стрингов из скрипта и соединить их по \n
             // валидация скрипта с помощью prepareData в execute_script формирование большого запроса
-            return null;
 
         } else if ((Objects.equals(command.getCommandName(), "help"))) {
             for (Command currentCommand : commands){
                 ResponseMachine.makeStringResponse(currentCommand.toString());
             }
             user.addCommandToHistory("help");
-            return null;
+            return "";
         } else if ((Objects.equals(command.getCommandName(), "history"))) {
             user.getHistory();
-            return null;
+            return "";
         }
         return null;
+    }
+    public List<Request> parseScript(String scriptCommands, InstructionFetcher infetch){
+        List<Request> requestList = new ArrayList<>();
+        Scanner scanner = new Scanner(scriptCommands);
+        String line;
+        while (scanner.hasNextLine()){
+            line = scanner.nextLine();
+            String[] command = line.split(" ");
+            String[] argsToGive = Arrays.copyOfRange(command, 1, command.length);
+            Command currentCommand = infetch.instructionFetch(command[0]);
+            Request commandRequest = currentCommand.prepareRequest(argsToGive, scanner);
+            RequestMachine.addCommandToRequest(commandRequest, currentCommand);
+            requestList.add(commandRequest);
+        }
+        return requestList;
     }
 }

@@ -1,10 +1,15 @@
 import collections.CSVDataBase;
-import commands.Command;
-import commands.CommandHandler;
-import utils.CommandsInitiator;
-import utils.ProgramRunner;
-import utils.ResponseMachine;
-import utils.SaveChecker;
+import commands.*;
+import components.CityRequest;
+import components.Request;
+import components.User;
+import exceptions.CommandExecutingException;
+import exceptions.WrongDataException;
+import utils.*;
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class Main {
@@ -29,5 +34,17 @@ public class Main {
         // передаем в ch и получаем результат
         // формируем response
         // передаем на клиент
+
+        Request request = new Request("00");
+        Command command = request.getCommand();
+        if (command instanceof ExecuteScriptCommand){
+
+        }
+        else if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))){
+
+        }
+        else {
+            
+        }
     }
 }

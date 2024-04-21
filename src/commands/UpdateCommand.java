@@ -10,7 +10,7 @@ import validators.InputDataValidator;
 
 import java.util.*;
 
-public class UpdateCommand extends Command{
+public class UpdateCommand extends DataBaseCommand{
 
     public UpdateCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
         super(name, description, hasInlineArguments, isMultiLines);

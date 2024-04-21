@@ -1,5 +1,6 @@
 package commands;
 
+import components.Request;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.DataPreparer;
@@ -27,6 +28,9 @@ public class ExecuteScriptCommand extends CHCommand{
             String[] command = line.split(" ");
             String [] argsToGive = Arrays.copyOfRange(command, 1, command.length);
             if (Objects.equals(line, "")){
+                continue;
+            }
+            else if (Objects.equals(command[0], "exit")){
                 continue;
             }
             Command currentCommand = instructionFetcher.instructionFetch(command[0]);
@@ -66,6 +70,9 @@ public class ExecuteScriptCommand extends CHCommand{
             }
         }
         return prepData;
+    }
+    public String prepareStringForRequest(List<String> data){
+        return String.join("\n", data);
     }
 
 }

@@ -12,4 +12,9 @@ public class CityRequest extends Request{
     public City getCity() {
         return city;
     }
+
+    @Override
+    public String toString(){
+        return this.command.toString() + "\n" + this.args + "\n" + this.city.toString();
+    }
 }

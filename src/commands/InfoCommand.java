@@ -1,10 +1,12 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class InfoCommand extends Command{
     public InfoCommand(String commandName, String description,
@@ -14,5 +16,10 @@ public class InfoCommand extends Command{
     @Override
     public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         dataBase.info();
+    }
+
+    @Override
+    public Request prepareRequest(String [] args, Scanner scanner){
+        return new Request("");
     }
 }

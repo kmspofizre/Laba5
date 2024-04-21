@@ -11,7 +11,7 @@ import validators.InputDataValidator;
 
 import java.util.*;
 
-public class InsertCommand extends Command{
+public class InsertCommand extends DataBaseCommand{
     public InsertCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
         super(name, description, hasInlineArguments, isMultiLines);
     }

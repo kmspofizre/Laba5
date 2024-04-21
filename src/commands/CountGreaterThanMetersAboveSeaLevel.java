@@ -1,6 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,5 +32,12 @@ public class CountGreaterThanMetersAboveSeaLevel extends Command{
         Double metersAboveSeaLevel = Double.parseDouble(args[0]);
         data[0] = args[0];
         return data;
+    }
+
+
+    @Override
+    public Request prepareRequest(String [] args, Scanner scanner){
+        String [] data = prepareData(args, scanner);
+        return new Request(data[0]);
     }
 }

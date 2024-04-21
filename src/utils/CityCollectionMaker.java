@@ -46,17 +46,17 @@ public class CityCollectionMaker extends CollectionMaker{
         return outputStandardOfLiving;
     }
     public static City makeCityInstance(String[] item){
-        Human governor = new Human(Integer.parseInt(item[11]));
-        Climate climate = getClimate(item[8]);
-        Government government = getGovernment(item[9]);
-        StandardOfLiving standardOfLiving = getStandardOfLiving(item[10]);
+        Human governor = new Human(Integer.parseInt(item[10]));
+        Climate climate = getClimate(item[7]);
+        Government government = getGovernment(item[8]);
+        StandardOfLiving standardOfLiving = getStandardOfLiving(item[9]);
         Coordinates coords = new Coordinates(Float.parseFloat(item[2]), Integer.parseInt(item[3]));
         Date date = new Date();
         long id = Long.parseLong(item[0]);
-        int area = Integer.parseInt(item[5]);
-        int population = Integer.parseInt(item[6]);
+        int area = Integer.parseInt(item[4]);
+        int population = Integer.parseInt(item[5]);
         String name = item[1];
-        Double metersAboveSeaLevel = Double.parseDouble(item[7]);
+        Double metersAboveSeaLevel = Double.parseDouble(item[6]);
         City city = new City(id, name, coords, date, area,
                 population, metersAboveSeaLevel, climate, government, standardOfLiving, governor);
         return city;

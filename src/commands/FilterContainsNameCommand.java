@@ -1,6 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Request;
 import exceptions.WrongDataException;
 import validators.CityNameValidator;
 
@@ -35,5 +36,12 @@ public class FilterContainsNameCommand extends Command{
             data[0] = args[0];
         }
         return data;
+    }
+
+
+    @Override
+    public Request prepareRequest(String [] args, Scanner scanner){
+        String [] data = prepareData(args, scanner);
+        return new Request(data[0]);
     }
 }
