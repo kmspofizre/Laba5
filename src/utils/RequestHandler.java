@@ -19,7 +19,7 @@ public class RequestHandler {
                 responses.add(command.execute(request.getArgs(), csvDataBase, false));
             }
             else {
-
+                responses.add(command.execute(request.getArgs(), csvDataBase, false));
             }
         }
         return responses;
