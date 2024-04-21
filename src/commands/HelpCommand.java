@@ -1,6 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.Response;
 import utils.ResponseMachine;
 
 public class HelpCommand extends CHCommand{
@@ -8,9 +9,11 @@ public class HelpCommand extends CHCommand{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+        String resp = "";
         for (String item : args){
-            ResponseMachine.makeStringResponse(item);
+            resp = resp + item + "\n";
         }
+        return ResponseMachine.makeClientResponse(resp);
     }
 }

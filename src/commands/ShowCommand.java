@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,13 +14,13 @@ public class ShowCommand extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
-        dataBase.show();
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+        return dataBase.show();
     }
 
 
     @Override
     public Request prepareRequest(String [] args, Scanner scanner){
-        return new Request("");
+        return new Request(new String[0]);
     }
 }

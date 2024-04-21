@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 
 import java.lang.annotation.Documented;
 import java.util.ArrayList;
@@ -14,9 +15,9 @@ public class RemoveCommand extends Command{
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         Long id = Long.parseLong(args[0]);
-        dataBase.remove(id, fromScript);
+        return dataBase.remove(id, fromScript);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{
@@ -37,6 +38,6 @@ public class RemoveCommand extends Command{
     @Override
     public Request prepareRequest(String [] args, Scanner scanner){
         String [] data = prepareData(args, scanner);
-        return new Request(data[0]);
+        return new Request(data);
     }
 }

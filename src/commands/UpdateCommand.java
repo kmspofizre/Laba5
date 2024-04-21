@@ -4,6 +4,7 @@ import collections.CSVDataBase;
 import components.City;
 import components.CityRequest;
 import components.Request;
+import components.Response;
 import exceptions.CommandExecutingException;
 import utils.CityCollectionMaker;
 import validators.InputDataValidator;
@@ -16,7 +17,7 @@ public class UpdateCommand extends DataBaseCommand{
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException{
+    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException{
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         if (argsToGive.length <= 10){
@@ -25,7 +26,8 @@ public class UpdateCommand extends DataBaseCommand{
         List<String []> commandArgs = new ArrayList<>();
         commandArgs.add(argsToGive);
 
-        dataBase.update(id, commandArgs, fromScript);
+        Response response = dataBase.update(city);
+        return response;
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{
@@ -60,7 +62,7 @@ public class UpdateCommand extends DataBaseCommand{
     public Request prepareRequest(String [] args, Scanner scanner){
         String[] cityData = prepareData(args, scanner);
         City city = CityCollectionMaker.makeCityInstance(cityData);
-        CityRequest cityRequest = new CityRequest(args[0], city);
+        CityRequest cityRequest = new CityRequest(args, city);
         return cityRequest;
     }
 }

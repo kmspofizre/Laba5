@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +15,9 @@ public class CountGreaterThanMetersAboveSeaLevel extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) {
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) {
         Double metersAboveSeaLevel = Double.parseDouble(args[0]);
-        dataBase.countGreaterThanMetersAboveSeaLevel(metersAboveSeaLevel);
+        return dataBase.countGreaterThanMetersAboveSeaLevel(metersAboveSeaLevel);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{
@@ -38,6 +39,6 @@ public class CountGreaterThanMetersAboveSeaLevel extends Command{
     @Override
     public Request prepareRequest(String [] args, Scanner scanner){
         String [] data = prepareData(args, scanner);
-        return new Request(data[0]);
+        return new Request(data);
     }
 }

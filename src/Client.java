@@ -41,7 +41,6 @@ public class Client {
                     if (currentCommand.getCommandName().equals("execute_script")){
                         requestList = infetch.parseScript(scriptCommands, infetch);
                         System.out.println(requestList);
-                        // отправить полученную большую строку на серв
                         // список request (add request и так далее)
                     }
                 }
@@ -50,7 +49,6 @@ public class Client {
                     RequestMachine.addCommandToRequest(commandRequest, currentCommand);
                     requestList.add(commandRequest);
                     System.out.println(commandRequest);
-                    // отправка собранных значений на сервер (здесь это для одной команды)
                     // this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }
             }

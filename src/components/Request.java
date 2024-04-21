@@ -3,13 +3,13 @@ package components;
 import commands.Command;
 
 public class Request {
-    protected String args;
+    protected String[] args;
     protected Command command;
-    public Request(String args){
+    public Request(String[] args){
         this.args = args;
     }
 
-    public String getArgs() {
+    public String[] getArgs() {
         return args;
     }
 

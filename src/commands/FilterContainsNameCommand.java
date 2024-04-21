@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 import exceptions.WrongDataException;
 import validators.CityNameValidator;
 
@@ -16,10 +17,9 @@ public class FilterContainsNameCommand extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
         String name = args[0];
-        // валидация
-        dataBase.filterContainsName(name);
+        return dataBase.filterContainsName(name);
     }
     @Override
     public String [] prepareData(String [] args, Scanner scanner) throws WrongDataException {
@@ -42,6 +42,6 @@ public class FilterContainsNameCommand extends Command{
     @Override
     public Request prepareRequest(String [] args, Scanner scanner){
         String [] data = prepareData(args, scanner);
-        return new Request(data[0]);
+        return new Request(data);
     }
 }

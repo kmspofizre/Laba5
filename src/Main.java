@@ -8,7 +8,9 @@ import exceptions.WrongDataException;
 import utils.*;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -35,16 +37,5 @@ public class Main {
         // формируем response
         // передаем на клиент
 
-        Request request = new Request("00");
-        Command command = request.getCommand();
-        if (command instanceof ExecuteScriptCommand){
-
-        }
-        else if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))){
-
-        }
-        else {
-            
-        }
     }
 }

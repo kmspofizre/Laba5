@@ -2,6 +2,7 @@ package collections;
 
 import components.City;
 import components.Climate;
+import components.Response;
 import exceptions.CommandExecutingException;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
@@ -110,91 +111,57 @@ public class CSVDataBase extends DataBase {
         return merged;
     }
 
-    public void info() {
-        ResponseMachine.makeStringResponse("Тип коллекции: TreeMap");
-        ResponseMachine.makeStringResponse("Количество элементов: " + this.dataBase.size());
-        ResponseMachine.makeStringResponse("Дата инициализации: " + this.initDate);
+    public Response info() {
+        String resp = "Тип коллекции: TreeMap\nКоличество элементов: " +
+                this.dataBase.size() + "\nДата инициализации: " + this.initDate;
+        return ResponseMachine.makeClientResponse(resp);
     }
 
-    public void show() {
+    public Response show() {
+        String resp = "";
         for (Map.Entry<Long, City> item : this.dataBase.entrySet()) {
-            ResponseMachine.makeStringResponse(item.getValue().toString());
+            resp = resp + item.getValue().toString() + "\n";
         }
+        return ResponseMachine.makeClientResponse(resp);
     }
 
-    public void insert(long id, List<String[]> data, boolean fromScript) throws CommandExecutingException {
-        CityCollectionValidator cityValidator = new CityCollectionValidator();
-        List<String[]> validatedData = new ArrayList<>();
-        if (!this.dataBase.containsKey(id)) {
-            if (fromScript) {
-                if (cityValidator.validateData(data.get(0))) {
-                    this.lastCityId = this.lastCityId + 1;
-                    String[] merged = dataPreparer(id, data.get(0));
-                    validatedData.add(merged);
-                    TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
-                    this.dataBase.putAll(cityInstance);
-                    ResponseMachine.makeStringResponse("Элемент добавлен успешно");
-                }
-            } else {
-                String[] merged = dataPreparer(id, data.get(0));
-                validatedData.add(merged);
-                TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
-                this.dataBase.putAll(cityInstance);
-                ResponseMachine.makeStringResponse("Элемент добавлен успешно");
-                writeCollectionToTMP();
-            }
+    public Response insert(City city) throws CommandExecutingException {
 
+        if (!this.dataBase.containsKey(city.getId())) {
+            this.dataBase.put(city.getId(), city);
+            return ResponseMachine.makeClientResponse("Элемент добавлен успешно");
         } else {
-            throw new CommandExecutingException("Элемент с таким id уже существует");
+            return ResponseMachine.makeClientResponse("Элемент с таким id уже существует");
         }
     }
 
-    public void update(long id, List<String[]> data, boolean fromScript) throws CommandExecutingException {
-        CityCollectionValidator cityValidator = new CityCollectionValidator();
-        List<String[]> validatedData = new ArrayList<>();
-        if (this.dataBase.containsKey(id)) {
-            if (fromScript) {
-                if (cityValidator.validateData(data.get(0))) {
-                    String[] merged = dataPreparer(id, data.get(0));
-                    validatedData.add(merged);
-                    TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
-                    this.dataBase.putAll(cityInstance);
-                    ResponseMachine.makeStringResponse("Элемент обновлен успешно");
-                }
-            } else {
-                String[] merged = dataPreparer(id, data.get(0));
-                validatedData.add(merged);
-                TreeMap<Long, City> cityInstance = CityCollectionMaker.makeCityCollection(validatedData);
-                this.dataBase.putAll(cityInstance);
-                ResponseMachine.makeStringResponse("Элемент обновлен успешно");
-                writeCollectionToTMP();
-            }
+    public Response update(City city) throws CommandExecutingException {
+        if (this.dataBase.containsKey(city.getId())) {
+            this.dataBase.put(city.getId(), city);
+            return ResponseMachine.makeClientResponse("Элемент обновлен успешно");
         }
         else {
-            throw new CommandExecutingException("Элемент с заданным ключом не найден");
+            return ResponseMachine.makeClientResponse("Элемент с заданным ключом не найден");
         }
     }
 
-        public void remove (long id, boolean fromScript){
+        public Response remove (long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
                 this.dataBase.remove(id);
-                ResponseMachine.makeStringResponse("Элемент удален успешно");
-                if (!fromScript){
-                    writeCollectionToTMP();
-                }
+                return ResponseMachine.makeClientResponse("Элемент удален успешно");
+
             } else {
-                ResponseMachine.makeStringResponse("Элемента с таким ключом не существует");
+                return ResponseMachine.makeClientResponse("Элемента с таким ключом не существует");
             }
         }
-        public void clear () {
-        if (InputDataValidator.yesOrNo("Вы уверены, что хотите очистить коллекцию? (YES/NO)")){
+        public Response clear () {
             this.dataBase.clear();
-            ResponseMachine.makeStringResponse("Коллекция очищена");
-        }
+            return ResponseMachine.makeClientResponse("Коллекция очищена");
+
         }
 
 
-        public void removeGreaterKey (long id, boolean fromScript){
+        public Response removeGreaterKey (long id, boolean fromScript){
             for (Long currentId : this.dataBase.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
@@ -203,19 +170,19 @@ public class CSVDataBase extends DataBase {
                     }
                 }
             }
-            ResponseMachine.makeStringResponse("Элементы с ключами, большими, чем заданный удалены успешно");
+            return ResponseMachine.makeClientResponse("Элементы с ключами, большими, чем заданный удалены успешно");
         }
 
-        public void sumOfMetersAboveSeaLevel () {
+        public Response sumOfMetersAboveSeaLevel () {
             Collection<City> values = this.dataBase.values();
             Double sum = 0.0;
             for (City item : values) {
                 sum += item.getMetersAboveSeaLevel();
             }
-            ResponseMachine.makeStringResponse("Сумма значений 'Высота над уровнем моря': " + sum);
+            return ResponseMachine.makeClientResponse("Сумма значений 'Высота над уровнем моря': " + sum);
         }
 
-        public void countGreaterThanMetersAboveSeaLevel (Double metersAboveSeaLevel){
+        public Response countGreaterThanMetersAboveSeaLevel (Double metersAboveSeaLevel){
             Collection<City> values = this.dataBase.values();
             long count = 0;
             for (City item : values) {
@@ -223,28 +190,31 @@ public class CSVDataBase extends DataBase {
                     count += 1;
                 }
             }
-            ResponseMachine.makeStringResponse("Количество городов, высота которых над уровнем море больше заданной: " + count);
+            return ResponseMachine.makeClientResponse("Количество городов, высота которых над уровнем море больше заданной: " + count);
         }
 
-        public void filterContainsName (String name){
+        public Response filterContainsName (String name){
             Collection<City> values = this.dataBase.values();
-            ResponseMachine.makeStringResponse("Элементы, содержащие " + name);
+            String resp;
+            resp = "Элементы, содержащие " + name + "\n";
+
             for (City item : values) {
                 if (item.getName().contains(name)) {
-                    ResponseMachine.makeStringResponse(item);
+                    resp = resp + item + "\n";
                 }
             }
+            return ResponseMachine.makeClientResponse(resp);
         }
-        public void save () {
+        public Response save () {
             try {
                 CSVWriter.writeCityCollectionToCSV(this.fileName, this.dataBase);
-                ResponseMachine.makeStringResponse("Данные сохранены");
+                return ResponseMachine.makeClientResponse("Данные сохранены");
             } catch (IOException e) {
-                ResponseMachine.makeStringResponse("Не удалось найти файл");
+                return ResponseMachine.makeClientResponse("Не удалось найти файл");
             }
         }
 
-        public void removeLower (Long id, boolean fromScript){
+        public Response removeLower (Long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
                 TreeMap<Long, City> newCityCollection = new TreeMap<>();
                 City city = this.dataBase.get(id);
@@ -254,14 +224,12 @@ public class CSVDataBase extends DataBase {
                     }
                 }
                 this.dataBase = newCityCollection;
-                if (!fromScript){
-                    writeCollectionToTMP();
-                    ResponseMachine.makeStringResponse("Элементы удалены");
-                }
-            } else {
-                ResponseMachine.makeStringResponse("Элемента с заданным ключом не существует");
-            }
 
+                return ResponseMachine.makeClientResponse("Элементы удалены");
+
+            } else {
+                return ResponseMachine.makeClientResponse("Элемента с заданным ключом не существует");
+            }
         }
 
     public TMPManager getTmpManager() {

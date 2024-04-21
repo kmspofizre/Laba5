@@ -4,6 +4,7 @@ import collections.CSVDataBase;
 import components.City;
 import components.CityRequest;
 import components.Request;
+import components.Response;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.CityCollectionMaker;
@@ -16,7 +17,7 @@ public class InsertCommand extends DataBaseCommand{
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException{
+    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException{
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         if (argsToGive.length <= 10){
@@ -24,7 +25,8 @@ public class InsertCommand extends DataBaseCommand{
         }
         List<String []> commandArgs = new ArrayList<>();
         commandArgs.add(argsToGive);
-        dataBase.insert(id, commandArgs, fromScript);
+        Response response = dataBase.insert(city);
+        return response;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class InsertCommand extends DataBaseCommand{
     public Request prepareRequest(String [] args, Scanner scanner){
         String[] cityData = prepareData(args, scanner);
         City city = CityCollectionMaker.makeCityInstance(cityData);
-        CityRequest cityRequest = new CityRequest(args[0], city);
+        CityRequest cityRequest = new CityRequest(args, city);
         return cityRequest;
     }
 }

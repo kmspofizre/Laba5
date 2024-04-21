@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -17,7 +18,7 @@ public class Command {
         this.hasInlineArguments = hasInlineArguments;
         this.isMultiLines = isMultiLines;
     }
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){}
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){return null;}
     @Override
     public String toString(){
         return this.commandName + " - " + this.description;

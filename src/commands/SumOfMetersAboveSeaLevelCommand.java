@@ -2,6 +2,7 @@ package commands;
 
 import collections.CSVDataBase;
 import components.Request;
+import components.Response;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,12 +16,12 @@ public class SumOfMetersAboveSeaLevelCommand extends Command{
     }
 
     @Override
-    public void execute(String [] args, CSVDataBase dataBase, boolean fromScript){
-        dataBase.sumOfMetersAboveSeaLevel();
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+        return dataBase.sumOfMetersAboveSeaLevel();
     }
 
     @Override
     public Request prepareRequest(String [] args, Scanner scanner){
-        return new Request("");
+        return new Request(new String[0]);
     }
 }
