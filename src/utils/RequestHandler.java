@@ -4,10 +4,12 @@ import collections.CSVDataBase;
 import commands.Command;
 import commands.DataBaseCommand;
 import commands.ExecuteScriptCommand;
+import components.CityRequest;
 import components.Request;
 import components.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RequestHandler {
@@ -16,7 +18,12 @@ public class RequestHandler {
         for (Request request : requestList){
             Command command = request.getCommand();
             if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))){
-                responses.add(command.execute(request.getArgs(), csvDataBase, false));
+                Response response = ((DataBaseCommand) command).execute(request.getArgs(),
+                        ((CityRequest) request).getCity(), csvDataBase, false);
+                String additionString;
+                additionString = command.getCommandName() + " " + String.join(" ", request.getArgs());
+                response.addCommandToResponse(additionString);
+                responses.add(response);
             }
             else {
                 responses.add(command.execute(request.getArgs(), csvDataBase, false));

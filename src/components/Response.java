@@ -9,4 +9,7 @@ public class Response {
     public String getReponseString() {
         return reponseString;
     }
+    public void addCommandToResponse(String commandWithArgs){
+        this.reponseString = commandWithArgs + "\n" + this.reponseString;
+    }
 }
