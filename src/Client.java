@@ -49,16 +49,15 @@ public class Client {
                         String scriptCommands = infetch.fetchAndCheckCHC(currentCommand, argsToGive, commands, user);
                         if (currentCommand.getCommandName().equals("execute_script")) {
                             requestList = infetch.parseScript(scriptCommands, infetch);
-                            // список request (add request и так далее)
                         }
                     }
                     else {
                         Request commandRequest = currentCommand.prepareRequest(argsToGive, scanner);
                         RequestMachine.addCommandToRequest(commandRequest, currentCommand);
                         requestList.add(commandRequest);
-                        // this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                     }
                     ByteBuffer buf = DataPreparer.serializeObj(requestList);
+                    // передать на сервер и ждать ответа
                 }
             }
             catch (CommandExecutingException | WrongDataException e){

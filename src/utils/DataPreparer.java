@@ -42,7 +42,6 @@ public class DataPreparer {
             out.flush();
             ByteBuffer buf = ByteBuffer.wrap(bos.toByteArray());
             return buf;
-            //waitForResponse
 
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -54,8 +53,8 @@ public class DataPreparer {
         return (List<Response>) ois.readObject();
     }
 
-    public static List<Request> getRequests(ByteBuffer buf) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(buf.array());
+    public static List<Request> getRequests(byte[] buf) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(buf);
         ObjectInputStream ois = new ObjectInputStream(bis);
         return (List<Request>) ois.readObject();
     }

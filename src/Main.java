@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -35,33 +36,5 @@ public class Main {
             dataBase.save();
             System.exit(0);
         });
-        Selector selector = Selector.open();
-        ServerSocketChannel server = ServerSocketChannel.open();
-        server.configureBlocking(false);
-        server.register(selector, SelectionKey.OP_ACCEPT);
-        while(true) {
-            selector.select();
-            Set<SelectionKey> keys = selector.selectedKeys();
-            for (var iter = keys.iterator(); iter.hasNext(); ) {
-                SelectionKey key = iter.next(); iter.remove();
-                if (key.isValid()) {
-                    if (key.isReadable()) {
-                        var sc = (SocketChannel) key.channel();
-
-                        var data = (List<Request>) key.attachment();
-
-                        sc.register(key.selector(), OP_WRITE);
-                        List<Response> responses = RequestHandler.handleRequests(data, dataBase);
-                        ByteBuffer buf = DataPreparer.serializeObj(responses);
-                        sc.write(buf);
-                    }
-                }
-            }
-        }
-        // считываем запросы
-        // передаем в ch и получаем результат
-        // формируем response
-        // передаем на клиент
-
     }
 }
