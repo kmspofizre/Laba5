@@ -2,9 +2,12 @@ package components;
 
 import commands.Command;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable {
     protected String[] args;
     protected Command command;
+    private static final long serialVersionUID = 777777L;
     public Request(String[] args){
         this.args = args;
     }

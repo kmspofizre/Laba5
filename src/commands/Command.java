@@ -4,14 +4,16 @@ import collections.CSVDataBase;
 import components.Request;
 import components.Response;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Command {
+public class Command implements Serializable {
     private String commandName;
     private String description;
     private boolean hasInlineArguments;
     private boolean isMultiLines;
+    private static final long serialVersionUID = 228337L;
     public Command(String commandName, String description, boolean hasInlineArguments, boolean isMultiLines){
         this.commandName = commandName;
         this.description = description;
