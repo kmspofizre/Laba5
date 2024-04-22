@@ -5,6 +5,7 @@ import components.Request;
 import components.User;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
+import sun.misc.Signal;
 import utils.*;
 
 import java.io.FileNotFoundException;
@@ -22,13 +23,10 @@ public class Main {
 
         CommandHandler handler = new CommandHandler(dataBase, commands);
         ProgramRunner programRunner = new ProgramRunner(dataBase, handler);
-        if (SaveChecker.checkForSaves(dataBase)){
-            dataBase.getDataFromTMP();
-            ResponseMachine.makeStringResponse("Загружены данные с последнего сохранения");
-        }
-        else {
-            dataBase.writeCollectionToTMP();
-        }
+        Signal.handle(new Signal("INT"), signal -> {
+            dataBase.save();
+            System.exit(0);
+        });
         programRunner.runProgram();
 
 

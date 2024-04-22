@@ -165,9 +165,6 @@ public class CSVDataBase extends DataBase {
             for (Long currentId : this.dataBase.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
-                    if (!fromScript){
-                        writeCollectionToTMP();
-                    }
                 }
             }
             return ResponseMachine.makeClientResponse("Элементы с ключами, большими, чем заданный удалены успешно");
