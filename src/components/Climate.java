@@ -1,6 +1,8 @@
 package components;
 
-public enum Climate {
+import java.io.Serializable;
+
+public enum Climate implements Serializable {
     MONSOON,
     MEDITERRANIAN,
     SUBARCTIC,

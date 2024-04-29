@@ -21,7 +21,7 @@ public class SumOfMetersAboveSeaLevelCommand extends Command{
     }
 
     @Override
-    public Request prepareRequest(String [] args, Scanner scanner){
+    public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
         return new Request(new String[0]);
     }
 }

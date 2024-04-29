@@ -1,6 +1,8 @@
 package components;
 
-public class Human {
+import java.io.Serializable;
+
+public class Human implements Serializable {
     private int age; //Значение поля должно быть больше 0
     public Human(int age){
         this.age = age;

@@ -36,7 +36,7 @@ public class ProgramRunner {
                     infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler, argsToGive);
                 }
                 else {
-                    String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner);
+                    String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner, false);
                     this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
                 }
             }

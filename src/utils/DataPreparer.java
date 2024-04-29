@@ -13,14 +13,14 @@ import java.util.Scanner;
 
 public class DataPreparer {
     public static String[] prepareData(Command command, String[] inlineArgs,
-                                       Scanner scanner) throws CommandExecutingException, WrongDataException,
+                                       Scanner scanner, boolean fromScript) throws CommandExecutingException, WrongDataException,
             NumberFormatException{
         if (command.isHasInlineArguments()){
             if (inlineArgs.length == 0){
                 throw new CommandExecutingException("Inline аргументы не были доставлены");
             }
         }
-        String [] data = command.prepareData(inlineArgs, scanner);
+        String [] data = command.prepareData(inlineArgs, scanner, fromScript);
         return data;
     }
     public static String[] prepareScriptData(Command command, String[] inlineArgs,
@@ -47,8 +47,8 @@ public class DataPreparer {
             throw new RuntimeException(ex);
         }
     }
-    public static List<Response> getResponses(ByteBuffer buf) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(buf.array());
+    public static List<Response> getResponses(byte[] buf) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(buf);
         ObjectInputStream ois = new ObjectInputStream(bis);
         return (List<Response>) ois.readObject();
     }

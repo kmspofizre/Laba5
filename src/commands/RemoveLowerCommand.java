@@ -18,7 +18,7 @@ public class RemoveLowerCommand extends Command{
         return dataBase.removeLower(id, fromScript);
     }
     @Override
-    public String[] prepareData(String [] args, Scanner scanner) throws NumberFormatException{
+    public String[] prepareData(String [] args, Scanner scanner, boolean fromScript) throws NumberFormatException{
         String [] data = new String [1];
         Long id = Long.parseLong(args[0]);
         data[0] = args[0];
@@ -34,8 +34,8 @@ public class RemoveLowerCommand extends Command{
     }
 
     @Override
-    public Request prepareRequest(String [] args, Scanner scanner){
-        String [] data = prepareData(args, scanner);
+    public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
+        String [] data = prepareData(args, scanner, fromScript);
         return new Request(data);
     }
 }

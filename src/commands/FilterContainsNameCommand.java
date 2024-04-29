@@ -22,7 +22,7 @@ public class FilterContainsNameCommand extends Command{
         return dataBase.filterContainsName(name);
     }
     @Override
-    public String [] prepareData(String [] args, Scanner scanner) throws WrongDataException {
+    public String [] prepareData(String [] args, Scanner scanner, boolean fromScript) throws WrongDataException {
         String [] data = new String[1];
         if (CityNameValidator.validateData(args[0])){
             data[0] = args[0];
@@ -40,8 +40,8 @@ public class FilterContainsNameCommand extends Command{
 
 
     @Override
-    public Request prepareRequest(String [] args, Scanner scanner){
-        String [] data = prepareData(args, scanner);
+    public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
+        String [] data = prepareData(args, scanner, fromScript);
         return new Request(data);
     }
 }

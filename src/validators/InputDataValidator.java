@@ -10,9 +10,11 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class InputDataValidator {
-    public static String stringDataValidator(Scanner scanner) {
-        ResponseMachine.makeStringResponse("Введите название города");
-        String string = scanner.nextLine();
+    public static String stringDataValidator(Scanner scanner, boolean fromScript) {
+        if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите название города");
+        }
+                String string = scanner.nextLine();
         while (string.equals("")) {
             ResponseMachine.makeStringResponse("Имя не может быть пустым");
             ResponseMachine.makeStringResponse("Введите название города");
@@ -21,11 +23,13 @@ public class InputDataValidator {
         return string;
     }
 
-    public static String xCoordinateValidator(Scanner scanner) {
+    public static String xCoordinateValidator(Scanner scanner, boolean fromScript) {
         Float x = Float.parseFloat("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите координату x");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите координату x");
+            }
             try {
                 x = Float.parseFloat(scanner.nextLine());
                 f = true;
@@ -36,11 +40,13 @@ public class InputDataValidator {
         return x.toString();
     }
 
-    public static String yCoordinateValidator(Scanner scanner) {
+    public static String yCoordinateValidator(Scanner scanner, boolean fromScript) {
         Integer y = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите координату y");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите координату y");
+            }
             try {
                 y = Integer.parseInt(scanner.nextLine());
                 f = true;
@@ -51,11 +57,13 @@ public class InputDataValidator {
         return y.toString();
     }
 
-    public static String areaValidator(Scanner scanner) {
+    public static String areaValidator(Scanner scanner, boolean fromScript) {
         Integer area = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите площадь города");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите площадь города");
+            }
             try {
                 area = Integer.parseInt(scanner.nextLine());
                 if (area <= 0){
@@ -71,11 +79,13 @@ public class InputDataValidator {
         return area.toString();
     }
 
-    public static String populationValidator(Scanner scanner) {
+    public static String populationValidator(Scanner scanner, boolean fromScript) {
         Integer population = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите население города");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите население города");
+            }
             try {
                 population = Integer.parseInt(scanner.nextLine());
                 if (population <= 0){
@@ -90,11 +100,13 @@ public class InputDataValidator {
         }
         return population.toString();
     }
-    public static String metersAboveSeaLevelValidator(Scanner scanner) {
+    public static String metersAboveSeaLevelValidator(Scanner scanner, boolean fromScript) {
         Double metersAboveSeaLevel = Double.parseDouble("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите высоту над уровнем моря");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите высоту над уровнем моря");
+            }
             try {
                 metersAboveSeaLevel = Double.parseDouble(scanner.nextLine());
                 f = true;
@@ -104,8 +116,10 @@ public class InputDataValidator {
         }
         return metersAboveSeaLevel.toString();
     }
-    public static String climateValidator(Scanner scanner) {
-        ResponseMachine.makeStringResponse("Выберите климат: MONSOON, MEDITERRANIAN, SUBARCTIC, DESERT");
+    public static String climateValidator(Scanner scanner, boolean fromScript) {
+        if (!fromScript){
+            ResponseMachine.makeStringResponse("Выберите климат: MONSOON, MEDITERRANIAN, SUBARCTIC, DESERT");
+        }
         List<String> climateTypes = new ArrayList<>();
         String climate = scanner.nextLine();
         climateTypes.add("MONSOON");
@@ -119,8 +133,10 @@ public class InputDataValidator {
         }
         return climate;
     }
-    public static String governmentValidator(Scanner scanner) {
-        ResponseMachine.makeStringResponse("Выберите тип правительства: DESPOTISM, DICTATORSHIP, STRATOCRACY");
+    public static String governmentValidator(Scanner scanner, boolean fromScript) {
+        if (!fromScript){
+            ResponseMachine.makeStringResponse("Выберите тип правительства: DESPOTISM, DICTATORSHIP, STRATOCRACY");
+        }
         List<String> governmentTypes = new ArrayList<>();
         String government = scanner.nextLine();
         governmentTypes.add("DESPOTISM");
@@ -134,8 +150,10 @@ public class InputDataValidator {
         return government;
     }
 
-    public static String standardOfLivingValidator(Scanner scanner) {
-        ResponseMachine.makeStringResponse("Выберите уровень жизни в городе: NIGHTMARE, LOW, VERY_HIGH");
+    public static String standardOfLivingValidator(Scanner scanner, boolean fromScript) {
+        if (!fromScript){
+            ResponseMachine.makeStringResponse("Выберите уровень жизни в городе: NIGHTMARE, LOW, VERY_HIGH");
+        }
         List<String> standardOfLivingTypes = new ArrayList<>();
         String standardOfLiving = scanner.nextLine();
         standardOfLivingTypes.add("VERY_HIGH");
@@ -148,11 +166,13 @@ public class InputDataValidator {
         }
         return standardOfLiving;
     }
-    public static String governorValidator(Scanner scanner){
+    public static String governorValidator(Scanner scanner, boolean fromScript){
         Integer age = Integer.parseInt("0");
         boolean f = false;
         while (!f) {
-            ResponseMachine.makeStringResponse("Введите возраст губернатора");
+            if (!fromScript){
+                ResponseMachine.makeStringResponse("Введите возраст губернатора");
+            }
             try {
                 age = Integer.parseInt(scanner.nextLine());
                 if (age <= 0){

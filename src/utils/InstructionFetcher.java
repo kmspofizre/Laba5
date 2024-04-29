@@ -67,7 +67,7 @@ public class InstructionFetcher {
         }
         return null;
     }
-    public List<Request> parseScript(String scriptCommands, InstructionFetcher infetch){
+    public List<Request> parseScript(String scriptCommands, InstructionFetcher infetch, User user){
         List<Request> requestList = new ArrayList<>();
         Scanner scanner = new Scanner(scriptCommands);
         String line;
@@ -76,7 +76,21 @@ public class InstructionFetcher {
             String[] command = line.split(" ");
             String[] argsToGive = Arrays.copyOfRange(command, 1, command.length);
             Command currentCommand = infetch.instructionFetch(command[0]);
-            Request commandRequest = currentCommand.prepareRequest(argsToGive, scanner);
+            if (currentCommand == null | Objects.equals(line, "")){
+                continue;
+            }
+            if (Objects.equals(currentCommand.getCommandName(),
+                    "help")){
+                for (Command currentCommand1 : infetch.commandsAvalible){
+                    ResponseMachine.makeStringResponse(currentCommand1.toString());
+                }
+                continue;
+            }
+            else if (Objects.equals(currentCommand.getCommandName(), "history")){
+                user.getHistory();
+                continue;
+            }
+            Request commandRequest = currentCommand.prepareRequest(argsToGive, scanner, true);
             RequestMachine.addCommandToRequest(commandRequest, currentCommand);
             requestList.add(commandRequest);
         }

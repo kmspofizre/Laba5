@@ -34,7 +34,7 @@ public class Command implements Serializable {
     public boolean isMultiLines(){
         return this.isMultiLines;
     }
-    public String [] prepareData(String [] args, Scanner scanner){
+    public String [] prepareData(String [] args, Scanner scanner, boolean fromScript){
         String [] data = new String[0];
         return data;
     }
@@ -42,7 +42,7 @@ public class Command implements Serializable {
         String [] data = new String[0];
         return data;
     }
-    public Request prepareRequest(String [] args, Scanner scanner){
+    public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
         return null;
     }
 }

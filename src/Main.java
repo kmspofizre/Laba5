@@ -36,5 +36,13 @@ public class Main {
             dataBase.save();
             System.exit(0);
         });
+        TCPServer tcpServer = new TCPServer(dataBase, "localhost", 8080);
+        try{
+            tcpServer.runTCP();
+        }
+        catch (ClassNotFoundException e1){
+            ResponseMachine.makeStringResponse(e1.getException());
+            ResponseMachine.makeStringResponse(e1.getMessage());
+        }
     }
 }

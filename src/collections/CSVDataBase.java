@@ -95,19 +95,18 @@ public class CSVDataBase extends DataBase {
     }
 
     public String[] dataPreparer(long id, String[] item) {
-        String[] merged = new String[12];
+        String[] merged = new String[11];
         merged[0] = String.valueOf(id);
         merged[1] = item[1];
         merged[2] = item[2];
         merged[3] = item[3];
-        merged[4] = new Date().toString();
-        merged[5] = item[4];
-        merged[6] = item[5];
-        merged[7] = item[6];
-        merged[8] = item[7];
-        merged[9] = item[8];
-        merged[10] = item[9];
-        merged[11] = item[10];
+        merged[4] = item[4];
+        merged[5] = item[5];
+        merged[6] = item[6];
+        merged[7] = item[7];
+        merged[8] = item[8];
+        merged[9] = item[9];
+        merged[10] = item[10];
         return merged;
     }
 
@@ -162,7 +161,8 @@ public class CSVDataBase extends DataBase {
 
 
         public Response removeGreaterKey (long id, boolean fromScript){
-            for (Long currentId : this.dataBase.keySet()) {
+            TreeMap<Long, City> copy = (TreeMap<Long, City>) this.dataBase.clone();
+            for (Long currentId : copy.keySet()) {
                 if (currentId > id) {
                     this.dataBase.remove(currentId);
                 }
