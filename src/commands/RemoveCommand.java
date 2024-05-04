@@ -1,16 +1,15 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.City;
 import components.Request;
 import components.Response;
+import components.Reversible;
 
 import java.lang.annotation.Documented;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class RemoveCommand extends Command{
+public class RemoveCommand extends Command implements Reversible {
     public RemoveCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
         super(name, description, hasInlineArguments, isMultiLines);
     }
@@ -39,5 +38,10 @@ public class RemoveCommand extends Command{
     public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
         String [] data = prepareData(args, scanner, fromScript);
         return new Request(data);
+    }
+    @Override
+    public Response undo(TreeMap<Long, City> changed, CSVDataBase dataBase){
+        dataBase.insertAllFromCollection(changed);
+        return new Response("Удаление элементов коллекции отменено");
     }
 }

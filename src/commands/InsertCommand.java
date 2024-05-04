@@ -1,10 +1,7 @@
 package commands;
 
 import collections.CSVDataBase;
-import components.City;
-import components.CityRequest;
-import components.Request;
-import components.Response;
+import components.*;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.CityCollectionMaker;
@@ -12,7 +9,7 @@ import validators.InputDataValidator;
 
 import java.util.*;
 
-public class InsertCommand extends DataBaseCommand{
+public class InsertCommand extends DataBaseCommand implements Reversible {
     public InsertCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
         super(name, description, hasInlineArguments, isMultiLines);
     }
@@ -60,5 +57,10 @@ public class InsertCommand extends DataBaseCommand{
         City city = CityCollectionMaker.makeCityInstance(cityData);
         CityRequest cityRequest = new CityRequest(args, city);
         return cityRequest;
+    }
+    @Override
+    public Response undo(TreeMap<Long, City> lastAction, CSVDataBase csvDataBase){
+        Response response = csvDataBase.removeAllFromCollection(lastAction);
+        return response;
     }
 }

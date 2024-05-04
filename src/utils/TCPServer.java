@@ -2,6 +2,8 @@ package utils;
 
 
 import collections.CSVDataBase;
+import commands.Command;
+import components.City;
 import components.Request;
 import components.Response;
 
@@ -18,7 +20,7 @@ import java.util.*;
 
 public class TCPServer {
     private final CSVDataBase dataBase;
-    private TreeMap<Integer, String> lastActions;
+    private TreeMap<SocketChannel, Map.Entry<Command, TreeMap<Long, City>>> lastActions;
     private Map<SocketChannel, List<Response>> userResponses;
     private final Selector selector;
     private final ByteBuffer intBuffer;
@@ -97,7 +99,16 @@ public class TCPServer {
         }
         byte[] bytes = buffer.array();
         List<Request> requests = DataPreparer.getRequests(bytes);
-        List<Response> responses = RequestHandler.handleRequests(requests, this.dataBase);
+        List<Response> responses;
+        if (this.lastActions.containsKey(client)){
+            responses = RequestHandler.handleRequests(requests, this.dataBase,
+                    this.lastActions.get(client));
+        }
+        else {
+            responses = RequestHandler.handleRequests(requests, this.dataBase,
+                    null);
+        }
+        // обработать Response через for, чтобы достать последние изменения пользователей
         this.userResponses.put(client, responses);
         ResponseHandler.handleResponses(responses);
         client.register(this.selector, SelectionKey.OP_WRITE);

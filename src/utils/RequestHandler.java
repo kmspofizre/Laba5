@@ -4,32 +4,43 @@ import collections.CSVDataBase;
 import commands.Command;
 import commands.DataBaseCommand;
 import commands.ExecuteScriptCommand;
-import components.CityRequest;
-import components.Request;
-import components.Response;
+import components.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.channels.SocketChannel;
+import java.util.*;
 
 public class RequestHandler {
-    public static List<Response> handleRequests(List<Request> requestList, CSVDataBase csvDataBase){
+    public static List<Response> handleRequests(List<Request> requestList,
+                                                CSVDataBase csvDataBase,
+                                                Map.Entry<Command, TreeMap<Long, City>> lastAction){
         List<Response> responses = new ArrayList<>();
+        boolean canUndo = true;
         for (Request request : requestList){
             Command command = request.getCommand();
-            if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))){
+            if (Objects.equals(command.getCommandName(), "undo")){
+                if (lastAction == null){
+                    responses.add(new Response("Вы не вносили изменений в рамках этой сессии"));
+                }
+                else {
+                    if (canUndo){
+                        canUndo = false;
+                        ((Reversible) lastAction.getKey()).undo(lastAction.getValue(), csvDataBase);
+                    }
+                }
+            }
+            else if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))){
                 Response response = ((DataBaseCommand) command).execute(request.getArgs(),
                         ((CityRequest) request).getCity(), csvDataBase, false);
                 String additionString;
                 additionString = command.getCommandName() + " " + String.join(" ", request.getArgs());
                 response.addCommandToResponse(additionString);
                 responses.add(response);
+                canUndo = true;
             }
             else {
                 responses.add(command.execute(request.getArgs(), csvDataBase, false));
             }
         }
-        //
         return responses;
     }
 }

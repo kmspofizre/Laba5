@@ -20,12 +20,6 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String [] args) throws IOException {
-        // init
-        // считывание ввода через while
-        // получение команды
-        // валидация (сначала команда, потом переданные значения)
-        // если все норм, формируем request в классе request есть user
-        // если нет, валидатор выдаст ошибку
         Scanner scanner = new Scanner(System.in);
         Command[] commands = CommandsInitiator.initClientCommands();
         InstructionFetcher infetch = new InstructionFetcher(commands);
@@ -58,7 +52,6 @@ public class Client {
                         byte[] bytes = DataPreparer.serializeObj(requestList).array();
                         List<Response> responses = tcpClient.send(bytes);
                         ResponseHandler.handleResponses(responses);
-                        // передать на сервер и ждать ответа
                     }
                 }
                 catch (CommandExecutingException | WrongDataException e) {

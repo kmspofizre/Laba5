@@ -1,12 +1,15 @@
 package commands;
 
 import collections.CSVDataBase;
+import components.City;
 import components.Request;
 import components.Response;
+import components.Reversible;
 
 import java.util.Scanner;
+import java.util.TreeMap;
 
-public class RemoveLowerCommand extends Command{
+public class RemoveLowerCommand extends Command implements Reversible {
 
     public RemoveLowerCommand(String commandName, String description,
                               boolean hasInlineArguments, boolean isMultiLines) {
@@ -37,5 +40,10 @@ public class RemoveLowerCommand extends Command{
     public Request prepareRequest(String [] args, Scanner scanner, boolean fromScript){
         String [] data = prepareData(args, scanner, fromScript);
         return new Request(data);
+    }
+    @Override
+    public Response undo(TreeMap<Long, City> changed, CSVDataBase dataBase){
+        dataBase.insertAllFromCollection(changed);
+        return new Response("Удаление элементов коллекции отменено");
     }
 }

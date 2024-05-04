@@ -4,7 +4,7 @@ import commands.*;
 
 public class CommandsInitiator {
     public static Command[] initCommands() {
-        Command[] commands = new Command[16];
+        Command[] commands = new Command[17];
         commands[0] = new InfoCommand("info", "Вывести информацию о коллекции", false, false);
         commands[1] = new ShowCommand("show", "Вывести элементы коллекции", false, false);
         commands[2] = new InsertCommand("insert", "Добавить элемент с заданным ключом в коллекцию", true, true);
@@ -26,10 +26,11 @@ public class CommandsInitiator {
         commands[15] = new SumOfMetersAboveSeaLevelCommand("sum_of_meters_above_sea_level",
                 "Вывести сумму значений поля metersAboveSeaLevel для всех элементов коллекции",
                 false, false);
+        commands[16] = new UndoCommand("undo", "Отменяет последнее изменение в БД", false, false);
         return commands;
     }
     public static Command[] initClientCommands() {
-        Command[] commands = new Command[15];
+        Command[] commands = new Command[16];
         commands[0] = new InfoCommand("info", "Вывести информацию о коллекции", false, false);
         commands[1] = new ShowCommand("show", "Вывести элементы коллекции", false, false);
         commands[2] = new InsertCommand("insert", "Добавить элемент с заданным ключом в коллекцию", true, true);
@@ -50,6 +51,7 @@ public class CommandsInitiator {
         commands[14] = new SumOfMetersAboveSeaLevelCommand("sum_of_meters_above_sea_level",
                 "Вывести сумму значений поля metersAboveSeaLevel для всех элементов коллекции",
                 false, false);
+        commands[15] = new UndoCommand("undo", "Отменяет последнее изменение в БД", false, false);
         return commands;
     }
 }

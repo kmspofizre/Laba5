@@ -232,4 +232,20 @@ public class CSVDataBase extends DataBase {
     public TMPManager getTmpManager() {
         return tmpManager;
     }
+
+    public void insertAllFromCollection(TreeMap<Long, City> toInsert){
+        this.dataBase.putAll(toInsert);
+    }
+    public Response removeAllFromCollection(TreeMap<Long, City> toRemove){
+        for (Map.Entry<Long, City> entry : toRemove.entrySet()){
+            if (this.dataBase.containsKey(entry.getKey())){
+                this.dataBase.remove(entry.getKey());
+                return new Response("Добавление элемента в коллекцию удалено");
+            }
+            else {
+                return new Response("Элемент уже удален");
+            }
+        }
+        return null;
+    }
 }
