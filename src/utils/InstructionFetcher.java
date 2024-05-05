@@ -79,6 +79,9 @@ public class InstructionFetcher {
             if (currentCommand == null | Objects.equals(line, "")){
                 continue;
             }
+            if (Objects.equals(currentCommand.getCommandName(), "undo")){
+                continue;
+            }
             if (Objects.equals(currentCommand.getCommandName(),
                     "help")){
                 for (Command currentCommand1 : infetch.commandsAvalible){

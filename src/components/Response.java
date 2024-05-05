@@ -12,7 +12,7 @@ public class Response implements Serializable {
     public String getResponseString() {
         return this.responseString;
     }
-    public static void addCommandToResponse(String commandWithArgs){
+    public void addCommandToResponse(String commandWithArgs){
         this.responseString = commandWithArgs + "\n" + this.responseString;
     }
 

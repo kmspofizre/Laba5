@@ -10,6 +10,7 @@ public class FinalResponse extends Response{
     private List<Response> responses;
     private boolean containsReversible;
     private Map.Entry<Command, TreeMap<Long, City>> lastAction;
+    private boolean isLastUndo;
     public FinalResponse(String responseText){
         super(responseText);
     }
@@ -36,5 +37,13 @@ public class FinalResponse extends Response{
 
     public Map.Entry<Command, TreeMap<Long, City>> getLastAction() {
         return lastAction;
+    }
+
+    public boolean isLastUndo() {
+        return isLastUndo;
+    }
+
+    public void setLastUndo(boolean lastUndo) {
+        isLastUndo = lastUndo;
     }
 }

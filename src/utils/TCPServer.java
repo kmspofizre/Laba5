@@ -21,7 +21,7 @@ import java.util.*;
 
 public class TCPServer {
     private final CSVDataBase dataBase;
-    private TreeMap<SocketChannel, Map.Entry<Command, TreeMap<Long, City>>> lastActions;
+    private Map<SocketChannel, Map.Entry<Command, TreeMap<Long, City>>> lastActions;
     private Map<SocketChannel, List<Response>> userResponses;
     private final Selector selector;
     private final ByteBuffer intBuffer;
@@ -35,6 +35,7 @@ public class TCPServer {
         server.configureBlocking(false);
         server.register(this.selector, SelectionKey.OP_ACCEPT);
         this.userResponses = new HashMap<>();
+        this.lastActions = new HashMap<>();
     }
 
     public void runTCP() throws IOException, ClassNotFoundException {
@@ -111,6 +112,9 @@ public class TCPServer {
         }
         if (responses.isContainsReversible()){
             this.lastActions.put(client, responses.getLastAction());
+        }
+        if (responses.isLastUndo()){
+            this.lastActions.remove(client);
         }
         this.userResponses.put(client, responses.getResponses());
         ResponseHandler.handleResponses(responses.getResponses());

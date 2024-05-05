@@ -143,11 +143,11 @@ public class CSVDataBase extends DataBase {
 
     public Response update(City city) throws CommandExecutingException {
         if (this.dataBase.containsKey(city.getId())) {
-            this.dataBase.put(city.getId(), city);
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент обновлен успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
-            backup.put(city.getId(), city);
+            backup.put(city.getId(), this.dataBase.get(city.getId()));
             dbResponse.addDeletedPart(backup);
+            this.dataBase.put(city.getId(), city);
             dbResponse.setSuccess(true);
             return dbResponse;
         }
@@ -160,7 +160,7 @@ public class CSVDataBase extends DataBase {
 
         public Response remove (long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
-                DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
+                DataBaseResponse dbResponse = new DataBaseResponse("Элемент удален успешно");
                 TreeMap<Long, City> backup = new TreeMap<>();
                 City city = this.dataBase.get(id);
                 backup.put(id, city);
@@ -191,7 +191,7 @@ public class CSVDataBase extends DataBase {
             TreeMap<Long, City> copy = (TreeMap<Long, City>) this.dataBase.clone();
             for (Long currentId : copy.keySet()) {
                 if (currentId > id) {
-                    backup.put(id, this.dataBase.get(id));
+                    backup.put(currentId, this.dataBase.get(currentId));
                     this.dataBase.remove(currentId);
                 }
             }
@@ -263,7 +263,7 @@ public class CSVDataBase extends DataBase {
             } else {
                 dbResponse.setResponseString("Элемента с заданным ключом не существует");
                 dbResponse.setSuccess(false);
-                return ResponseMachine.makeClientResponse("Элемента с заданным ключом не существует");
+                return dbResponse;
             }
         }
 
@@ -278,7 +278,7 @@ public class CSVDataBase extends DataBase {
         for (Map.Entry<Long, City> entry : toRemove.entrySet()){
             if (this.dataBase.containsKey(entry.getKey())){
                 this.dataBase.remove(entry.getKey());
-                return new Response("Добавление элемента в коллекцию удалено");
+                return new Response("Добавление элемента в коллекцию отменено");
             }
             else {
                 return new Response("Элемент уже удален");
