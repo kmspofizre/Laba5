@@ -4,6 +4,7 @@ package utils;
 import collections.CSVDataBase;
 import commands.Command;
 import components.City;
+import components.FinalResponse;
 import components.Request;
 import components.Response;
 
@@ -99,7 +100,7 @@ public class TCPServer {
         }
         byte[] bytes = buffer.array();
         List<Request> requests = DataPreparer.getRequests(bytes);
-        List<Response> responses;
+        FinalResponse responses;
         if (this.lastActions.containsKey(client)){
             responses = RequestHandler.handleRequests(requests, this.dataBase,
                     this.lastActions.get(client));
@@ -108,9 +109,11 @@ public class TCPServer {
             responses = RequestHandler.handleRequests(requests, this.dataBase,
                     null);
         }
-        // обработать Response через for, чтобы достать последние изменения пользователей
-        this.userResponses.put(client, responses);
-        ResponseHandler.handleResponses(responses);
+        if (responses.isContainsReversible()){
+            this.lastActions.put(client, responses.getLastAction());
+        }
+        this.userResponses.put(client, responses.getResponses());
+        ResponseHandler.handleResponses(responses.getResponses());
         client.register(this.selector, SelectionKey.OP_WRITE);
     }
 

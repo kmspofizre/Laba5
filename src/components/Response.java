@@ -3,16 +3,20 @@ package components;
 import java.io.Serializable;
 
 public class Response implements Serializable {
-    private String reponseString;
+    private String responseString;
     private static final long serialVersionUID = 333333L;
     public Response(String reponseString){
-        this.reponseString = reponseString;
+        this.responseString = reponseString;
     }
 
-    public String getReponseString() {
-        return this.reponseString;
+    public String getResponseString() {
+        return this.responseString;
     }
-    public void addCommandToResponse(String commandWithArgs){
-        this.reponseString = commandWithArgs + "\n" + this.reponseString;
+    public static void addCommandToResponse(String commandWithArgs){
+        this.responseString = commandWithArgs + "\n" + this.responseString;
+    }
+
+    public void setResponseString(String responseString) {
+        this.responseString = responseString;
     }
 }

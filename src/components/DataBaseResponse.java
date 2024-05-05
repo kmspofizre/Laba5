@@ -7,6 +7,8 @@ public class DataBaseResponse extends Response{
     private TreeMap<Long, City> changedPart;
     private static final long serialVersionUID = 333555L;
 
+    private boolean success;
+
     public DataBaseResponse(String responseString){
         super(responseString);
     }
@@ -17,5 +19,13 @@ public class DataBaseResponse extends Response{
 
     public TreeMap<Long, City> getDeletedPart(){
         return this.changedPart;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 }

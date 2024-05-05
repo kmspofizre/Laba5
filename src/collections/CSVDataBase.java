@@ -2,6 +2,7 @@ package collections;
 
 import components.City;
 import components.Climate;
+import components.DataBaseResponse;
 import components.Response;
 import exceptions.CommandExecutingException;
 import exceptions.FileTroubleException;
@@ -125,49 +126,78 @@ public class CSVDataBase extends DataBase {
     }
 
     public Response insert(City city) throws CommandExecutingException {
-
         if (!this.dataBase.containsKey(city.getId())) {
+            DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
+            TreeMap<Long, City> backup = new TreeMap<>();
+            backup.put(city.getId(), city);
+            dbResponse.addDeletedPart(backup);
             this.dataBase.put(city.getId(), city);
-            return ResponseMachine.makeClientResponse("Элемент добавлен успешно");
+            dbResponse.setSuccess(true);
+            return dbResponse;
         } else {
-            return ResponseMachine.makeClientResponse("Элемент с таким id уже существует");
+            DataBaseResponse dbResponse = new DataBaseResponse("Элемент с таким id уже существует");
+            dbResponse.setSuccess(true);
+            return dbResponse;
         }
     }
 
     public Response update(City city) throws CommandExecutingException {
         if (this.dataBase.containsKey(city.getId())) {
             this.dataBase.put(city.getId(), city);
-            return ResponseMachine.makeClientResponse("Элемент обновлен успешно");
+            DataBaseResponse dbResponse = new DataBaseResponse("Элемент обновлен успешно");
+            TreeMap<Long, City> backup = new TreeMap<>();
+            backup.put(city.getId(), city);
+            dbResponse.addDeletedPart(backup);
+            dbResponse.setSuccess(true);
+            return dbResponse;
         }
         else {
-            return ResponseMachine.makeClientResponse("Элемент с заданным ключом не найден");
+            DataBaseResponse dbResponse = new DataBaseResponse("Элемент с заданным ключом не найден");
+            dbResponse.setSuccess(false);
+            return dbResponse;
         }
     }
 
         public Response remove (long id, boolean fromScript){
             if (this.dataBase.containsKey(id)) {
+                DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
+                TreeMap<Long, City> backup = new TreeMap<>();
+                City city = this.dataBase.get(id);
+                backup.put(id, city);
+                dbResponse.addDeletedPart(backup);
                 this.dataBase.remove(id);
-                return ResponseMachine.makeClientResponse("Элемент удален успешно");
+                dbResponse.setSuccess(true);
+                return dbResponse;
 
             } else {
-                return ResponseMachine.makeClientResponse("Элемента с таким ключом не существует");
+                DataBaseResponse dbResponse = new DataBaseResponse("Элемента с таким ключом не существует");
+                dbResponse.setSuccess(false);
+                return dbResponse;
             }
         }
         public Response clear () {
+            DataBaseResponse dbResponse = new DataBaseResponse("Коллекция очищена");
+            TreeMap<Long, City> backup = (TreeMap<Long, City>) this.dataBase.clone();
+            dbResponse.addDeletedPart(backup);
             this.dataBase.clear();
-            return ResponseMachine.makeClientResponse("Коллекция очищена");
-
+            dbResponse.setSuccess(true);
+            return dbResponse;
         }
 
 
         public Response removeGreaterKey (long id, boolean fromScript){
+            DataBaseResponse dbResponse = new DataBaseResponse("Элементы с ключами, большими, чем заданный удалены успешно");
+            TreeMap<Long, City> backup = new TreeMap<>();
             TreeMap<Long, City> copy = (TreeMap<Long, City>) this.dataBase.clone();
             for (Long currentId : copy.keySet()) {
                 if (currentId > id) {
+                    backup.put(id, this.dataBase.get(id));
                     this.dataBase.remove(currentId);
                 }
             }
-            return ResponseMachine.makeClientResponse("Элементы с ключами, большими, чем заданный удалены успешно");
+            dbResponse.addDeletedPart(backup);
+            dbResponse.setSuccess(true);
+            return dbResponse;
         }
 
         public Response sumOfMetersAboveSeaLevel () {
@@ -212,19 +242,27 @@ public class CSVDataBase extends DataBase {
         }
 
         public Response removeLower (Long id, boolean fromScript){
+            DataBaseResponse dbResponse = new DataBaseResponse("Элементы удалены");
             if (this.dataBase.containsKey(id)) {
+                TreeMap<Long, City> backup = new TreeMap<>();
                 TreeMap<Long, City> newCityCollection = new TreeMap<>();
                 City city = this.dataBase.get(id);
                 for (Map.Entry<Long, City> item : this.dataBase.entrySet()) {
                     if (item.getValue().compareTo(city) >= 0) {
                         newCityCollection.put(item.getKey(), item.getValue());
                     }
+                    else {
+                        backup.put(item.getKey(), item.getValue());
+                    }
                 }
                 this.dataBase = newCityCollection;
-
-                return ResponseMachine.makeClientResponse("Элементы удалены");
+                dbResponse.addDeletedPart(backup);
+                dbResponse.setSuccess(true);
+                return dbResponse;
 
             } else {
+                dbResponse.setResponseString("Элемента с заданным ключом не существует");
+                dbResponse.setSuccess(false);
                 return ResponseMachine.makeClientResponse("Элемента с заданным ключом не существует");
             }
         }
