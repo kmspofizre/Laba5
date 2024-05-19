@@ -5,6 +5,8 @@ import components.City;
 import components.Response;
 import exceptions.CommandExecutingException;
 
+import java.sql.SQLException;
+
 public abstract class DataBaseCommand extends Command{
 
     public DataBaseCommand(String commandName, String description, boolean hasInlineArguments, boolean isMultiLines) {
@@ -14,5 +16,5 @@ public abstract class DataBaseCommand extends Command{
         return null;
     }
 
-    public abstract Response execute(String[] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException;
+    public abstract Response execute(String[] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException, SQLException;
 }

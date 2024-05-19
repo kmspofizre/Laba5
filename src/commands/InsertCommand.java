@@ -7,6 +7,7 @@ import exceptions.WrongDataException;
 import utils.CityCollectionMaker;
 import validators.InputDataValidator;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class InsertCommand extends DataBaseCommand implements Reversible {
@@ -14,7 +15,7 @@ public class InsertCommand extends DataBaseCommand implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException{
+    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException, SQLException {
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         List<String []> commandArgs = new ArrayList<>();

@@ -98,4 +98,7 @@ public class City implements Comparable<City>, Serializable {
         }
         return false;
     }
+    public Date getCreationDate(){
+        return this.creationDate;
+    }
 }

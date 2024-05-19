@@ -7,12 +7,13 @@ import commands.ExecuteScriptCommand;
 import components.*;
 
 import java.nio.channels.SocketChannel;
+import java.sql.SQLException;
 import java.util.*;
 
 public class RequestHandler {
     public static FinalResponse handleRequests(List<Request> requestList,
                                                 CSVDataBase csvDataBase,
-                                                Map.Entry<Command, TreeMap<Long, City>> lastAction){
+                                                Map.Entry<Command, TreeMap<Long, City>> lastAction) throws SQLException {
         List<Response> responses = new ArrayList<>();
         FinalResponse finalResponse = new FinalResponse("Final Response");
         finalResponse.setContainsReversible(false);

@@ -1,9 +1,6 @@
 package collections;
 
-import components.City;
-import components.Climate;
-import components.DataBaseResponse;
-import components.Response;
+import components.*;
 import exceptions.CommandExecutingException;
 import exceptions.FileTroubleException;
 import readers.ReaderFromCSV;
@@ -16,7 +13,9 @@ import writers.CSVWriter;
 
 import java.io.IOException;
 import java.io.SyncFailedException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class CSVDataBase extends DataBase {
     private TreeMap<Long, City> dataBase;
@@ -24,14 +23,16 @@ public class CSVDataBase extends DataBase {
     private long lastCityId;
     private String fileName;
     private TMPManager tmpManager;
+    private Connection connection;
 
-    public CSVDataBase(String file_name) {
+    public CSVDataBase(String file_name, Connection connection) {
         List<String[]> validatedData = getValidatedData(getData(file_name));
         TreeMap<Long, City> cityCollection = CityCollectionMaker.makeCityCollection(validatedData);
         this.initDate = new Date();
         this.dataBase = cityCollection;
         this.fileName = file_name;
         this.tmpManager = new TMPManager();
+        this.connection = connection;
     }
     public boolean compareWithTMP(){
         TreeMap<Long, City> tmpCollection = this.tmpManager.getCollectionFromCSV();
@@ -125,8 +126,30 @@ public class CSVDataBase extends DataBase {
         return ResponseMachine.makeClientResponse(resp);
     }
 
-    public Response insert(City city) throws CommandExecutingException {
+    public Response insert(City city) throws CommandExecutingException, SQLException {
         if (!this.dataBase.containsKey(city.getId())) {
+            long id = city.getId();
+            String name = city.getName();
+            Coordinates coordinates = city.getCoordinates();
+            Date date = city.getCreationDate();
+            int area = city.getArea();
+            int population = city.getPopulation();
+            Double metersAboveSeaLevel = city.getMetersAboveSeaLevel();
+            Climate climate = city.getClimate();
+            Government government = city.getGovernment();
+            StandardOfLiving standardOfLiving = city.getStandardOfLiving();
+            Human governor = city.getGovernor();
+            PreparedStatement ps = this.connection.prepareStatement("INSERT INTO coordinates(x, y) VALUES(?, ?)");
+            ps.setFloat(1, coordinates.getX());
+            ps.setInt(2, coordinates.getY());
+            ps.executeUpdate();
+            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM coordinates WHERE x = ? AND y = ?");
+
+            preparedStatement.setFloat(1, coordinates.getX());
+            preparedStatement.setInt(2, coordinates.getY());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            System.out.println(resultSet.getInt("id"));
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
             backup.put(city.getId(), city);

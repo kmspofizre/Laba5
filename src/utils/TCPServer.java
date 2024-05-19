@@ -17,6 +17,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.sql.SQLException;
 import java.util.*;
 
 public class TCPServer {
@@ -38,7 +39,7 @@ public class TCPServer {
         this.lastActions = new HashMap<>();
     }
 
-    public void runTCP() throws IOException, ClassNotFoundException {
+    public void runTCP() throws IOException, ClassNotFoundException, SQLException {
         while (true) {
             this.selector.select();
             Set<SelectionKey> keys = this.selector.selectedKeys();
@@ -79,7 +80,7 @@ public class TCPServer {
     }
 
 
-    private void readUser(SelectionKey key) throws IOException, ClassNotFoundException, SocketException {
+    private void readUser(SelectionKey key) throws IOException, ClassNotFoundException, SocketException, SQLException {
         SocketChannel client = (SocketChannel) key.channel();
         this.intBuffer.clear();
         int size = client.read(this.intBuffer);
