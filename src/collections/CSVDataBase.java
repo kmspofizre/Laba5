@@ -14,6 +14,7 @@ import writers.CSVWriter;
 import java.io.IOException;
 import java.io.SyncFailedException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.Date;
 
@@ -127,7 +128,8 @@ public class CSVDataBase extends DataBase {
     }
 
     public Response insert(City city) throws CommandExecutingException, SQLException {
-        if (!this.dataBase.containsKey(city.getId())) {
+        boolean cityExists = this.cityExists(city);
+        if (!cityExists) {
             long id = city.getId();
             String name = city.getName();
             Coordinates coordinates = city.getCoordinates();
@@ -139,17 +141,27 @@ public class CSVDataBase extends DataBase {
             Government government = city.getGovernment();
             StandardOfLiving standardOfLiving = city.getStandardOfLiving();
             Human governor = city.getGovernor();
-            PreparedStatement ps = this.connection.prepareStatement("INSERT INTO coordinates(x, y) VALUES(?, ?)");
-            ps.setFloat(1, coordinates.getX());
-            ps.setInt(2, coordinates.getY());
-            ps.executeUpdate();
-            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM coordinates WHERE x = ? AND y = ?");
-
-            preparedStatement.setFloat(1, coordinates.getX());
-            preparedStatement.setInt(2, coordinates.getY());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            System.out.println(resultSet.getInt("id"));
+            int coordinatesId = getCoordsId(coordinates);
+            int governorId = getGovernorId(governor);
+            int standardOfLivingId = getStandardOfLivingId(standardOfLiving);
+            int governmentId = getGovernmentId(government);
+            int climateId = getClimateId(climate);
+            java.sql.Date sqlDate= new java.sql.Date(date.getTime());
+            PreparedStatement insertStatement = this.connection.prepareStatement("INSERT INTO city(id, name, coordinate, creation_date, " +
+                    "area, city_population, meters_above_sea_level, climate, " +
+                    "government, standard_of_living, governor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            insertStatement.setLong(1, id);
+            insertStatement.setString(2, name);
+            insertStatement.setInt(3, coordinatesId);
+            insertStatement.setDate(4, sqlDate);
+            insertStatement.setInt(5, area);
+            insertStatement.setInt(6, population);
+            insertStatement.setDouble(7, metersAboveSeaLevel);
+            insertStatement.setInt(8, climateId);
+            insertStatement.setInt(9, governmentId);
+            insertStatement.setInt(10, standardOfLivingId);
+            insertStatement.setInt(11, governorId);
+            insertStatement.executeUpdate();
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
             backup.put(city.getId(), city);
@@ -308,5 +320,75 @@ public class CSVDataBase extends DataBase {
             }
         }
         return null;
+    }
+
+
+    public boolean cityExists(City city) throws SQLException {
+        PreparedStatement cityExists = this.connection.prepareStatement("SELECT * FROM city WHERE id = ?");
+        cityExists.setLong(1, city.getId());
+        ResultSet rs = cityExists.executeQuery();
+        return rs.next();
+    }
+
+
+    public int getCoordsId(Coordinates coordinates) throws SQLException {
+        PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM coordinates WHERE x = ? AND y = ?");
+        preparedStatement.setFloat(1, coordinates.getX());
+        preparedStatement.setInt(2, coordinates.getY());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()){
+            return resultSet.getInt("id");
+        }
+        PreparedStatement ps = this.connection.prepareStatement("INSERT INTO coordinates(x, y) VALUES(?, ?)");
+        ps.setFloat(1, coordinates.getX());
+        ps.setInt(2, coordinates.getY());
+        ps.executeUpdate();
+        resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("id");
+    }
+
+
+    public int getGovernorId(Human governor) throws SQLException {
+        PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM human WHERE age = ?");
+        preparedStatement.setFloat(1, governor.getAge());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()){
+            return resultSet.getInt("id");
+        }
+        PreparedStatement ps = this.connection.prepareStatement("INSERT INTO human(age) VALUES(?)");
+        ps.setFloat(1, governor.getAge());
+        ps.executeUpdate();
+        resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("id");
+    }
+
+
+    public int getClimateId(Climate climate) throws SQLException {
+        PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM climate WHERE climate_name = ?");
+        preparedStatement.setString(1, climate.toString());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("id");
+    }
+
+
+    public int getGovernmentId(Government government)throws SQLException {
+        PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM government WHERE government_name = ?");
+        preparedStatement.setString(1, government.toString());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("id");
+    }
+
+
+    public int getStandardOfLivingId(StandardOfLiving standardOfLiving) throws SQLException {
+        PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT id FROM standard_of_living WHERE standard_of_living_name = ?");
+
+        preparedStatement.setString(1, standardOfLiving.toString());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("id");
     }
 }
