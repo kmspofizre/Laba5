@@ -119,16 +119,23 @@ public class CSVDataBase extends DataBase {
         return ResponseMachine.makeClientResponse(resp);
     }
 
-    public Response show() {
+    public Response show() throws SQLException {
+        PreparedStatement showStatement = this.connection.prepareStatement("SELECT * FROM city");
         String resp = "";
-        for (Map.Entry<Long, City> item : this.dataBase.entrySet()) {
-            resp = resp + item.getValue().toString() + "\n";
+        ResultSet resultSet = showStatement.executeQuery();
+        String newCity;
+        while (resultSet.next()){
+            newCity = "";
+            newCity = newCity + "Название: " + resultSet.getString("name") + "\n";
+            newCity = newCity + "Площадь: " + Integer.valueOf(resultSet.getInt("area")).toString() + "\n";
+            newCity = newCity + "Население: " + Integer.valueOf(resultSet.getInt("city_population")).toString() + "\n";
+            resp = resp + newCity + "\n";
         }
         return ResponseMachine.makeClientResponse(resp);
     }
 
     public Response insert(City city) throws CommandExecutingException, SQLException {
-        boolean cityExists = this.cityExists(city);
+        boolean cityExists = this.cityExists(city.getId());
         if (!cityExists) {
             long id = city.getId();
             String name = city.getName();
@@ -146,7 +153,7 @@ public class CSVDataBase extends DataBase {
             int standardOfLivingId = getStandardOfLivingId(standardOfLiving);
             int governmentId = getGovernmentId(government);
             int climateId = getClimateId(climate);
-            java.sql.Date sqlDate= new java.sql.Date(date.getTime());
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             PreparedStatement insertStatement = this.connection.prepareStatement("INSERT INTO city(id, name, coordinate, creation_date, " +
                     "area, city_population, meters_above_sea_level, climate, " +
                     "government, standard_of_living, governor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -176,8 +183,43 @@ public class CSVDataBase extends DataBase {
         }
     }
 
-    public Response update(City city) throws CommandExecutingException {
-        if (this.dataBase.containsKey(city.getId())) {
+    public Response update(City city) throws CommandExecutingException, SQLException {
+        boolean cityExists = this.cityExists(city.getId());
+        if (cityExists) {
+            String name = city.getName();
+            Coordinates coordinates = city.getCoordinates();
+            Date date = city.getCreationDate();
+            int area = city.getArea();
+            int population = city.getPopulation();
+            Double metersAboveSeaLevel = city.getMetersAboveSeaLevel();
+            Climate climate = city.getClimate();
+            Government government = city.getGovernment();
+            StandardOfLiving standardOfLiving = city.getStandardOfLiving();
+            Human governor = city.getGovernor();
+            int coordinatesId = getCoordsId(coordinates);
+            int governorId = getGovernorId(governor);
+            int standardOfLivingId = getStandardOfLivingId(standardOfLiving);
+            int governmentId = getGovernmentId(government);
+            int climateId = getClimateId(climate);
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+
+            PreparedStatement insertStatement = this.connection.prepareStatement("UPDATE city SET name = ?, coordinate = ?, creation_date = ?, " +
+                    "area = ?, city_population = ?, meters_above_sea_level = ?, climate = ?, " +
+                    "government = ?, standard_of_living = ?, governor = ?");
+            insertStatement.setString(1, name);
+            insertStatement.setInt(2, coordinatesId);
+            insertStatement.setDate(3, sqlDate);
+            insertStatement.setInt(4, area);
+            insertStatement.setInt(5, population);
+            insertStatement.setDouble(6, metersAboveSeaLevel);
+            insertStatement.setInt(7, climateId);
+            insertStatement.setInt(8, governmentId);
+            insertStatement.setInt(9, standardOfLivingId);
+            insertStatement.setInt(10, governorId);
+            insertStatement.executeUpdate();
+
+
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент обновлен успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
             backup.put(city.getId(), this.dataBase.get(city.getId()));
@@ -193,8 +235,12 @@ public class CSVDataBase extends DataBase {
         }
     }
 
-        public Response remove (long id, boolean fromScript){
-            if (this.dataBase.containsKey(id)) {
+        public Response remove (long id, boolean fromScript) throws SQLException {
+            boolean cityExists = this.cityExists(id);
+            if (cityExists) {
+                PreparedStatement removeStatement = this.connection.prepareStatement("DELETE FROM city WHERE id = ?");
+                removeStatement.setLong(1, id);
+                removeStatement.executeUpdate();
                 DataBaseResponse dbResponse = new DataBaseResponse("Элемент удален успешно");
                 TreeMap<Long, City> backup = new TreeMap<>();
                 City city = this.dataBase.get(id);
@@ -323,9 +369,9 @@ public class CSVDataBase extends DataBase {
     }
 
 
-    public boolean cityExists(City city) throws SQLException {
+    public boolean cityExists(long id) throws SQLException {
         PreparedStatement cityExists = this.connection.prepareStatement("SELECT * FROM city WHERE id = ?");
-        cityExists.setLong(1, city.getId());
+        cityExists.setLong(1, id);
         ResultSet rs = cityExists.executeQuery();
         return rs.next();
     }

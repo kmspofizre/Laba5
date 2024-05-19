@@ -6,6 +6,7 @@ import exceptions.CommandExecutingException;
 import utils.CityCollectionMaker;
 import validators.InputDataValidator;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class UpdateCommand extends DataBaseCommand implements Reversible {
@@ -14,7 +15,7 @@ public class UpdateCommand extends DataBaseCommand implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException{
+    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException, SQLException {
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         List<String []> commandArgs = new ArrayList<>();

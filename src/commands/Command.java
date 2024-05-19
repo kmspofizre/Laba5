@@ -5,6 +5,7 @@ import components.Request;
 import components.Response;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class Command implements Serializable {
         this.hasInlineArguments = hasInlineArguments;
         this.isMultiLines = isMultiLines;
     }
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){return null;}
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws SQLException {return null;}
     @Override
     public String toString(){
         return this.commandName + " - " + this.description;

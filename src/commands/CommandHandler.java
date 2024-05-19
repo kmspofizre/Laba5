@@ -9,6 +9,7 @@ import utils.ResponseMachine;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.*;
 
 public class CommandHandler {
@@ -38,6 +39,8 @@ public class CommandHandler {
         catch (NumberFormatException e){
             ResponseMachine.makeStringResponse("Неверный формат ввода числового значения");
             return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public void help(){

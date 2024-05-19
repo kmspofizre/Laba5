@@ -4,6 +4,7 @@ import collections.CSVDataBase;
 import components.Request;
 import components.Response;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class ShowCommand extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws SQLException {
         return dataBase.show();
     }
 

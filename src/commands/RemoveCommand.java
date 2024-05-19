@@ -7,6 +7,7 @@ import components.Response;
 import components.Reversible;
 
 import java.lang.annotation.Documented;
+import java.sql.SQLException;
 import java.util.*;
 
 public class RemoveCommand extends Command implements Reversible {
@@ -14,7 +15,7 @@ public class RemoveCommand extends Command implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws SQLException {
         Long id = Long.parseLong(args[0]);
         return dataBase.remove(id, fromScript);
     }
