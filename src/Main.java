@@ -27,7 +27,6 @@ public class Main {
         Connection connection = DriverManager.getConnection(jdbcURL, username, passwd);
         PostgresDataBase dataBase = new PostgresDataBase("test_this_crap.csv", connection);
         CommandHandler handler = new CommandHandler(dataBase, commands);
-        ProgramRunner programRunner = new ProgramRunner(dataBase, handler);
         Signal.handle(new Signal("INT"), signal -> {
             dataBase.save();
             System.exit(0);

@@ -2,10 +2,7 @@ package commands;
 
 
 import collections.PostgresDataBase;
-import components.City;
-import components.Request;
-import components.Response;
-import components.Reversible;
+import components.*;
 
 import java.lang.annotation.Documented;
 import java.sql.SQLException;
@@ -16,9 +13,9 @@ public class RemoveCommand extends Command implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {
+    public Response execute(String [] args, PostgresDataBase dataBase, User user) throws SQLException {
         Long id = Long.parseLong(args[0]);
-        return dataBase.remove(id, fromScript);
+        return dataBase.remove(id, user);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner, boolean fromScript) throws NumberFormatException{

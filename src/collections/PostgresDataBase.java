@@ -134,7 +134,7 @@ public class PostgresDataBase extends DataBase {
         return ResponseMachine.makeClientResponse(resp);
     }
 
-    public Response insert(City city) throws CommandExecutingException, SQLException {
+    public Response insert(City city, User user) throws CommandExecutingException, SQLException {
         boolean cityExists = this.cityExists(city.getId());
         if (!cityExists) {
             long id = city.getId();
@@ -153,10 +153,11 @@ public class PostgresDataBase extends DataBase {
             int standardOfLivingId = getStandardOfLivingId(standardOfLiving);
             int governmentId = getGovernmentId(government);
             int climateId = getClimateId(climate);
+            int userId = user.getId();
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             PreparedStatement insertStatement = this.connection.prepareStatement("INSERT INTO city(id, name, coordinate, creation_date, " +
                     "area, city_population, meters_above_sea_level, climate, " +
-                    "government, standard_of_living, governor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    "government, standard_of_living, governor, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             insertStatement.setLong(1, id);
             insertStatement.setString(2, name);
             insertStatement.setInt(3, coordinatesId);
@@ -168,6 +169,7 @@ public class PostgresDataBase extends DataBase {
             insertStatement.setInt(9, governmentId);
             insertStatement.setInt(10, standardOfLivingId);
             insertStatement.setInt(11, governorId);
+            insertStatement.setInt(12, userId);
             insertStatement.executeUpdate();
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент добавлен успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
@@ -176,16 +178,18 @@ public class PostgresDataBase extends DataBase {
             this.dataBase.put(city.getId(), city);
             dbResponse.setSuccess(true);
             return dbResponse;
-        } else {
+        }
+        else {
             DataBaseResponse dbResponse = new DataBaseResponse("Элемент с таким id уже существует");
             dbResponse.setSuccess(true);
             return dbResponse;
         }
     }
 
-    public Response update(City city) throws CommandExecutingException, SQLException {
+    public Response update(City city, User user) throws CommandExecutingException, SQLException {
         boolean cityExists = this.cityExists(city.getId());
-        if (cityExists) {
+        boolean userOwner = userOwner(user, city.getId());
+        if (cityExists & userOwner) {
             String name = city.getName();
             Coordinates coordinates = city.getCoordinates();
             Date date = city.getCreationDate();
@@ -202,8 +206,6 @@ public class PostgresDataBase extends DataBase {
             int governmentId = getGovernmentId(government);
             int climateId = getClimateId(climate);
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-
-
             PreparedStatement insertStatement = this.connection.prepareStatement("UPDATE city SET name = ?, coordinate = ?, creation_date = ?, " +
                     "area = ?, city_population = ?, meters_above_sea_level = ?, climate = ?, " +
                     "government = ?, standard_of_living = ?, governor = ?");
@@ -229,15 +231,16 @@ public class PostgresDataBase extends DataBase {
             return dbResponse;
         }
         else {
-            DataBaseResponse dbResponse = new DataBaseResponse("Элемент с заданным ключом не найден");
+            DataBaseResponse dbResponse = new DataBaseResponse("Элемент с заданным ключом не найден или вы не являетесь владельцем");
             dbResponse.setSuccess(false);
             return dbResponse;
         }
     }
 
-        public Response remove (long id, boolean fromScript) throws SQLException {
+        public Response remove(long id, User user) throws SQLException {
             boolean cityExists = this.cityExists(id);
-            if (cityExists) {
+            boolean isOwner = userOwner(user, id);
+            if (cityExists & isOwner) {
                 PreparedStatement removeStatement = this.connection.prepareStatement("DELETE FROM city WHERE id = ?");
                 removeStatement.setLong(1, id);
                 removeStatement.executeUpdate();
@@ -256,8 +259,9 @@ public class PostgresDataBase extends DataBase {
                 return dbResponse;
             }
         }
-        public Response clear () throws SQLException {
-            PreparedStatement preparedStatement = this.connection.prepareStatement("TRUNCATE city");
+        public Response clear(User user) throws SQLException {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("DELETE FROM city WHERE user_id = ?");
+            preparedStatement.setInt(1, user.getId());
             preparedStatement.executeUpdate();
             DataBaseResponse dbResponse = new DataBaseResponse("Коллекция очищена");
             TreeMap<Long, City> backup = (TreeMap<Long, City>) this.dataBase.clone();
@@ -268,7 +272,7 @@ public class PostgresDataBase extends DataBase {
         }
 
 
-        public Response removeGreaterKey (long id, boolean fromScript) throws SQLException {
+        public Response removeGreaterKey (long id, User user) throws SQLException {
             DataBaseResponse dbResponse = new DataBaseResponse("Элементы с ключами, большими, чем заданный удалены успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
             TreeMap<Long, City> copy = (TreeMap<Long, City>) this.dataBase.clone();
@@ -278,15 +282,16 @@ public class PostgresDataBase extends DataBase {
                     this.dataBase.remove(currentId);
                 }
             }
-            PreparedStatement removeGreaterStatement = this.connection.prepareStatement("DELETE FROM city WHERE id < ?");
+            PreparedStatement removeGreaterStatement = this.connection.prepareStatement("DELETE FROM city WHERE id < ? AND user_id = ?");
             removeGreaterStatement.setLong(1, id);
+            removeGreaterStatement.setInt(2, user.getId());
             removeGreaterStatement.executeUpdate();
             dbResponse.addDeletedPart(backup);
             dbResponse.setSuccess(true);
             return dbResponse;
         }
 
-        public Response sumOfMetersAboveSeaLevel () throws SQLException {
+        public Response sumOfMetersAboveSeaLevel() throws SQLException {
             Collection<City> values = this.dataBase.values();
             Double sum = 0.0;
             PreparedStatement sumOfMetersStatement = this.connection.prepareStatement("SELECT * FROM city");
@@ -331,12 +336,14 @@ public class PostgresDataBase extends DataBase {
             }
         }
 
-        public Response removeLower (Long id, boolean fromScript) throws SQLException {
+        public Response removeLower (Long id, User user) throws SQLException {
             DataBaseResponse dbResponse = new DataBaseResponse("Элементы удалены");
             boolean cityExists = this.cityExists(id);
             if (cityExists) {
-                PreparedStatement particularCity = this.connection.prepareStatement("SELECT * FROM city WHERE id = ?");
+                PreparedStatement particularCity = this.connection.prepareStatement("SELECT * FROM city WHERE id = ? AND user_id = ?");
+
                 particularCity.setLong(1, id);
+                particularCity.setInt(2, user.getId());
                 ResultSet oneMoreCity = particularCity.executeQuery();
                 oneMoreCity.next();
                 PreparedStatement allCitiesStatement = this.connection.prepareStatement("SELECT * FROM city");
@@ -461,4 +468,48 @@ public class PostgresDataBase extends DataBase {
         return resultSet.getInt("id");
     }
 
+    public Response loginUser(User user) throws SQLException {
+        String userName = user.getName();
+        PreparedStatement checkLogin = this.connection.prepareStatement("SELECT * FROM users WHERE user_name = ?");
+        checkLogin.setString(1, userName);
+        ResultSet resultSet = checkLogin.executeQuery();
+        if (resultSet.next()){
+            user.setId(resultSet.getInt("id"));
+            return new UserResponse("Вы успешно вошли", true, user);
+        }
+        else {
+            return new UserResponse("Такого пользователя не существует", false, user);
+        }
+    }
+
+
+    public Response registerUser(User user) throws SQLException {
+        String userName = user.getName();
+        PreparedStatement checkLogin = this.connection.prepareStatement("SELECT * FROM users WHERE user_name = ?");
+        checkLogin.setString(1, userName);
+        ResultSet resultSet = checkLogin.executeQuery();
+        if (resultSet.next()){
+            return new UserResponse("Такой пользователь уже существует", false, user);
+        }
+        else {
+            PreparedStatement addUser = this.connection.prepareStatement("INSERT INTO users(user_name, passwrd) VALUES (?, ?)");
+            addUser.setString(1, user.getName());
+            addUser.setString(2, user.getPasswrd());
+            addUser.executeUpdate();
+            resultSet = checkLogin.executeQuery();
+            resultSet.next();
+            user.setId(resultSet.getInt("id"));
+
+            return new UserResponse("Регистрация прошла успешно", true, user);
+        }
+    }
+
+    public boolean userOwner(User user, long id) throws SQLException {
+        PreparedStatement userOwner = this.connection.prepareStatement("SELECT * FROM city WHERE user_id = ? AND id = ?");
+        userOwner.setInt(1, user.getId());
+        userOwner.setLong(2, id);
+        ResultSet resultSet = userOwner.executeQuery();
+        boolean isOwner = resultSet.next();
+        return isOwner;
+    }
 }

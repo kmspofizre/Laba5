@@ -4,6 +4,7 @@ package commands;
 import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
+import components.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class SumOfMetersAboveSeaLevelCommand extends Command{
     }
 
     @Override
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {
+    public Response execute(String [] args, PostgresDataBase dataBase, User user) throws SQLException {
         return dataBase.sumOfMetersAboveSeaLevel();
     }
 

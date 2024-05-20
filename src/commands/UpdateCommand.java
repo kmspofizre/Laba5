@@ -14,14 +14,15 @@ public class UpdateCommand extends DataBaseCommand implements Reversible {
     public UpdateCommand(String name, String description, boolean hasInlineArguments, boolean isMultiLines) {
         super(name, description, hasInlineArguments, isMultiLines);
     }
+
     @Override
-    public Response execute(String [] args, City city, PostgresDataBase dataBase, boolean fromScript) throws NumberFormatException, CommandExecutingException, SQLException {
+    public Response execute(String [] args, City city, PostgresDataBase dataBase, User user) throws NumberFormatException, CommandExecutingException, SQLException {
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         List<String []> commandArgs = new ArrayList<>();
         commandArgs.add(argsToGive);
 
-        Response response = dataBase.update(city);
+        Response response = dataBase.update(city, user);
         return response;
     }
     @Override

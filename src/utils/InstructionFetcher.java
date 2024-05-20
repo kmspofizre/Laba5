@@ -27,13 +27,13 @@ public class InstructionFetcher {
     }
     public void fetchAndExecuteCHC(Command command,
                                    CommandHandler commandHandler,
-                                   String[] args) throws CommandExecutingException,
+                                   String[] args, User user) throws CommandExecutingException,
             FileNotFoundException, StackOverflowError {
         if ((Objects.equals(command.getCommandName(), "execute_script"))) {
             if (args.length == 0){
                 throw new CommandExecutingException("Не передано имя файла");
             }
-            commandHandler.executeScript(args[0]);
+            commandHandler.executeScript(args[0], user);
 
         } else if ((Objects.equals(command.getCommandName(), "help"))) {
             commandHandler.help();

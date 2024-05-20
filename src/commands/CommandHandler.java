@@ -1,6 +1,7 @@
 package commands;
 
 import collections.PostgresDataBase;
+import components.User;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.DataPreparer;
@@ -25,9 +26,9 @@ public class CommandHandler {
         this.historyIndex = 0;
         this.instructionFetcher = new InstructionFetcher(commands);
     }
-    public boolean executeCommand(Command command, String [] args, boolean fromScript){
+    public boolean executeCommand(Command command, String [] args, User user){
         try{
-            command.execute(args, this.dataBase, fromScript);
+            command.execute(args, this.dataBase, user);
             this.history[this.historyIndex] = command.getCommandName();
             incrementHistoryIndex();
             return true;
@@ -71,7 +72,7 @@ public class CommandHandler {
     public Command[] getCommands() {
         return commands;
     }
-    public void executeScript(String fileName) throws FileNotFoundException, StackOverflowError {
+    public void executeScript(String fileName, User user) throws FileNotFoundException, StackOverflowError {
         Scanner scanner = new Scanner(new File(fileName));
         String line;
         while (scanner.hasNextLine()) {
@@ -89,7 +90,7 @@ public class CommandHandler {
                             throw new CommandExecutingException("Не передано имя файла");
                         }
                         this.dataBase.save();
-                        executeScript(argsToGive[0]);
+                        executeScript(argsToGive[0], user);
                     }
                     else if (Objects.equals(currentCommand.getCommandName(), "history")){
                         getHistory();
@@ -100,7 +101,7 @@ public class CommandHandler {
                 }
                 else {
                     String [] argsForCommand = DataPreparer.prepareScriptData(currentCommand, argsToGive, scanner);
-                    executeCommand(currentCommand, argsForCommand, true);
+                    executeCommand(currentCommand, argsForCommand, user);
                 }
             }
             catch (CommandExecutingException | WrongDataException e){

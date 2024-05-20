@@ -2,10 +2,7 @@ package commands;
 
 
 import collections.PostgresDataBase;
-import components.City;
-import components.Request;
-import components.Response;
-import components.Reversible;
+import components.*;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -17,9 +14,9 @@ public class RemoveGreaterKeyCommand extends Command implements Reversible {
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {
+    public Response execute(String [] args, PostgresDataBase dataBase, User user) throws SQLException {
         Long id = Long.parseLong(args[0]);
-        return dataBase.removeGreaterKey(id, fromScript);
+        return dataBase.removeGreaterKey(id, user);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner, boolean fromScript) throws NumberFormatException{

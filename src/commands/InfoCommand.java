@@ -4,6 +4,7 @@ package commands;
 import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
+import components.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class InfoCommand extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, PostgresDataBase dataBase, User user){
         return dataBase.info();
     }
 

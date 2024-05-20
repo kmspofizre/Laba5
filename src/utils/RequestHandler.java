@@ -2,9 +2,7 @@ package utils;
 
 
 import collections.PostgresDataBase;
-import commands.Command;
-import commands.DataBaseCommand;
-import commands.ExecuteScriptCommand;
+import commands.*;
 import components.*;
 
 import java.nio.channels.SocketChannel;
@@ -21,6 +19,7 @@ public class RequestHandler {
         boolean canUndo = true;
         boolean isLastUndo = false;
         for (Request request : requestList){
+            User user = request.getUser();
             Command command = request.getCommand();
             if (Objects.equals(command.getCommandName(), "undo")){
                 if (lastAction == null){
@@ -38,11 +37,20 @@ public class RequestHandler {
                     }
                 }
             }
+            else if (command instanceof UserRegisterCommand){
+                if (command instanceof Register){
+                    System.out.println(user);
+                    responses.add(csvDataBase.registerUser(request.getUser()));
+                }
+                else {
+                    responses.add(csvDataBase.loginUser(request.getUser()));
+                }
+            }
             else if (command instanceof Reversible){
                 isLastUndo = false;
                 if ((DataBaseCommand.class.isAssignableFrom(command.getClass()))) {
                     DataBaseResponse dataBaseResponse = (DataBaseResponse) ((DataBaseCommand) command).execute(request.getArgs(),
-                            ((CityRequest) request).getCity(), csvDataBase, false);
+                            ((CityRequest) request).getCity(), csvDataBase, user);
                     String additionString;
                     additionString = command.getCommandName() + " " + String.join(" ", request.getArgs());
                     dataBaseResponse.addCommandToResponse(additionString);
@@ -54,7 +62,7 @@ public class RequestHandler {
                 else {
                     isLastUndo = false;
                     DataBaseResponse dataBaseResponse = (DataBaseResponse) command.execute(request.getArgs(),
-                            csvDataBase, false);
+                            csvDataBase, user);
                     responses.add(dataBaseResponse);
                     finalResponse.setContainsReversible(true);
                     Map.Entry<Command, TreeMap<Long, City>> entry = new AbstractMap.SimpleEntry<>(command, dataBaseResponse.getDeletedPart());
@@ -65,7 +73,7 @@ public class RequestHandler {
             }
             else {
                 isLastUndo = false;
-                responses.add(command.execute(request.getArgs(), csvDataBase, false));
+                responses.add(command.execute(request.getArgs(), csvDataBase, user));
             }
         }
         finalResponse.setResponses(responses);

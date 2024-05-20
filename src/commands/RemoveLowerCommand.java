@@ -2,10 +2,7 @@ package commands;
 
 
 import collections.PostgresDataBase;
-import components.City;
-import components.Request;
-import components.Response;
-import components.Reversible;
+import components.*;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -17,10 +14,11 @@ public class RemoveLowerCommand extends Command implements Reversible {
                               boolean hasInlineArguments, boolean isMultiLines) {
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
+
     @Override
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws NumberFormatException, SQLException {
+    public Response execute(String [] args, PostgresDataBase dataBase, User user) throws NumberFormatException, SQLException {
         Long id = Long.parseLong(args[0]);
-        return dataBase.removeLower(id, fromScript);
+        return dataBase.removeLower(id, user);
     }
     @Override
     public String[] prepareData(String [] args, Scanner scanner, boolean fromScript) throws NumberFormatException{

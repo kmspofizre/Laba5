@@ -5,6 +5,7 @@ import collections.PostgresDataBase;
 import commands.CHCommand;
 import commands.Command;
 import commands.CommandHandler;
+import components.User;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 
@@ -16,10 +17,12 @@ public class ProgramRunner {
     private boolean fromScript;
     private CommandHandler commandHandler;
     private PostgresDataBase csvDataBase;
-    public ProgramRunner(PostgresDataBase csvDataBase, CommandHandler commandHandler){
+    private User user;
+    public ProgramRunner(PostgresDataBase csvDataBase, CommandHandler commandHandler, User user){
         this.csvDataBase = csvDataBase;
         this.commandHandler = commandHandler;
         this.fromScript = false;
+        this.user = user;
     }
     // fromScript
     public void runProgram(){
@@ -34,11 +37,11 @@ public class ProgramRunner {
             try {
                 Command currentCommand = infetch.instructionFetch(command[0]);
                 if ((CHCommand.class.isAssignableFrom(currentCommand.getClass()))) {
-                    infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler, argsToGive);
+                    infetch.fetchAndExecuteCHC(currentCommand, this.commandHandler, argsToGive, this.user);
                 }
                 else {
                     String [] argsForCommand = DataPreparer.prepareData(currentCommand, argsToGive, scanner, false);
-                    this.commandHandler.executeCommand(currentCommand, argsForCommand, false);
+                    this.commandHandler.executeCommand(currentCommand, argsForCommand, this.user);
                 }
             }
             catch (CommandExecutingException | WrongDataException e){

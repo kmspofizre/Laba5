@@ -3,6 +3,7 @@ package commands;
 import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
+import components.User;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ public class Command implements Serializable {
         this.hasInlineArguments = hasInlineArguments;
         this.isMultiLines = isMultiLines;
     }
-    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {return null;}
+    public Response execute(String [] args, PostgresDataBase dataBase, User user) throws SQLException {return null;}
     @Override
     public String toString(){
         return this.commandName + " - " + this.description;
