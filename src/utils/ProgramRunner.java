@@ -1,6 +1,7 @@
 package utils;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import commands.CHCommand;
 import commands.Command;
 import commands.CommandHandler;
@@ -14,8 +15,8 @@ import java.util.Scanner;
 public class ProgramRunner {
     private boolean fromScript;
     private CommandHandler commandHandler;
-    private CSVDataBase csvDataBase;
-    public ProgramRunner(CSVDataBase csvDataBase, CommandHandler commandHandler){
+    private PostgresDataBase csvDataBase;
+    public ProgramRunner(PostgresDataBase csvDataBase, CommandHandler commandHandler){
         this.csvDataBase = csvDataBase;
         this.commandHandler = commandHandler;
         this.fromScript = false;

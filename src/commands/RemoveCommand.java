@@ -1,6 +1,7 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.City;
 import components.Request;
 import components.Response;
@@ -15,7 +16,7 @@ public class RemoveCommand extends Command implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws SQLException {
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {
         Long id = Long.parseLong(args[0]);
         return dataBase.remove(id, fromScript);
     }
@@ -41,7 +42,7 @@ public class RemoveCommand extends Command implements Reversible {
         return new Request(data);
     }
     @Override
-    public Response undo(TreeMap<Long, City> changed, CSVDataBase dataBase){
+    public Response undo(TreeMap<Long, City> changed, PostgresDataBase dataBase){
         dataBase.insertAllFromCollection(changed);
         return new Response("Удаление элементов коллекции отменено");
     }

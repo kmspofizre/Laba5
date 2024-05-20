@@ -1,9 +1,10 @@
 package components;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 
 import java.util.TreeMap;
 
 public interface Reversible {
-    public Response undo(TreeMap<Long, City> changed, CSVDataBase dataBase);
+    public Response undo(TreeMap<Long, City> changed, PostgresDataBase dataBase);
 }

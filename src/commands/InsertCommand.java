@@ -1,6 +1,7 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.*;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
@@ -15,7 +16,7 @@ public class InsertCommand extends DataBaseCommand implements Reversible {
         super(name, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, City city, CSVDataBase dataBase, boolean fromScript) throws CommandExecutingException, SQLException {
+    public Response execute(String [] args, City city, PostgresDataBase dataBase, boolean fromScript) throws CommandExecutingException, SQLException {
         Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         List<String []> commandArgs = new ArrayList<>();
@@ -60,7 +61,7 @@ public class InsertCommand extends DataBaseCommand implements Reversible {
         return cityRequest;
     }
     @Override
-    public Response undo(TreeMap<Long, City> lastAction, CSVDataBase csvDataBase){
+    public Response undo(TreeMap<Long, City> lastAction, PostgresDataBase csvDataBase){
         Response response = csvDataBase.removeAllFromCollection(lastAction);
         return response;
     }

@@ -1,7 +1,7 @@
 package utils;
 
 
-import collections.CSVDataBase;
+import collections.PostgresDataBase;
 import commands.Command;
 import components.City;
 import components.FinalResponse;
@@ -21,13 +21,13 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class TCPServer {
-    private final CSVDataBase dataBase;
+    private final PostgresDataBase dataBase;
     private Map<SocketChannel, Map.Entry<Command, TreeMap<Long, City>>> lastActions;
     private Map<SocketChannel, List<Response>> userResponses;
     private final Selector selector;
     private final ByteBuffer intBuffer;
 
-    public TCPServer(CSVDataBase csvDataBase, String hostname, int port) throws IOException {
+    public TCPServer(PostgresDataBase csvDataBase, String hostname, int port) throws IOException {
         this.dataBase = csvDataBase;
         this.selector = Selector.open();
         this.intBuffer = ByteBuffer.allocate(Integer.BYTES);

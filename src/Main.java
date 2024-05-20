@@ -1,24 +1,10 @@
-import collections.CSVDataBase;
+import collections.PostgresDataBase;
 import commands.*;
-import components.CityRequest;
-import components.Request;
-import components.Response;
-import components.User;
-import exceptions.CommandExecutingException;
-import exceptions.WrongDataException;
 import sun.misc.Signal;
 import utils.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -39,7 +25,7 @@ public class Main {
         String passwd = properties.getProperty("passwd");
 
         Connection connection = DriverManager.getConnection(jdbcURL, username, passwd);
-        CSVDataBase dataBase = new CSVDataBase("test_this_crap.csv", connection);
+        PostgresDataBase dataBase = new PostgresDataBase("test_this_crap.csv", connection);
         CommandHandler handler = new CommandHandler(dataBase, commands);
         ProgramRunner programRunner = new ProgramRunner(dataBase, handler);
         Signal.handle(new Signal("INT"), signal -> {

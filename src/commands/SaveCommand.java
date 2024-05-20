@@ -1,6 +1,6 @@
 package commands;
 
-import collections.CSVDataBase;
+import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
 
@@ -15,7 +15,7 @@ public class SaveCommand extends Command{
     }
 
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript){
         return dataBase.save();
     }
 

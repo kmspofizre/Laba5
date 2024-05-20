@@ -1,6 +1,7 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.Response;
 import utils.ResponseMachine;
 
@@ -9,7 +10,7 @@ public class HistoryCommand extends CHCommand{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript){
         String resp = "";
         for (String item : args){
             resp = resp + item + "\n";

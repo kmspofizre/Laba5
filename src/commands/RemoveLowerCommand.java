@@ -1,11 +1,13 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.City;
 import components.Request;
 import components.Response;
 import components.Reversible;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -16,7 +18,7 @@ public class RemoveLowerCommand extends Command implements Reversible {
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws NumberFormatException{
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws NumberFormatException, SQLException {
         Long id = Long.parseLong(args[0]);
         return dataBase.removeLower(id, fromScript);
     }
@@ -42,7 +44,7 @@ public class RemoveLowerCommand extends Command implements Reversible {
         return new Request(data);
     }
     @Override
-    public Response undo(TreeMap<Long, City> changed, CSVDataBase dataBase){
+    public Response undo(TreeMap<Long, City> changed, PostgresDataBase dataBase){
         dataBase.insertAllFromCollection(changed);
         return new Response("Удаление элементов коллекции отменено");
     }

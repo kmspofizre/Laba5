@@ -1,6 +1,6 @@
 package commands;
 
-import collections.CSVDataBase;
+import collections.PostgresDataBase;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
 import utils.DataPreparer;
@@ -13,12 +13,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class CommandHandler {
-    private CSVDataBase dataBase;
+    private PostgresDataBase dataBase;
     private Command [] commands;
     private String [] history;
     private int historyIndex;
     private InstructionFetcher instructionFetcher;
-    public CommandHandler(CSVDataBase dataBase, Command [] commands){
+    public CommandHandler(PostgresDataBase dataBase, Command [] commands){
         this.dataBase = dataBase;
         this.commands = commands;
         this.history = new String [14];

@@ -1,9 +1,11 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +18,7 @@ public class SumOfMetersAboveSeaLevelCommand extends Command{
     }
 
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {
         return dataBase.sumOfMetersAboveSeaLevel();
     }
 

@@ -1,6 +1,7 @@
 package utils;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import commands.Command;
 import commands.DataBaseCommand;
 import commands.ExecuteScriptCommand;
@@ -12,7 +13,7 @@ import java.util.*;
 
 public class RequestHandler {
     public static FinalResponse handleRequests(List<Request> requestList,
-                                                CSVDataBase csvDataBase,
+                                                PostgresDataBase csvDataBase,
                                                 Map.Entry<Command, TreeMap<Long, City>> lastAction) throws SQLException {
         List<Response> responses = new ArrayList<>();
         FinalResponse finalResponse = new FinalResponse("Final Response");

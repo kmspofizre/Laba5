@@ -1,6 +1,5 @@
 package commands;
 
-import collections.CSVDataBase;
 import utils.ResponseMachine;
 import validators.InputDataValidator;
 

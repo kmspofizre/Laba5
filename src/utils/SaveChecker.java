@@ -1,6 +1,7 @@
 package utils;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.City;
 import validators.InputDataValidator;
 
@@ -9,7 +10,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class SaveChecker {
-    public static boolean checkForSaves(CSVDataBase dataBase){
+    public static boolean checkForSaves(PostgresDataBase dataBase){
         if (!(dataBase.compareWithTMP())){
             ResponseMachine.makeStringResponse("У вас есть несохраненные изменения с прошлой сессии");
             TMPManager tmpManager = dataBase.getTmpManager();

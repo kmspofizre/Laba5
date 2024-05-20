@@ -3,6 +3,9 @@ package components;
 import utils.ResponseMachine;
 
 public class User {
+    private Integer id;
+    private String name;
+    private String passwrd;
     private String[] history;
     private int historyIndex;
     public User(){

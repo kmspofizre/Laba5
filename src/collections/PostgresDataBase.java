@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.Date;
 
-public class CSVDataBase extends DataBase {
+public class PostgresDataBase extends DataBase {
     private TreeMap<Long, City> dataBase;
     private Date initDate;
     private long lastCityId;
@@ -26,7 +26,7 @@ public class CSVDataBase extends DataBase {
     private TMPManager tmpManager;
     private Connection connection;
 
-    public CSVDataBase(String file_name, Connection connection) {
+    public PostgresDataBase(String file_name, Connection connection) {
         List<String[]> validatedData = getValidatedData(getData(file_name));
         TreeMap<Long, City> cityCollection = CityCollectionMaker.makeCityCollection(validatedData);
         this.initDate = new Date();
@@ -256,7 +256,9 @@ public class CSVDataBase extends DataBase {
                 return dbResponse;
             }
         }
-        public Response clear () {
+        public Response clear () throws SQLException {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("TRUNCATE city");
+            preparedStatement.executeUpdate();
             DataBaseResponse dbResponse = new DataBaseResponse("Коллекция очищена");
             TreeMap<Long, City> backup = (TreeMap<Long, City>) this.dataBase.clone();
             dbResponse.addDeletedPart(backup);
@@ -266,7 +268,7 @@ public class CSVDataBase extends DataBase {
         }
 
 
-        public Response removeGreaterKey (long id, boolean fromScript){
+        public Response removeGreaterKey (long id, boolean fromScript) throws SQLException {
             DataBaseResponse dbResponse = new DataBaseResponse("Элементы с ключами, большими, чем заданный удалены успешно");
             TreeMap<Long, City> backup = new TreeMap<>();
             TreeMap<Long, City> copy = (TreeMap<Long, City>) this.dataBase.clone();
@@ -276,39 +278,46 @@ public class CSVDataBase extends DataBase {
                     this.dataBase.remove(currentId);
                 }
             }
+            PreparedStatement removeGreaterStatement = this.connection.prepareStatement("DELETE FROM city WHERE id < ?");
+            removeGreaterStatement.setLong(1, id);
+            removeGreaterStatement.executeUpdate();
             dbResponse.addDeletedPart(backup);
             dbResponse.setSuccess(true);
             return dbResponse;
         }
 
-        public Response sumOfMetersAboveSeaLevel () {
+        public Response sumOfMetersAboveSeaLevel () throws SQLException {
             Collection<City> values = this.dataBase.values();
             Double sum = 0.0;
-            for (City item : values) {
-                sum += item.getMetersAboveSeaLevel();
+            PreparedStatement sumOfMetersStatement = this.connection.prepareStatement("SELECT * FROM city");
+            ResultSet resultSet = sumOfMetersStatement.executeQuery();
+            while (resultSet.next()){
+                sum += resultSet.getDouble("meters_above_sea_level");
             }
             return ResponseMachine.makeClientResponse("Сумма значений 'Высота над уровнем моря': " + sum);
         }
 
-        public Response countGreaterThanMetersAboveSeaLevel (Double metersAboveSeaLevel){
-            Collection<City> values = this.dataBase.values();
+        public Response countGreaterThanMetersAboveSeaLevel (Double metersAboveSeaLevel) throws SQLException {
             long count = 0;
-            for (City item : values) {
-                if (item.getMetersAboveSeaLevel() > metersAboveSeaLevel) {
+            PreparedStatement sumOfMetersStatement = this.connection.prepareStatement("SELECT * FROM city");
+            ResultSet resultSet = sumOfMetersStatement.executeQuery();
+            while (resultSet.next()) {
+                if (resultSet.getDouble("meters_above_sea_level") > metersAboveSeaLevel) {
                     count += 1;
                 }
             }
             return ResponseMachine.makeClientResponse("Количество городов, высота которых над уровнем море больше заданной: " + count);
         }
 
-        public Response filterContainsName (String name){
+        public Response filterContainsName (String name) throws SQLException {
             Collection<City> values = this.dataBase.values();
             String resp;
             resp = "Элементы, содержащие " + name + "\n";
-
-            for (City item : values) {
-                if (item.getName().contains(name)) {
-                    resp = resp + item + "\n";
+            PreparedStatement sumOfMetersStatement = this.connection.prepareStatement("SELECT * FROM city");
+            ResultSet resultSet = sumOfMetersStatement.executeQuery();
+            while (resultSet.next()) {
+                if (resultSet.getString("name").contains(name)) {
+                    resp = resp + resultSet.getString("name") + "\n";
                 }
             }
             return ResponseMachine.makeClientResponse(resp);
@@ -322,12 +331,26 @@ public class CSVDataBase extends DataBase {
             }
         }
 
-        public Response removeLower (Long id, boolean fromScript){
+        public Response removeLower (Long id, boolean fromScript) throws SQLException {
             DataBaseResponse dbResponse = new DataBaseResponse("Элементы удалены");
-            if (this.dataBase.containsKey(id)) {
+            boolean cityExists = this.cityExists(id);
+            if (cityExists) {
+                PreparedStatement particularCity = this.connection.prepareStatement("SELECT * FROM city WHERE id = ?");
+                particularCity.setLong(1, id);
+                ResultSet oneMoreCity = particularCity.executeQuery();
+                oneMoreCity.next();
+                PreparedStatement allCitiesStatement = this.connection.prepareStatement("SELECT * FROM city");
+                ResultSet resultSet = allCitiesStatement.executeQuery();
                 TreeMap<Long, City> backup = new TreeMap<>();
                 TreeMap<Long, City> newCityCollection = new TreeMap<>();
                 City city = this.dataBase.get(id);
+                while (resultSet.next()){
+                    if (resultSet.getInt("city_population") < oneMoreCity.getInt("city_population")){
+                        PreparedStatement deleteStatement = this.connection.prepareStatement("DELETE FROM city WHERE id = ?");
+                        deleteStatement.setLong(1, resultSet.getLong("id"));
+                        deleteStatement.executeUpdate();
+                    }
+                }
                 for (Map.Entry<Long, City> item : this.dataBase.entrySet()) {
                     if (item.getValue().compareTo(city) >= 0) {
                         newCityCollection.put(item.getKey(), item.getValue());
@@ -437,4 +460,5 @@ public class CSVDataBase extends DataBase {
         resultSet.next();
         return resultSet.getInt("id");
     }
+
 }

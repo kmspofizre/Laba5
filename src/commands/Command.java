@@ -1,6 +1,6 @@
 package commands;
 
-import collections.CSVDataBase;
+import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
 
@@ -21,7 +21,7 @@ public class Command implements Serializable {
         this.hasInlineArguments = hasInlineArguments;
         this.isMultiLines = isMultiLines;
     }
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript) throws SQLException {return null;}
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript) throws SQLException {return null;}
     @Override
     public String toString(){
         return this.commandName + " - " + this.description;

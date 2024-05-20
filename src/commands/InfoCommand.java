@@ -1,6 +1,7 @@
 package commands;
 
-import collections.CSVDataBase;
+
+import collections.PostgresDataBase;
 import components.Request;
 import components.Response;
 
@@ -15,7 +16,7 @@ public class InfoCommand extends Command{
         super(commandName, description, hasInlineArguments, isMultiLines);
     }
     @Override
-    public Response execute(String [] args, CSVDataBase dataBase, boolean fromScript){
+    public Response execute(String [] args, PostgresDataBase dataBase, boolean fromScript){
         return dataBase.info();
     }
 
