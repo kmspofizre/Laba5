@@ -11,8 +11,7 @@ import java.util.*;
 
 public class RequestHandler {
     public static FinalResponse handleRequests(List<Request> requestList,
-                                                PostgresDataBase csvDataBase,
-                                                Map.Entry<Command, TreeMap<Long, City>> lastAction) throws SQLException {
+                                                PostgresDataBase csvDataBase) throws SQLException {
         List<Response> responses = new ArrayList<>();
         FinalResponse finalResponse = new FinalResponse("Final Response");
         finalResponse.setContainsReversible(false);
@@ -21,23 +20,8 @@ public class RequestHandler {
         for (Request request : requestList){
             User user = request.getUser();
             Command command = request.getCommand();
-            if (Objects.equals(command.getCommandName(), "undo")){
-                if (lastAction == null){
-                    responses.add(new Response("У Вас нет новых изменений"));
-                }
-                else if (lastAction.getValue() == null){
-                    responses.add(new Response("У Вас нет новых изменений"));
-                }
-                else {
-                    if (canUndo){
-                        canUndo = false;
-                        Response response = ((Reversible) lastAction.getKey()).undo(lastAction.getValue(), csvDataBase);
-                        responses.add(response);
-                        isLastUndo = true;
-                    }
-                }
-            }
-            else if (command instanceof UserRegisterCommand){
+
+            if (command instanceof UserRegisterCommand){
                 if (command instanceof Register){
                     System.out.println(user);
                     responses.add(csvDataBase.registerUser(request.getUser()));

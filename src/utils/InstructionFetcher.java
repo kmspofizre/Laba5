@@ -94,6 +94,7 @@ public class InstructionFetcher {
                 continue;
             }
             Request commandRequest = currentCommand.prepareRequest(argsToGive, scanner, true);
+            commandRequest.setUser(user);
             RequestMachine.addCommandToRequest(commandRequest, currentCommand);
             requestList.add(commandRequest);
         }

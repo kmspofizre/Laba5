@@ -1,10 +1,13 @@
 import collections.PostgresDataBase;
 import commands.*;
 import sun.misc.Signal;
+import thread.RequestReader;
 import utils.*;
 
 import java.io.IOException;
 
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,11 +17,11 @@ import static java.nio.channels.SelectionKey.OP_WRITE;
 
 
 public class Main {
+    public static TCPServer serv;
     public static void main(String[] args) throws IOException, SQLException {
 
 
         Command [] commands = CommandsInitiator.initCommands();
-        //jdbc:postgresql://localhost:5432/lab7
         Properties properties = PropertiesReader.getProperties("server_config.properties");
         String jdbcURL = properties.getProperty("jdbcURL");
         String username = properties.getProperty("username");
@@ -31,13 +34,37 @@ public class Main {
             dataBase.save();
             System.exit(0);
         });
-        TCPServer tcpServer = new TCPServer(dataBase, "localhost", 8080);
-        try{
-            tcpServer.runTCP();
-        }
-        catch (ClassNotFoundException e1){
-            ResponseMachine.makeStringResponse(e1.getException());
-            ResponseMachine.makeStringResponse(e1.getMessage());
-        }
+        serv = new TCPServer(dataBase, "localhost", 8080);
+        getServerAcceptThread(dataBase).start();
+        //try{
+         //   tcpServer.runTCP();
+        //}
+        //catch (ClassNotFoundException e1){
+         //   ResponseMachine.makeStringResponse(e1.getException());
+         //   ResponseMachine.makeStringResponse(e1.getMessage());
+        //}
     }
+
+
+    private static Thread getServerAcceptThread(PostgresDataBase dataBase) {
+        return new Thread(() -> {
+            ServerSocketChannel serverChannel = serv.getServer();
+
+            while (true) {
+                try {
+                    SocketChannel client = serverChannel.accept();
+
+                    if (client == null) continue;
+
+                    client.configureBlocking(false);
+
+                    Thread requestReaderThread = new Thread(new RequestReader(client, dataBase));
+                    requestReaderThread.start();
+                } catch (IOException e) {
+                    ResponseMachine.makeStringResponse("User () disconnected");
+                }
+            }
+        });
+    }
+
 }

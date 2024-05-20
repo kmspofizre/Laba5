@@ -21,119 +21,106 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class TCPServer {
-    private final PostgresDataBase dataBase;
-    private Map<SocketChannel, Map.Entry<Command, TreeMap<Long, City>>> lastActions;
-    private Map<SocketChannel, List<Response>> userResponses;
-    private final Selector selector;
-    private final ByteBuffer intBuffer;
+
+    private ServerSocketChannel server;
 
     public TCPServer(PostgresDataBase csvDataBase, String hostname, int port) throws IOException {
-        this.dataBase = csvDataBase;
-        this.selector = Selector.open();
-        this.intBuffer = ByteBuffer.allocate(Integer.BYTES);
-        ServerSocketChannel server = ServerSocketChannel.open();
+        this.server = ServerSocketChannel.open();
         server.bind(new InetSocketAddress(hostname, port));
         server.configureBlocking(false);
-        server.register(this.selector, SelectionKey.OP_ACCEPT);
-        this.userResponses = new HashMap<>();
-        this.lastActions = new HashMap<>();
     }
+//
+//    public void runTCP() throws IOException, ClassNotFoundException, SQLException {
+//        while (true) {
+//            this.selector.select();
+//            Set<SelectionKey> keys = this.selector.selectedKeys();
+//            for (var iter = keys.iterator(); iter.hasNext(); ) {
+//                SelectionKey key = iter.next();
+//                iter.remove();
+//                try {
+//                    if (key.isValid()) {
+//                        if (key.isAcceptable()) {
+//                            connectUser(key);
+//                        }
+//                        if (key.isReadable()) {
+//                            readUser(key);
+//                        }
+//                        if (key.isWritable()) {
+//                            writeUser(key);
+//                        }
+//                    }
+//                }
+//                catch (SocketException se){
+//                    continue;
+//                }
+//            }
+//        }
 
-    public void runTCP() throws IOException, ClassNotFoundException, SQLException {
-        while (true) {
-            this.selector.select();
-            Set<SelectionKey> keys = this.selector.selectedKeys();
-            for (var iter = keys.iterator(); iter.hasNext(); ) {
-                SelectionKey key = iter.next();
-                iter.remove();
-                try {
-                    if (key.isValid()) {
-                        if (key.isAcceptable()) {
-                            connectUser(key);
-                        }
-                        if (key.isReadable()) {
-                            readUser(key);
-                        }
-                        if (key.isWritable()) {
-                            writeUser(key);
-                        }
-                    }
-                }
-                catch (SocketException se){
-                    continue;
-                }
-            }
-        }
-
-    }
-
-
-    private void connectUser(SelectionKey key) throws IOException, SocketException {
-        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-        SocketChannel client = serverSocketChannel.accept();
-        client.configureBlocking(false);
-        client.register(this.selector, SelectionKey.OP_READ);
-    }
+//    }
+//
+//
+//    private void connectUser(SelectionKey key) throws IOException, SocketException {
+//        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+//        SocketChannel client = serverSocketChannel.accept();
+//        client.configureBlocking(false);
+//        client.register(this.selector, SelectionKey.OP_READ);
+//    }
 
     private void disconnect(SocketChannel client) throws IOException, SocketException {
         client.close();
     }
 
+//
+//    private void readUser(SelectionKey key) throws IOException, ClassNotFoundException, SQLException {
+//        SocketChannel client = (SocketChannel) key.channel();
+//        this.intBuffer.clear();
+//        int size = client.read(this.intBuffer);
+//        if (size == -1) {
+//            disconnect(client);
+//            return;
+//        }
+//        ByteBuffer buffer = ByteBuffer.allocate(this.intBuffer.flip().getInt());
+//        int curRead = 0;
+//        while (curRead < size) {
+//            curRead = client.read(buffer);
+//            if (curRead == 0) {
+//                continue;
+//            }
+//            if (curRead == -1) {
+//                break;
+//            }
+//            size -= curRead;
+//        }
+//        byte[] bytes = buffer.array();
+//        List<Request> requests = DataPreparer.getRequests(bytes);
+//        FinalResponse responses;
+//        if (this.lastActions.containsKey(client)){
+//            responses = RequestHandler.handleRequests(requests, this.dataBase);
+//        }
+//        else {
+//            responses = RequestHandler.handleRequests(requests, this.dataBase);
+//        }
+//        this.userResponses.put(client, responses.getResponses());
+//        ResponseHandler.handleResponses(responses.getResponses());
+//        client.register(this.selector, SelectionKey.OP_WRITE);
+//    }
+//
+//    public void writeUser(SelectionKey key) throws IOException, SocketException {
+//        SocketChannel client = (SocketChannel) key.channel();
+//        this.intBuffer.clear();
+//        List<Response> responses = this.userResponses.get(client);
+//        this.userResponses.remove(client);
+//        byte[] bytes = DataPreparer.serializeObj(responses).array();
+//        this.intBuffer.clear();
+//        this.intBuffer.putInt(bytes.length);
+//        this.intBuffer.flip();
+//        client.write(this.intBuffer);
+//        client.write(ByteBuffer.wrap(bytes));
+//        client.register(this.selector, SelectionKey.OP_READ);
+//        this.intBuffer.clear();
+//    }
 
-    private void readUser(SelectionKey key) throws IOException, ClassNotFoundException, SocketException, SQLException {
-        SocketChannel client = (SocketChannel) key.channel();
-        this.intBuffer.clear();
-        int size = client.read(this.intBuffer);
-        if (size == -1) {
-            disconnect(client);
-            return;
-        }
-        ByteBuffer buffer = ByteBuffer.allocate(this.intBuffer.flip().getInt());
-        int curRead = 0;
-        while (curRead < size) {
-            curRead = client.read(buffer);
-            if (curRead == 0) {
-                continue;
-            }
-            if (curRead == -1) {
-                break;
-            }
-            size -= curRead;
-        }
-        byte[] bytes = buffer.array();
-        List<Request> requests = DataPreparer.getRequests(bytes);
-        FinalResponse responses;
-        if (this.lastActions.containsKey(client)){
-            responses = RequestHandler.handleRequests(requests, this.dataBase,
-                    this.lastActions.get(client));
-        }
-        else {
-            responses = RequestHandler.handleRequests(requests, this.dataBase,
-                    null);
-        }
-        if (responses.isContainsReversible()){
-            this.lastActions.put(client, responses.getLastAction());
-        }
-        if (responses.isLastUndo()){
-            this.lastActions.remove(client);
-        }
-        this.userResponses.put(client, responses.getResponses());
-        ResponseHandler.handleResponses(responses.getResponses());
-        client.register(this.selector, SelectionKey.OP_WRITE);
-    }
-
-    public void writeUser(SelectionKey key) throws IOException, SocketException {
-        SocketChannel client = (SocketChannel) key.channel();
-        this.intBuffer.clear();
-        List<Response> responses = this.userResponses.get(client);
-        this.userResponses.remove(client);
-        byte[] bytes = DataPreparer.serializeObj(responses).array();
-        this.intBuffer.clear();
-        this.intBuffer.putInt(bytes.length);
-        this.intBuffer.flip();
-        client.write(this.intBuffer);
-        client.write(ByteBuffer.wrap(bytes));
-        client.register(this.selector, SelectionKey.OP_READ);
-        this.intBuffer.clear();
+    public ServerSocketChannel getServer() {
+        return server;
     }
 }
