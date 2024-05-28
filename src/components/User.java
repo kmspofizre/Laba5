@@ -7,15 +7,15 @@ import java.io.Serializable;
 public class User implements Serializable {
     private Integer id;
     private String name;
-    private String passwrd;
+    private byte[] passwrdHash;
     private String[] history;
     private int historyIndex;
     private static final long serialVersionUID = 52525252L;
-    public User(String name, String passwrd){
+    public User(String name, byte[] passwrdHash){
         this.history = new String [14];
         this.historyIndex = 0;
         this.name = name;
-        this.passwrd = passwrd;
+        this.passwrdHash = passwrdHash;
         this.id = 0;
     }
     public void getHistory(){
@@ -45,8 +45,8 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public void setPasswrd(String passwrd) {
-        this.passwrd = passwrd;
+    public void setPasswrd(byte[] passwrdHash) {
+        this.passwrdHash = passwrdHash;
     }
 
 
@@ -58,8 +58,8 @@ public class User implements Serializable {
         return id;
     }
 
-    public String getPasswrd() {
-        return passwrd;
+    public byte[] getPasswrd() {
+        return this.passwrdHash;
     }
 
     public void setId(Integer id) {

@@ -8,10 +8,14 @@ import validators.UserDataValidator;
 
 import java.io.*;
 import java.net.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.security.MessageDigest;
+
+
 
 public class Client {
     private Scanner scanner;
@@ -68,18 +72,26 @@ public class Client {
             ResponseMachine.makeStringResponse("В данный момент сервер недоступен");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
-    public static User accessUser(Scanner scanner, TCPClient tcpClient) throws IOException, ClassNotFoundException {
+    public static User accessUser(Scanner scanner, TCPClient tcpClient) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
         boolean isSuccess = false;
-        User user = new User("name", "des");
+        byte[] bytes1 = new byte[1];
+        User user = new User("name", bytes1);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        String pepper = "*63&^mVLC(#";
         while (!isSuccess){
             boolean registered = InputDataValidator.yesOrNo("Вы зарегистрированы? (YES/NO)");
             String name = UserDataValidator.askNameData("Введите логин", scanner);
             String passwd = UserDataValidator.askPasswordData("Введите пароль", scanner);
-            user = new User(name, passwd);
+            byte[] hash = md.digest(
+                    (passwd + pepper).getBytes("UTF-8"));
+
+            user = new User(name, hash);
             user.setName(name);
-            user.setPasswrd(passwd);
+            user.setPasswrd(hash);
             String [] kort = new String[1];
             List<Request> requestList = new ArrayList<>();
             if (registered) {

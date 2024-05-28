@@ -13,6 +13,7 @@ import writers.CSVWriter;
 
 import java.io.IOException;
 import java.io.SyncFailedException;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -470,8 +471,12 @@ public class PostgresDataBase extends DataBase {
 
     public Response loginUser(User user) throws SQLException {
         String userName = user.getName();
-        PreparedStatement checkLogin = this.connection.prepareStatement("SELECT * FROM users WHERE user_name = ?");
+        byte[] hash = user.getPasswrd();
+        String passwrd = new String(hash, StandardCharsets.UTF_8);
+        System.out.println(passwrd);
+        PreparedStatement checkLogin = this.connection.prepareStatement("SELECT * FROM users WHERE user_name = ? AND passwrd = ?");
         checkLogin.setString(1, userName);
+        checkLogin.setString(2, passwrd);
         ResultSet resultSet = checkLogin.executeQuery();
         if (resultSet.next()){
             user.setId(resultSet.getInt("id"));
@@ -488,13 +493,15 @@ public class PostgresDataBase extends DataBase {
         PreparedStatement checkLogin = this.connection.prepareStatement("SELECT * FROM users WHERE user_name = ?");
         checkLogin.setString(1, userName);
         ResultSet resultSet = checkLogin.executeQuery();
+        byte[] hash = user.getPasswrd();
+        String passwrd = new String(hash, StandardCharsets.UTF_8);
         if (resultSet.next()){
             return new UserResponse("Такой пользователь уже существует", false, user);
         }
         else {
             PreparedStatement addUser = this.connection.prepareStatement("INSERT INTO users(user_name, passwrd) VALUES (?, ?)");
             addUser.setString(1, user.getName());
-            addUser.setString(2, user.getPasswrd());
+            addUser.setString(2, passwrd);
             addUser.executeUpdate();
             resultSet = checkLogin.executeQuery();
             resultSet.next();
