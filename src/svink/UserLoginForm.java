@@ -12,6 +12,7 @@ public class UserLoginForm extends JFrame
     public JTextField smallField;
     public JButton submit;
     public JLabel response, login, password;
+    public JPasswordField passwordField;
     public UserLoginForm()
     {
         super("Форма входа");
@@ -34,14 +35,14 @@ public class UserLoginForm extends JFrame
 
         // Слушатель окончания ввода
         // Поле с паролем
-        JPasswordField password = new JPasswordField(30);
-        password.setEchoChar('*');
+        this.passwordField = new JPasswordField(30);
+        this.passwordField.setEchoChar('*');
         // Создание панели с текстовыми полями
         JPanel contents = new JPanel(new FlowLayout(FlowLayout.LEFT));
         contents.add(this.login);
         contents.add(this.smallField);
         contents.add(this.password);
-        contents.add(password);
+        contents.add(this.passwordField);
         contents.add(this.submit);
         contents.add(this.response);
         setContentPane(contents);

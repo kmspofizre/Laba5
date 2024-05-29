@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String[] history;
     private int historyIndex;
     private static final long serialVersionUID = 52525252L;
+    private boolean ready;
     public User(String name, byte[] passwrdHash){
         this.history = new String [14];
         this.historyIndex = 0;
@@ -64,5 +65,13 @@ public class User implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 }
