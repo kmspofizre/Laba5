@@ -2,10 +2,14 @@ import commands.*;
 import components.*;
 import exceptions.CommandExecutingException;
 import exceptions.WrongDataException;
+import svink.UserLoginForm;
 import utils.*;
 import validators.InputDataValidator;
 import validators.UserDataValidator;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
@@ -77,6 +81,17 @@ public class Client {
         }
     }
     public static User accessUser(Scanner scanner, TCPClient tcpClient) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
+        UserLoginForm userLoginForm = new UserLoginForm();
+        userLoginForm.setVisible(true);
+        userLoginForm.submit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Отображение введенного текста
+                JOptionPane.showMessageDialog(userLoginForm,
+                        "Ваше слово: " + userLoginForm.smallField.getText());
+                System.out.println(userLoginForm.smallField.getText());
+            }
+        });
+
         boolean isSuccess = false;
         byte[] bytes1 = new byte[1];
         User user = new User("name", bytes1);
