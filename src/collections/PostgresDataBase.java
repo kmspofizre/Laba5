@@ -136,7 +136,6 @@ public class PostgresDataBase extends DataBase {
         ResultSet resultSet = showStatement.executeQuery();
         String newCity;
         while (resultSet.next()){
-            newCity = "";
             String name = resultSet.getString("name");
             Integer area = resultSet.getInt("area");
             Integer cityPopulation = resultSet.getInt("city_population");
@@ -166,6 +165,7 @@ public class PostgresDataBase extends DataBase {
             String standardName = standardSet.getString("standard_of_living_name");
             Boolean userOwner = (resultSet.getInt("user_id") == userId);
             newCity = name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner;
+
             resp = resp + newCity + "\n";
         }
         return ResponseMachine.makeClientResponse(resp);

@@ -1,24 +1,34 @@
 package svink;
 
 // Использование текстовых полей JTextField
+
+import commands.Command;
+import commands.Login;
+import commands.Register;
 import components.*;
-import utils.TCPClient;
+import utils.*;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class UserLoginForm extends JFrame implements ActionListener
-{
+public class UserLoginForm extends JFrame implements ActionListener {
     // Текстовые поля
     public JTextField smallField;
     public JButton loginButton, registerButton;
     public JLabel response, login, password;
     public JPasswordField passwordField;
     public TCPClient tcpClient;
-    public UserLoginForm(TCPClient providedTCPClient)
-    {
+
+    public UserLoginForm(TCPClient providedTCPClient) {
         super("Форма входа");
         tcpClient = providedTCPClient;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -45,7 +55,6 @@ public class UserLoginForm extends JFrame implements ActionListener
         this.password.setHorizontalAlignment(JTextField.RIGHT);
 
 
-
         this.registerButton = new JButton("Регистрация");
         this.registerButton.setPreferredSize(new Dimension(150, 20));
         // Слушатель окончания ввода
@@ -60,7 +69,6 @@ public class UserLoginForm extends JFrame implements ActionListener
         this.loginButton.setActionCommand("Login");
         this.registerButton.addActionListener(this);
         this.registerButton.setActionCommand("Register");
-
 
 
         JPanel contents = new JPanel(new GridBagLayout());
@@ -104,11 +112,68 @@ public class UserLoginForm extends JFrame implements ActionListener
         setSize(400, 400);
         setVisible(false);
     }
+
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
         byte[] bytes1 = new byte[1];
-        User user = new User("qwerty", "qwerty".getBytes());
-        this.setVisible(false);
-        TableWindow anotherWindow = new TableWindow("Another Window", 600, 200, tcpClient, user);
+        User user;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            String pepper = "*63&^mVLC(#";
+            String login = smallField.getText();
+            String passwrd = new String(passwordField.getPassword());
+            if ((login.isEmpty()) | (login == null) | (login.equals("null")) | (login.length() < 2)) {
+                response.setText("Логин должен содержать не менее двух символов");
+                return;
+            } else if ((passwrd.isEmpty()) | (passwrd == null) | (passwrd.equals("null")) | (passwrd.length() < 5)) {
+                response.setText("Пароль не может быть меньше пяти символов");
+                return;
+            }
+            byte[] hash = md.digest(
+                    (passwrd + pepper).getBytes("UTF-8"));
+
+            user = new User(login, hash);
+            user.setName(login);
+            user.setPasswrd(hash);
+            String[] kort = new String[1];
+            List<Request> requestList = new ArrayList<>();
+            String command = e.getActionCommand();
+            UserRequest userRequest = new UserRequest(kort);
+            if (command.equals("Login")) {
+                Login loginCommand = new Login();
+                userRequest.setCommand(loginCommand);
+            } else if (command.equals("Register")) {
+                Register register = new Register();
+                userRequest.setCommand(register);
+            }
+            userRequest.setUser(user);
+            requestList.add(userRequest);
+            byte[] bytes = DataPreparer.serializeObj(requestList).array();
+            List<Response> responses = tcpClient.send(bytes);
+            UserResponse userResponse = (UserResponse) responses.get(0);
+            boolean isSuccess = userResponse.isSuccess();
+            if (!isSuccess) {
+                response.setText(userResponse.getResponseString());
+                return;
+            } else {
+                System.out.println(userResponse.getUser().getId());
+                response.setText(userResponse.getResponseString());
+                this.setVisible(false);
+                TableWindow anotherWindow = new TableWindow("Another Window", 300, 300, tcpClient, userResponse.getUser());
+                anotherWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                anotherWindow.setResizable(false);
+                anotherWindow.setLocationRelativeTo(null);
+                anotherWindow.setVisible(true);
+                setVisible(false);
+            }
+        } catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException(ex);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

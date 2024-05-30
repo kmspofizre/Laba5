@@ -1,9 +1,16 @@
 package svink;
 
+import commands.Command;
+import components.Request;
+import components.Response;
 import components.User;
-import utils.TCPClient;
+import utils.*;
 
 import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,16 +26,20 @@ public class TableWindow extends JFrame { // этот класс уже унас
     private JTable table1;
     private JTextField smallField;
     private JButton filterButton;
+    TCPClient tcpClient;
+    User user;
     // Данные для таблиц
 // Конструктор с параметрами
 
 
-    public TableWindow(String winTitle, int w, int h, TCPClient tcpClient, User user) {
+    public TableWindow(String winTitle, int w, int h, TCPClient providedtcpClient, User providedUser) {
+        tcpClient = providedtcpClient;
+        user = providedUser;
         width = w;
         height = h;
-        JFrame frame = new JFrame("Главное окно");
+        JFrame frame = new JFrame("Test frame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        justDoIt();
         String[] columnNames = {
                 "Название",
                 "Координаты",
@@ -131,5 +142,29 @@ public class TableWindow extends JFrame { // этот класс уже унас
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+    }
+    public void justDoIt(){
+        Scanner scanner = null;
+        Command[] commands = CommandsInitiator.initClientCommands();
+        InstructionFetcher infetch = new InstructionFetcher(commands);
+        String [] kort = new String[1];
+        java.util.List<Request> requestList = new ArrayList<>();
+        Command currentCommand = infetch.instructionFetch("show");
+        Request commandRequest = currentCommand.prepareRequest(kort, scanner, false);
+        RequestMachine.addCommandToRequest(commandRequest, currentCommand);
+        commandRequest.setUser(user);
+        requestList.add(commandRequest);
+        byte[] bytes = DataPreparer.serializeObj(requestList).array();
+        List<Response> responses = null;
+        try {
+            responses = tcpClient.send(bytes);
+            System.out.println("here");
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        ResponseHandler.handleResponses(responses);
     }
 }
