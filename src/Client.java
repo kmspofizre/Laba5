@@ -8,6 +8,7 @@ import validators.InputDataValidator;
 import validators.UserDataValidator;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -31,6 +32,8 @@ public class Client {
             List<Request> requestList = new ArrayList<>();
             TCPClient tcpClient = new TCPClient("localhost", 8080);
             UserLoginForm userLoginForm = new UserLoginForm(tcpClient);
+            userLoginForm.setMinimumSize(new Dimension(750, 300));
+            userLoginForm.setPreferredSize(new Dimension(950, 600));
             userLoginForm.setVisible(true);
             User user = accessUser(scanner, tcpClient);
             while (true) {
