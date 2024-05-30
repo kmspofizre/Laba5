@@ -1,22 +1,13 @@
 package svink;
 
 // Использование текстовых полей JTextField
-import commands.Login;
-import commands.Register;
 import components.*;
-import utils.DataPreparer;
 import utils.TCPClient;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserLoginForm extends JFrame implements ActionListener
 {
@@ -118,10 +109,6 @@ public class UserLoginForm extends JFrame implements ActionListener
         byte[] bytes1 = new byte[1];
         User user = new User("qwerty", "qwerty".getBytes());
         this.setVisible(false);
-        AnotherWindow anotherWindow = new AnotherWindow("Another Window", 1000, 600, tcpClient, user);
-        anotherWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        anotherWindow.setResizable(false);
-        anotherWindow.setLocationRelativeTo(null);
-        anotherWindow.setVisible(true);
+        TableWindow anotherWindow = new TableWindow("Another Window", 400, 200, tcpClient, user);
     }
 }
