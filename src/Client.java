@@ -27,10 +27,11 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         Command[] commands = CommandsInitiator.initClientCommands();
         InstructionFetcher infetch = new InstructionFetcher(commands);
-
         try {
             List<Request> requestList = new ArrayList<>();
             TCPClient tcpClient = new TCPClient("localhost", 8080);
+            UserLoginForm userLoginForm = new UserLoginForm(tcpClient);
+            userLoginForm.setVisible(true);
             User user = accessUser(scanner, tcpClient);
             while (true) {
                 try {
@@ -81,17 +82,6 @@ public class Client {
         }
     }
     public static User accessUser(Scanner scanner, TCPClient tcpClient) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
-        UserLoginForm userLoginForm = new UserLoginForm();
-        userLoginForm.setVisible(true);
-        userLoginForm.submit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Отображение введенного текста
-                JOptionPane.showMessageDialog(userLoginForm,
-                        "Ваше слово: " + userLoginForm.smallField.getText());
-                System.out.println(userLoginForm.smallField.getText());
-            }
-        });
-
         boolean isSuccess = false;
         byte[] bytes1 = new byte[1];
         User user = new User("name", bytes1);
@@ -133,4 +123,5 @@ public class Client {
         }
         return user;
     }
+
 }
