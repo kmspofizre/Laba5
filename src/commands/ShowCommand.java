@@ -18,7 +18,7 @@ public class ShowCommand extends Command{
     }
     @Override
     public Response execute(String [] args, PostgresDataBase dataBase, User user) throws SQLException {
-        return dataBase.show();
+        return dataBase.show(user);
     }
 
 

@@ -120,16 +120,52 @@ public class PostgresDataBase extends DataBase {
         return ResponseMachine.makeClientResponse(resp);
     }
 
-    public Response show() throws SQLException {
+    public Response show(User user) throws SQLException {
         PreparedStatement showStatement = this.connection.prepareStatement("SELECT * FROM city");
+        PreparedStatement coordinatesStatement = this.connection.prepareStatement("SELECT * FROM coordinates WHERE id = ?");
+        PreparedStatement humanStatement = this.connection.prepareStatement("SELECT * FROM human WHERE id = ?");
+        PreparedStatement climateStatement = this.connection.prepareStatement("SELECT * FROM climate WHERE id = ?");
+        PreparedStatement governmentStatement = this.connection.prepareStatement("SELECT * FROM government WHERE id = ?");
+        PreparedStatement standardOfLivingStatement = this.connection.prepareStatement("SELECT * FROM standard_of_living WHERE id = ?");
+        PreparedStatement userStatement = this.connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+        userStatement.setInt(1, user.getId());
+        ResultSet userSet = userStatement.executeQuery();
+        userSet.next();
+        int userId = userSet.getInt("id");
         String resp = "";
         ResultSet resultSet = showStatement.executeQuery();
         String newCity;
         while (resultSet.next()){
             newCity = "";
-            newCity = newCity + "Название: " + resultSet.getString("name") + "\n";
-            newCity = newCity + "Площадь: " + Integer.valueOf(resultSet.getInt("area")).toString() + "\n";
-            newCity = newCity + "Население: " + Integer.valueOf(resultSet.getInt("city_population")).toString() + "\n";
+            String name = resultSet.getString("name");
+            Integer area = resultSet.getInt("area");
+            Integer cityPopulation = resultSet.getInt("city_population");
+            Double metersAboveSeaLevel = resultSet.getDouble("meters_above_sea_level");
+            coordinatesStatement.setInt(1, resultSet.getInt("coordinate"));
+            ResultSet coordinatesSet = coordinatesStatement.executeQuery();
+            coordinatesSet.next();
+            Float x = coordinatesSet.getFloat("x");
+            Integer y = coordinatesSet.getInt("y");
+            humanStatement.setInt(1, resultSet.getInt("governor"));
+            ResultSet humanSet = humanStatement.executeQuery();
+            humanSet.next();
+            Integer governorAge = humanSet.getInt("age");
+            climateStatement.setInt(1, resultSet.getInt("climate"));
+            ResultSet climateSet = climateStatement.executeQuery();
+            climateSet.next();
+            String climateName = climateSet.getString("climate_name");
+            governmentStatement.setInt(1, resultSet.getInt("government"));
+            ResultSet governmentSet = governmentStatement.executeQuery();
+            governmentSet.next();
+            String governmentName = governmentSet.getString("government_name");
+            // next
+            standardOfLivingStatement.setInt(1, resultSet.getInt("standard_of_living"));
+            standardOfLivingStatement.executeQuery();
+            ResultSet standardSet = standardOfLivingStatement.executeQuery();
+            standardSet.next();
+            String standardName = standardSet.getString("standard_of_living_name");
+            Boolean userOwner = (resultSet.getInt("user_id") == userId);
+            newCity = name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner;
             resp = resp + newCity + "\n";
         }
         return ResponseMachine.makeClientResponse(resp);
