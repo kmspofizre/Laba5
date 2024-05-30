@@ -37,9 +37,21 @@ public class TableWindow extends JFrame { // этот класс уже унас
         user = providedUser;
         width = w;
         height = h;
-        JFrame frame = new JFrame("Test frame");
+        JFrame frame = new JFrame("Главная");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        justDoIt();
+        String citiesData = justDoIt();
+        int i = 0;
+        int dataLength = citiesData.split("\n").length;
+        String[][] tableData = new String[dataLength][5];
+        for (String elem : citiesData.split("\n")){
+            String[] dataToGet = elem.split("_");
+            tableData[i][0] = dataToGet[0];
+            tableData[i][1] = dataToGet[1] + ", " + dataToGet[2];
+            tableData[i][2] = dataToGet[3];
+            tableData[i][3] = dataToGet[4];
+            tableData[i][4] = dataToGet[8];
+            i++;
+        }
         String[] columnNames = {
                 "Название",
                 "Координаты",
@@ -48,26 +60,10 @@ public class TableWindow extends JFrame { // этот класс уже унас
                 "Уровень жизни"
         };
 
-        String[][] data = {
-                {"addins", "02.11.2006 19:15", "Folder", "", ""},
-                {"AppPatch", "03.10.2006 14:10", "Folder", "", ""},
-                {"assembly", "02.11.2006 14:20", "Folder", "", ""},
-                {"Boot", "13.10.2007 10:46", "Folder", "", ""},
-                {"Branding", "13.10.2007 12:10", "Folder", "", ""},
-                {"Cursors", "23.09.2006 16:34", "Folder", "", ""},
-                {"Debug", "07.12.2006 17:45", "Folder", "", ""},
-                {"Fonts", "03.10.2006 14:08", "Folder", "", ""},
-                {"Help", "08.11.2006 18:23", "Folder", "", ""},
-                {"explorer.exe", "18.10.2006 14:13", "File", "2,93MB", ""},
-                {"helppane.exe", "22.08.2006 11:39", "File", "4,58MB", ""},
-                {"twunk.exe", "19.08.2007 10:37", "File", "1,08MB", ""},
-                {"nsreg.exe", "07.08.2007 11:14", "File", "2,10MB", ""},
-                {"avisp.exe", "17.12.2007 16:58", "File", "12,67MB", ""},
-        };
 
         JPanel contents = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        JTable table = new JTable(data, columnNames);
+        JTable table = new JTable(tableData, columnNames);
         table.setEnabled(false);
         JButton button;
         String[] items = {
@@ -144,7 +140,7 @@ public class TableWindow extends JFrame { // этот класс уже унас
         frame.setVisible(true);
 
     }
-    public void justDoIt(){
+    public String justDoIt(){
         Scanner scanner = null;
         Command[] commands = CommandsInitiator.initClientCommands();
         InstructionFetcher infetch = new InstructionFetcher(commands);
@@ -166,5 +162,6 @@ public class TableWindow extends JFrame { // этот класс уже унас
             throw new RuntimeException(ex);
         }
         ResponseHandler.handleResponses(responses);
+        return responses.get(0).getResponseString();
     }
 }

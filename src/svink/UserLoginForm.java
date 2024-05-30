@@ -110,7 +110,6 @@ public class UserLoginForm extends JFrame implements ActionListener {
 
         // Определяем размер окна и выводим его на экран
         setSize(400, 400);
-        setVisible(false);
     }
 
     @Override
@@ -158,13 +157,8 @@ public class UserLoginForm extends JFrame implements ActionListener {
             } else {
                 System.out.println(userResponse.getUser().getId());
                 response.setText(userResponse.getResponseString());
-                this.setVisible(false);
                 TableWindow anotherWindow = new TableWindow("Another Window", 300, 300, tcpClient, userResponse.getUser());
-                anotherWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                anotherWindow.setResizable(false);
-                anotherWindow.setLocationRelativeTo(null);
-                anotherWindow.setVisible(true);
-                setVisible(false);
+                this.setVisible(false);
             }
         } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
