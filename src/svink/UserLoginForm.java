@@ -32,9 +32,10 @@ public class UserLoginForm extends JFrame implements ActionListener
         tcpClient = providedTCPClient;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Создание текстовых полей
-        this.smallField = new JTextField();
+        this.smallField = new JTextField(30);
         this.smallField.setToolTipText("Короткое поле");
-        this.smallField.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 30));
+        this.smallField.setPreferredSize(new Dimension(100, 20));
+
         // Настройка шрифта
         this.loginButton = new JButton("Вход");
         this.loginButton.setPreferredSize(new Dimension(150, 20));
@@ -44,48 +45,52 @@ public class UserLoginForm extends JFrame implements ActionListener
         this.response.setPreferredSize(new Dimension(400, 20));
 
         this.login = new JLabel("Логин");
-        this.login.setPreferredSize(new Dimension(400, 20));
-        this.login.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+        this.login.setPreferredSize(new Dimension(100, 20));
+        this.login.setHorizontalAlignment(JTextField.RIGHT);
 
         this.password = new JLabel("Пароль");
-        this.password.setPreferredSize(new Dimension(400, 20));
-        this.password.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+        this.password.setPreferredSize(new Dimension(100, 20));
+        this.password.setHorizontalAlignment(JTextField.RIGHT);
+
 
 
         this.registerButton = new JButton("Регистрация");
         this.registerButton.setPreferredSize(new Dimension(150, 20));
         // Слушатель окончания ввода
         // Поле с паролем
-        this.passwordField = new JPasswordField();
+        this.passwordField = new JPasswordField(30);
+        this.passwordField.setPreferredSize(new Dimension(100, 20));
         this.passwordField.setEchoChar('*');
-        this.passwordField.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 30));
+
         // Создание панели с текстовыми полями
 
         this.loginButton.addActionListener(this);
         this.loginButton.setActionCommand("Login");
         this.registerButton.addActionListener(this);
         this.registerButton.setActionCommand("Register");
-        GridLayout gridLayout = new GridLayout(4, 1, 10, 20);
-        JPanel loginPanel = new JPanel(new GridLayout(1, 2, 10, 20));
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 20));
-        loginPanel.add(this.login);
-        loginPanel.add(this.smallField);
-        JPanel passwordPanel = new JPanel((new GridLayout(1, 2, 10 ,20)));
-        passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 20));
-        passwordPanel.add(this.password);
-        passwordPanel.add(this.passwordField);
-        JPanel buttonsPanel = new JPanel((new GridLayout(1, 2, 10, 20)));
-        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 20));
-        buttonsPanel.add(this.loginButton);
-        buttonsPanel.add(this.registerButton);
-        JPanel labelPanel = new JPanel((new GridLayout(1, 1)));
-        labelPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 20));
-        labelPanel.add(this.response);
-        JPanel contents = new JPanel(gridLayout);
-        contents.add(loginPanel);
-        contents.add(passwordPanel);
-        contents.add(buttonsPanel);
-        contents.add(labelPanel);
+
+
+
+        JPanel contents = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        contents.add(this.login, c);
+        c.weightx = 0.5;
+        c.gridx = 1;
+        c.gridy = 0;
+        contents.add(this.smallField, c);
+        c.insets = new Insets(10, 0, 0, 0);
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 1;
+        contents.add(this.password, c);
+        c.insets = new Insets(10, 0, 0, 0);
+        c.weightx = 0.5;
+        c.gridx = 1;
+        c.gridy = 1;
+        contents.add(this.passwordField, c);
         setContentPane(contents);
 
         // Определяем размер окна и выводим его на экран
