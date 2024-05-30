@@ -109,6 +109,6 @@ public class UserLoginForm extends JFrame implements ActionListener
         byte[] bytes1 = new byte[1];
         User user = new User("qwerty", "qwerty".getBytes());
         this.setVisible(false);
-        TableWindow anotherWindow = new TableWindow("Another Window", 400, 200, tcpClient, user);
+        TableWindow anotherWindow = new TableWindow("Another Window", 600, 200, tcpClient, user);
     }
 }
