@@ -34,7 +34,6 @@ public class UserLoginForm extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Создание текстовых полей
         this.smallField = new JTextField(30);
-        this.smallField.setToolTipText("Короткое поле");
         this.smallField.setPreferredSize(new Dimension(100, 20));
 
         // Настройка шрифта

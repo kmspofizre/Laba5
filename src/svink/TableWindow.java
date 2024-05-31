@@ -179,13 +179,13 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
         if (actionCommand.equals("Добавить")){
-
+            InsertElementForm insertElementForm = new InsertElementForm(tcpClient, user);
         }
         else if (actionCommand.equals("Изменить")){
-
+            UpdateElementForm updateElementForm = new UpdateElementForm(tcpClient, user);
         }
         else if (actionCommand.equals("Удалить")){
-
+            RemoveElementForm removeElementForm = new RemoveElementForm(tcpClient, user);
         }
     }
 }
