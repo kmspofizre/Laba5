@@ -10,9 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,6 +27,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
     private JTable table1;
     private JTextField smallField;
     private JButton filterButton, insertButton, updateButton, removeButton;
+    JComboBox comboBox;
     TCPClient tcpClient;
     User user;
     // Данные для таблиц
@@ -41,21 +41,19 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         height = h;
         JFrame frame = new JFrame("Главная");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        String citiesData = justDoIt();
-        int i = 0;
-        int dataLength = citiesData.split("\n").length;
-        String[][] tableData = new String[dataLength][7];
-        for (String elem : citiesData.split("\n")){
-            String[] dataToGet = elem.split("_");
-            tableData[i][0] = dataToGet[0];
-            tableData[i][1] = dataToGet[1];
-            tableData[i][2] = dataToGet[2] + ", " + dataToGet[2];
-            tableData[i][3] = dataToGet[4];
-            tableData[i][4] = dataToGet[5];
-            tableData[i][5] = dataToGet[9];
-            tableData[i][6] = dataToGet[11];
-            i++;
-        }
+        smallField = new JTextField(30);
+        smallField.setToolTipText("Фильтр по названию");
+        smallField.setPreferredSize(new Dimension(300, 30));
+
+        String[] items = {
+                "Нет сортировки",
+                "Возрастание",
+                "Убывание"
+        };
+        comboBox = new JComboBox(items);
+        comboBox.setPreferredSize(new Dimension(300, 30));
+
+        String[][] tableData = justDoIt();
         String[] columnNames = {
                 "ID",
                 "Название",
@@ -72,13 +70,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         JTable table = new JTable(tableData, columnNames);
         table.setEnabled(false);
         JButton button;
-        String[] items = {
-                "Элемент списка 1",
-                "Элемент списка 2",
-                "Элемент списка 3"
-        };
-        JComboBox comboBox = new JComboBox(items);
-        comboBox.setPreferredSize(new Dimension(300, 30));
+
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 1;
         c.gridheight = 1;
@@ -86,25 +78,14 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         c.gridx = 0;
         c.weightx = 0.5;
         contents.add(comboBox, c);
-        smallField = new JTextField(30);
-        smallField.setToolTipText("Фильтр по названию");
-        smallField.setPreferredSize(new Dimension(300, 30));
+
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
+        c.gridwidth = 2;
         c.gridheight = 1;
         c.gridy = 0;
         c.gridx = 1;
         c.weightx = 0.5;
         contents.add(smallField, c);
-        filterButton = new JButton("Фильтровать");
-        filterButton.setPreferredSize(new Dimension(300, 30));
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridheight = 1;
-        c.gridy = 0;
-        c.gridx = 2;
-        c.weightx = 0.5;
-        contents.add(filterButton, c);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(700, 600));
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -152,7 +133,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         frame.setVisible(true);
 
     }
-    public String justDoIt(){
+    public String[][] justDoIt(){
         Scanner scanner = null;
         Command[] commands = CommandsInitiator.initClientCommands();
         InstructionFetcher infetch = new InstructionFetcher(commands);
@@ -173,7 +154,43 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
             throw new RuntimeException(ex);
         }
         ResponseHandler.handleResponses(responses);
-        return responses.get(0).getResponseString();
+        String citiesData = responses.get(0).getResponseString();
+        int i = 0;
+        int j = 0;
+        int dataLength = citiesData.split("\n").length;
+        String[][] tableData = new String[dataLength][7];
+        String[][] tableDataFinal = new String[dataLength][7];
+        for (String elem : citiesData.split("\n")){
+            String[] dataToGet = elem.split("_");
+            tableData[i][0] = dataToGet[0];
+            tableData[i][1] = dataToGet[1];
+            tableData[i][2] = dataToGet[2] + ", " + dataToGet[2];
+            tableData[i][3] = dataToGet[4];
+            tableData[i][4] = dataToGet[5];
+            tableData[i][5] = dataToGet[9];
+            tableData[i][6] = dataToGet[11];
+            i++;
+            if ((dataToGet[1].contains(smallField.getText())) | smallField.getText().equals("")){
+                tableDataFinal[j][0] = dataToGet[0];
+                tableDataFinal[j][1] = dataToGet[1];
+                tableDataFinal[j][2] = dataToGet[2] + ", " + dataToGet[2];
+                tableDataFinal[j][3] = dataToGet[4];
+                tableDataFinal[j][4] = dataToGet[5];
+                tableDataFinal[j][5] = dataToGet[9];
+                tableDataFinal[j][6] = dataToGet[11];
+                j++;
+            }
+        }
+        String selectedItem = (String)comboBox.getSelectedItem();
+        if (Objects.equals(selectedItem, "Возрастание")){
+            List<String[]> data = Arrays.stream(tableDataFinal).toList();
+            data.sort(Comparator.comparingInt(o -> Integer.parseInt(o[4])));
+        }
+        else if (Objects.equals(selectedItem, "Убывание")){
+            List<String[]> data = Arrays.stream(tableDataFinal).toList();
+            data.sort((o1, o2) -> -1 * (Integer.parseInt(o1[4]) - Integer.parseInt(o2[4])));
+        }
+        return tableDataFinal;
     }
 
     @Override
