@@ -164,7 +164,7 @@ public class PostgresDataBase extends DataBase {
             standardSet.next();
             String standardName = standardSet.getString("standard_of_living_name");
             Boolean userOwner = (resultSet.getInt("user_id") == userId);
-            newCity = name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner;
+            newCity = name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner + "_" + userId;
 
             resp = resp + newCity + "\n";
         }

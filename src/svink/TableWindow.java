@@ -7,6 +7,8 @@ import components.User;
 import utils.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class TableWindow extends JFrame { // этот класс уже унаследован от Frame
+public class TableWindow extends JFrame implements ActionListener { // этот класс уже унаследован от Frame
     // поля класса
     private String iconPath;
     private ImageIcon iconFile;
@@ -25,7 +27,7 @@ public class TableWindow extends JFrame { // этот класс уже унас
     private DefaultTableModel tableModel;
     private JTable table1;
     private JTextField smallField;
-    private JButton filterButton;
+    private JButton filterButton, insertButton, updateButton, removeButton;
     TCPClient tcpClient;
     User user;
     // Данные для таблиц
@@ -42,7 +44,7 @@ public class TableWindow extends JFrame { // этот класс уже унас
         String citiesData = justDoIt();
         int i = 0;
         int dataLength = citiesData.split("\n").length;
-        String[][] tableData = new String[dataLength][5];
+        String[][] tableData = new String[dataLength][6];
         for (String elem : citiesData.split("\n")){
             String[] dataToGet = elem.split("_");
             tableData[i][0] = dataToGet[0];
@@ -50,6 +52,7 @@ public class TableWindow extends JFrame { // этот класс уже унас
             tableData[i][2] = dataToGet[3];
             tableData[i][3] = dataToGet[4];
             tableData[i][4] = dataToGet[8];
+            tableData[i][5] = dataToGet[10];
             i++;
         }
         String[] columnNames = {
@@ -57,7 +60,8 @@ public class TableWindow extends JFrame { // этот класс уже унас
                 "Координаты",
                 "Площадь",
                 "Население",
-                "Уровень жизни"
+                "Уровень жизни",
+                "Владелец"
         };
 
 
@@ -109,7 +113,9 @@ public class TableWindow extends JFrame { // этот класс уже унас
         c.gridx = 0;
         c.gridy = 1;
         contents.add(scrollPane, c);
-        button = new JButton("Button 1");
+        insertButton = new JButton("Добавить");
+        insertButton.addActionListener(this);
+        insertButton.setActionCommand("Добавить");
         c.ipady = 0;
         c.weightx = 0.5;
         c.gridwidth = 1;
@@ -117,21 +123,25 @@ public class TableWindow extends JFrame { // этот класс уже унас
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 4;
-        contents.add(button, c);
+        contents.add(insertButton, c);
 
-        button = new JButton("Button 2");
+        updateButton = new JButton("Изменить");
+        updateButton.addActionListener(this);
+        updateButton.setActionCommand("Изменить");
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.5;
         c.gridx = 1;
         c.gridy = 4;
-        contents.add(button, c);
+        contents.add(updateButton, c);
 
-        button = new JButton("Button 3");
+        removeButton = new JButton("Удалить");
+        removeButton.addActionListener(this);
+        removeButton.setActionCommand("Удалить");
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.5;
         c.gridx = 2;
         c.gridy = 4;
-        contents.add(button, c);
+        contents.add(removeButton, c);
         frame.setContentPane(contents);
         frame.setPreferredSize(new Dimension(width, height));
         frame.setMinimumSize(new Dimension(600, 300));
@@ -163,5 +173,19 @@ public class TableWindow extends JFrame { // этот класс уже унас
         }
         ResponseHandler.handleResponses(responses);
         return responses.get(0).getResponseString();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String actionCommand = e.getActionCommand();
+        if (actionCommand.equals("Добавить")){
+
+        }
+        else if (actionCommand.equals("Изменить")){
+
+        }
+        else if (actionCommand.equals("Удалить")){
+
+        }
     }
 }
