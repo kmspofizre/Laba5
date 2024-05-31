@@ -26,11 +26,12 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
     private DefaultTableModel tableModel;
     private JTable table;
     private JTextField smallField;
-    private JButton filterButton, insertButton, updateButton, removeButton;
+    private JButton filterButton, insertButton, updateButton, removeButton, visualisationButton;
     JComboBox comboBox;
     TCPClient tcpClient;
     String[] columnNames;
     User user;
+    String[][] tableData;
     // Данные для таблиц
 // Конструктор с параметрами
 
@@ -125,6 +126,15 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         c.gridx = 2;
         c.gridy = 4;
         contents.add(removeButton, c);
+        visualisationButton = new JButton("Визуализация");
+        visualisationButton.addActionListener(this);
+        visualisationButton.setActionCommand("Визуализация");
+        c.gridy = 5;
+        c.gridx = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 3;
+        c.insets = new Insets(10, 0, 0, 0);
+        contents.add(visualisationButton, c);
         frame.setContentPane(contents);
         frame.setPreferredSize(new Dimension(width, height));
         frame.setMinimumSize(new Dimension(600, 300));
@@ -159,13 +169,13 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         int i = 0;
         int j = 0;
         int dataLength = citiesData.split("\n").length;
-        String[][] tableData = new String[dataLength][7];
+        tableData = new String[dataLength][7];
         String[][] tableDataFinal = new String[dataLength][7];
         for (String elem : citiesData.split("\n")) {
             String[] dataToGet = elem.split("_");
             tableData[i][0] = dataToGet[0];
             tableData[i][1] = dataToGet[1];
-            tableData[i][2] = dataToGet[2] + ", " + dataToGet[2];
+            tableData[i][2] = dataToGet[2] + ", " + dataToGet[3];
             tableData[i][3] = dataToGet[4];
             tableData[i][4] = dataToGet[5];
             tableData[i][5] = dataToGet[9];
@@ -174,7 +184,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
             if ((dataToGet[1].contains(smallField.getText())) | smallField.getText().equals("")) {
                 tableDataFinal[j][0] = dataToGet[0];
                 tableDataFinal[j][1] = dataToGet[1];
-                tableDataFinal[j][2] = dataToGet[2] + ", " + dataToGet[2];
+                tableDataFinal[j][2] = dataToGet[2] + ", " + dataToGet[3];
                 tableDataFinal[j][3] = dataToGet[4];
                 tableDataFinal[j][4] = dataToGet[5];
                 tableDataFinal[j][5] = dataToGet[9];
@@ -183,12 +193,20 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
             }
         }
         String selectedItem = (String) comboBox.getSelectedItem();
-        if (Objects.equals(selectedItem, "Возрастание")) {
-            List<String[]> data = Arrays.stream(tableDataFinal).toList();
-            data.sort(Comparator.comparingInt(o -> Integer.parseInt(o[4])));
-        } else if (Objects.equals(selectedItem, "Убывание")) {
-            List<String[]> data = Arrays.stream(tableDataFinal).toList();
-            data.sort((o1, o2) -> -1 * (Integer.parseInt(o1[4]) - Integer.parseInt(o2[4])));
+        if (Objects.equals(selectedItem, "Возрастание") & (tableDataFinal.length > 1)) {
+            java.util.Arrays.sort(tableDataFinal, new Comparator<String[]>() {
+                @Override
+                public int compare(String[] o1, String[] o2) {
+                    return Integer.parseInt(o1[4]) - Integer.parseInt(o2[4]);
+                }
+            });
+        } else if (Objects.equals(selectedItem, "Убывание") & tableDataFinal.length > 1) {
+            java.util.Arrays.sort(tableDataFinal, new Comparator<String[]>() {
+                @Override
+                public int compare(String[] o1, String[] o2) {
+                    return -1 * (Integer.parseInt(o1[4]) - Integer.parseInt(o2[4]));
+                }
+            });
         }
         String[] columnNames = {
                 "ID",
@@ -212,6 +230,8 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
             UpdateElementForm updateElementForm = new UpdateElementForm(tcpClient, user);
         } else if (actionCommand.equals("Удалить")) {
             RemoveElementForm removeElementForm = new RemoveElementForm(tcpClient, user);
+        } else if (actionCommand.equals("Визуализация")){
+            Visualisation visualisation = new Visualisation(600, 600, tcpClient, user, tableData);
         }
     }
 
