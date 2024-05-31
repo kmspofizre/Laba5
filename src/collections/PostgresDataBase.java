@@ -164,7 +164,8 @@ public class PostgresDataBase extends DataBase {
             standardSet.next();
             String standardName = standardSet.getString("standard_of_living_name");
             Boolean userOwner = (resultSet.getInt("user_id") == userId);
-            newCity = name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner + "_" + userId;
+            Long id = resultSet.getLong("id");
+            newCity = id + "_" + name + "_" + x + "_" + y + "_" + area + "_" + cityPopulation + "_" + metersAboveSeaLevel + "_" + climateName + "_" + governmentName + "_" + standardName + "_" + governorAge + "_" + userOwner + "_" + userId;
 
             resp = resp + newCity + "\n";
         }
@@ -245,7 +246,7 @@ public class PostgresDataBase extends DataBase {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             PreparedStatement insertStatement = this.connection.prepareStatement("UPDATE city SET name = ?, coordinate = ?, creation_date = ?, " +
                     "area = ?, city_population = ?, meters_above_sea_level = ?, climate = ?, " +
-                    "government = ?, standard_of_living = ?, governor = ?");
+                    "government = ?, standard_of_living = ?, governor = ? WHERE id = ?");
             insertStatement.setString(1, name);
             insertStatement.setInt(2, coordinatesId);
             insertStatement.setDate(3, sqlDate);
@@ -256,6 +257,7 @@ public class PostgresDataBase extends DataBase {
             insertStatement.setInt(8, governmentId);
             insertStatement.setInt(9, standardOfLivingId);
             insertStatement.setInt(10, governorId);
+            insertStatement.setLong(11, city.getId());
             insertStatement.executeUpdate();
 
 

@@ -38,7 +38,7 @@ public class CityCollectionMaker extends CollectionMaker{
     }
     public static StandardOfLiving getStandardOfLiving(String standardOfLiving){
         StandardOfLiving outputStandardOfLiving = switch (standardOfLiving) {
-            case ("VERY_HIGH") -> StandardOfLiving.VERY_HIGH;
+            case ("HIGH") -> StandardOfLiving.HIGH;
             case ("LOW") -> StandardOfLiving.LOW;
             case ("NIGHTMARE") -> StandardOfLiving.NIGHTMARE;
             default -> null;

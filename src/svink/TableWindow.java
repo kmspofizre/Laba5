@@ -44,18 +44,20 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         String citiesData = justDoIt();
         int i = 0;
         int dataLength = citiesData.split("\n").length;
-        String[][] tableData = new String[dataLength][6];
+        String[][] tableData = new String[dataLength][7];
         for (String elem : citiesData.split("\n")){
             String[] dataToGet = elem.split("_");
             tableData[i][0] = dataToGet[0];
-            tableData[i][1] = dataToGet[1] + ", " + dataToGet[2];
-            tableData[i][2] = dataToGet[3];
+            tableData[i][1] = dataToGet[1];
+            tableData[i][2] = dataToGet[2] + ", " + dataToGet[2];
             tableData[i][3] = dataToGet[4];
-            tableData[i][4] = dataToGet[8];
-            tableData[i][5] = dataToGet[10];
+            tableData[i][4] = dataToGet[5];
+            tableData[i][5] = dataToGet[9];
+            tableData[i][6] = dataToGet[11];
             i++;
         }
         String[] columnNames = {
+                "ID",
                 "Название",
                 "Координаты",
                 "Площадь",

@@ -18,7 +18,6 @@ public class InsertCommand extends DataBaseCommand implements Reversible {
 
     @Override
     public Response execute(String [] args, City city, PostgresDataBase dataBase, User user) throws CommandExecutingException, SQLException {
-        Long id = Long.parseLong(args[0]);
         String [] argsToGive = Arrays.copyOfRange(args, 0, args.length);
         List<String []> commandArgs = new ArrayList<>();
         commandArgs.add(argsToGive);
