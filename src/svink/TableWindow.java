@@ -164,7 +164,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
-        ResponseHandler.handleResponses(responses);
+        //ResponseHandler.handleResponses(responses);
         String citiesData = responses.get(0).getResponseString();
         int i = 0;
         int j = 0;
@@ -239,7 +239,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
 
         @Override
         protected Boolean doInBackground() throws Exception {
-            System.out.println("Swing swing swing");
+            //System.out.println("Swing swing swing");
             return true;
         }
 
@@ -258,7 +258,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
                         "Владелец"
                 };
                 table.setModel(new DefaultTableModel(data, columnNames));
-                System.out.println("Swing swing swing");
+                //System.out.println("Swing swing swing");
             } catch (Exception ignore) {
             }
 

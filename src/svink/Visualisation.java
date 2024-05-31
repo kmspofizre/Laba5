@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Visualisation extends JFrame implements MouseListener {
     Canvas canvas;
@@ -29,6 +31,8 @@ public class Visualisation extends JFrame implements MouseListener {
         user = providedUser;
         setSize(600, 600); // устанавливаем размер главного окна
         this.setBackground(Color.orange);
+        this.addMouseListener(this);
+        addMouseListener(this);
 
         setVisible(true);
 
@@ -57,6 +61,13 @@ public class Visualisation extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int eventX = e.getX();
         int eventY = e.getY();
+        for (Map.Entry<Long, int[]> elem : this.trigx.entrySet()){
+            if ((Arrays.stream(elem.getValue()).min().getAsInt() < eventX) & (eventX < Arrays.stream(elem.getValue()).max().getAsInt())){
+                int[] yArr = this.trigy.get(elem.getKey());
+                if ((Arrays.stream(yArr).min().getAsInt() < eventY) & (eventY < Arrays.stream(yArr).max().getAsInt())){
+                }
+            }
+        }
     }
 
     @Override
