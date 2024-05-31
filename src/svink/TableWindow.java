@@ -167,7 +167,6 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         List<Response> responses = null;
         try {
             responses = tcpClient.send(bytes);
-            System.out.println("here");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } catch (ClassNotFoundException ex) {
