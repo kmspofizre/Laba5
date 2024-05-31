@@ -34,32 +34,32 @@ public class UserLoginForm extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Создание текстовых полей
         this.smallField = new JTextField(30);
-        this.smallField.setPreferredSize(new Dimension(100, 20));
+        //this.smallField.setPreferredSize(new Dimension(100, 20));
 
         // Настройка шрифта
         this.loginButton = new JButton("Вход");
-        this.loginButton.setPreferredSize(new Dimension(150, 20));
+        //this.loginButton.setPreferredSize(new Dimension(150, 20));
 
 
         this.response = new JLabel("Здесь текст лейбла");
-        this.response.setPreferredSize(new Dimension(400, 20));
+       // this.response.setPreferredSize(new Dimension(400, 20));
         this.response.setHorizontalAlignment(JTextField.RIGHT);
 
         this.login = new JLabel("Логин");
-        this.login.setPreferredSize(new Dimension(100, 20));
+        //this.login.setPreferredSize(new Dimension(100, 20));
         this.login.setHorizontalAlignment(JTextField.RIGHT);
 
         this.password = new JLabel("Пароль");
-        this.password.setPreferredSize(new Dimension(100, 20));
+        //this.password.setPreferredSize(new Dimension(100, 20));
         this.password.setHorizontalAlignment(JTextField.RIGHT);
 
 
         this.registerButton = new JButton("Регистрация");
-        this.registerButton.setPreferredSize(new Dimension(150, 20));
+        //this.registerButton.setPreferredSize(new Dimension(150, 20));
         // Слушатель окончания ввода
         // Поле с паролем
         this.passwordField = new JPasswordField(30);
-        this.passwordField.setPreferredSize(new Dimension(100, 20));
+        //this.passwordField.setPreferredSize(new Dimension(100, 20));
         this.passwordField.setEchoChar('*');
 
         // Создание панели с текстовыми полями
@@ -90,7 +90,7 @@ public class UserLoginForm extends JFrame implements ActionListener {
         c.gridx = 1;
         c.gridy = 1;
         contents.add(this.passwordField, c);
-        c.insets = new Insets(10, 150, 0, 0);
+        c.insets = new Insets(10, 0, 0, 0);
         c.weightx = 0.5;
         c.gridy = 2;
         c.gridx = 0;
