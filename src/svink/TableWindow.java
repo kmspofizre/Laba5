@@ -24,11 +24,12 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
     private JButton start, stop;
     private final int width, height;
     private DefaultTableModel tableModel;
-    private JTable table1;
+    private JTable table;
     private JTextField smallField;
     private JButton filterButton, insertButton, updateButton, removeButton;
     JComboBox comboBox;
     TCPClient tcpClient;
+    String[] columnNames;
     User user;
     // Данные для таблиц
 // Конструктор с параметрами
@@ -53,7 +54,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         comboBox = new JComboBox(items);
         comboBox.setPreferredSize(new Dimension(300, 30));
 
-        String[][] tableData = justDoIt();
+        String[][] data = justDoIt();
         String[] columnNames = {
                 "ID",
                 "Название",
@@ -63,11 +64,10 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
                 "Уровень жизни",
                 "Владелец"
         };
-
+        table = new JTable(data, columnNames);
 
         JPanel contents = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        JTable table = new JTable(tableData, columnNames);
         table.setEnabled(false);
         JButton button;
 
@@ -133,11 +133,12 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         frame.setVisible(true);
 
     }
-    public String[][] justDoIt(){
+
+    public String[][] justDoIt() {
         Scanner scanner = null;
         Command[] commands = CommandsInitiator.initClientCommands();
         InstructionFetcher infetch = new InstructionFetcher(commands);
-        String [] kort = new String[1];
+        String[] kort = new String[1];
         java.util.List<Request> requestList = new ArrayList<>();
         Command currentCommand = infetch.instructionFetch("show");
         Request commandRequest = currentCommand.prepareRequest(kort, scanner, false);
@@ -160,7 +161,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
         int dataLength = citiesData.split("\n").length;
         String[][] tableData = new String[dataLength][7];
         String[][] tableDataFinal = new String[dataLength][7];
-        for (String elem : citiesData.split("\n")){
+        for (String elem : citiesData.split("\n")) {
             String[] dataToGet = elem.split("_");
             tableData[i][0] = dataToGet[0];
             tableData[i][1] = dataToGet[1];
@@ -170,7 +171,7 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
             tableData[i][5] = dataToGet[9];
             tableData[i][6] = dataToGet[11];
             i++;
-            if ((dataToGet[1].contains(smallField.getText())) | smallField.getText().equals("")){
+            if ((dataToGet[1].contains(smallField.getText())) | smallField.getText().equals("")) {
                 tableDataFinal[j][0] = dataToGet[0];
                 tableDataFinal[j][1] = dataToGet[1];
                 tableDataFinal[j][2] = dataToGet[2] + ", " + dataToGet[2];
@@ -181,29 +182,66 @@ public class TableWindow extends JFrame implements ActionListener { // этот 
                 j++;
             }
         }
-        String selectedItem = (String)comboBox.getSelectedItem();
-        if (Objects.equals(selectedItem, "Возрастание")){
+        String selectedItem = (String) comboBox.getSelectedItem();
+        if (Objects.equals(selectedItem, "Возрастание")) {
             List<String[]> data = Arrays.stream(tableDataFinal).toList();
             data.sort(Comparator.comparingInt(o -> Integer.parseInt(o[4])));
-        }
-        else if (Objects.equals(selectedItem, "Убывание")){
+        } else if (Objects.equals(selectedItem, "Убывание")) {
             List<String[]> data = Arrays.stream(tableDataFinal).toList();
             data.sort((o1, o2) -> -1 * (Integer.parseInt(o1[4]) - Integer.parseInt(o2[4])));
         }
+        String[] columnNames = {
+                "ID",
+                "Название",
+                "Координаты",
+                "Площадь",
+                "Население",
+                "Уровень жизни",
+                "Владелец"
+        };
+        new BackGroundWorker().execute();
         return tableDataFinal;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
-        if (actionCommand.equals("Добавить")){
+        if (actionCommand.equals("Добавить")) {
             InsertElementForm insertElementForm = new InsertElementForm(tcpClient, user);
-        }
-        else if (actionCommand.equals("Изменить")){
+        } else if (actionCommand.equals("Изменить")) {
             UpdateElementForm updateElementForm = new UpdateElementForm(tcpClient, user);
-        }
-        else if (actionCommand.equals("Удалить")){
+        } else if (actionCommand.equals("Удалить")) {
             RemoveElementForm removeElementForm = new RemoveElementForm(tcpClient, user);
+        }
+    }
+
+    class BackGroundWorker extends SwingWorker {
+
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            System.out.println("Swing swing swing");
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+
+                String[][] data = justDoIt();
+                String[] columnNames = {
+                        "ID",
+                        "Название",
+                        "Координаты",
+                        "Площадь",
+                        "Население",
+                        "Уровень жизни",
+                        "Владелец"
+                };
+                table.setModel(new DefaultTableModel(data, columnNames));
+                System.out.println("Swing swing swing");
+            } catch (Exception ignore) {
+            }
+
         }
     }
 }
